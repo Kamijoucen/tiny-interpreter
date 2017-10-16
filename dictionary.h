@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <ostream>
 #include "token.h"
 
 namespace lr {

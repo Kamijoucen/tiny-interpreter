@@ -51,18 +51,37 @@ namespace lr
         DO,
         FOR,
         WHILE,
-        ADD,
-        MINUS,
         ELSE,
+        RETURN,
+        CLASS,
+        IMPORT,
 
         // symbols
-        LEFT_PAREN,     // (
-        RIGHT_PAREN,    // )
-        ASSIGN,         // =
+        LEFT_PAREN,         // (
+        RIGHT_PAREN,        // )
+        ASSIGN,             // =
         UNRESERVED,
+        ADD,                // +
+        MINUS,              // -
+        MULTIPLY,           // *
+        DIVIDE,             // /
+        AND,                // &&
+        OR,                 // ||
+        NOT,                // !
+        EQUAL,              // ==
+        GREATER_OR_EQUAL,   // >=
+        LESS_OR_EQUAL,      // <=
+        GREATER_THAN,       // >
+        LESS_THAN,          // <
 
         // delimiter
-        SEMICOLON,      // ;
+        SEMICOLON,          // ;
+        COMMA,              // ,
+        LEFT_SQUARE,        // [
+        RIGHT_SQUARE,       // ]
+        LEFT_BRACE,         // {
+        RIGHT_BRACE,        // }
+        PERIOD,             // .
 
         // number
         FLOAT,

@@ -14,14 +14,15 @@ namespace lr
 
         explicit ExprAST(TokenLocation loc);
 
-        virtual ExprAST eval();
+//        virtual ExprAST eval();
 
         virtual ~ExprAST() = default;
     private:
         TokenLocation tokenLocation_;
     };
 
-    class BinaryExprAST : public ExprAST {
+    class BinaryExprAST : public ExprAST
+    {
     public:
         BinaryExprAST() = default;
 
@@ -31,7 +32,8 @@ namespace lr
         TokenValue  op_;
     };
 
-    class PrimaryExprAST : public ExprAST {
+    class PrimaryExprAST : public ExprAST
+    {
     public:
     private:
     };
@@ -42,7 +44,8 @@ namespace lr
     private:
     };
 
-    class IfStatementAST : ExprAST {
+    class IfStatementAST : ExprAST
+    {
 
     };
 
