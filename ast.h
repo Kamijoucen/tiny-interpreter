@@ -4,38 +4,50 @@
 
 
 #include "token.h"
+#include "memory"
 
 namespace lr
 {
-    class ExprAST
-    {
+
+    class ExprAST;
+    class NumberExprAST;
+
+    using ExprASTPtr        = std::unique_ptr<ExprAST>;
+    using NumberExprASTPtr  = std::unique_ptr<NumberExprAST>;
+
+    class ExprAST {
+    public:
+        ExprASTPtr eval();
+
+        TokenLocation getTokenLocation();
+
     public:
         ExprAST() = default;
 
         explicit ExprAST(TokenLocation loc);
 
-//        virtual ExprAST eval();
-
         virtual ~ExprAST() = default;
-    private:
+
+    protected:
         TokenLocation tokenLocation_;
     };
+
+    inline TokenLocation ExprAST::getTokenLocation() { return tokenLocation_; }
+
 
     class BinaryExprAST : public ExprAST
     {
     public:
+
+    public:
         BinaryExprAST() = default;
 
-    private:
-        ExprAST     left_;
-        ExprAST     right_;
-        TokenValue  op_;
-    };
+        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &tokenLocation);
 
-    class PrimaryExprAST : public ExprAST
-    {
-    public:
     private:
+        ExprASTPtr  left_;
+        ExprASTPtr  right_;
+        TokenValue  op_;
     };
 
     class NumberExprAST : public ExprAST
@@ -44,11 +56,25 @@ namespace lr
     private:
     };
 
-    class IfStatementAST : ExprAST
+    class IfStatementAST : public ExprAST
     {
 
     };
 
+    class WhileStatementAST : public ExprAST
+    {
+
+    };
+
+    class ForStatementAST : public ExprAST
+    {
+
+    };
+
+    class DoWhileStatementAST : public ExprAST
+    {
+
+    };
 
 }
 

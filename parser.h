@@ -9,7 +9,10 @@ namespace lr
 {
 
 class Parser {
+public:
+    ExprASTPtr parsePrimary();
 
+private:
 };
 
 }

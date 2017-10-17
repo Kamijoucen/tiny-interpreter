@@ -55,6 +55,8 @@ namespace lr
         RETURN,
         CLASS,
         IMPORT,
+        FALSE,
+        TRUE,
 
         // symbols
         LEFT_PAREN,         // (

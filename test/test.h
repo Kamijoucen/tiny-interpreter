@@ -7,6 +7,7 @@
 
 inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenValue) {
     std::string value;
+    using lr::TokenValue;
     switch (tokenValue) {
         case lr::TokenValue::VAR:
             value = "VAR";
@@ -107,7 +108,7 @@ inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenVal
         case lr::TokenValue::INTEGER:
             value = "INTEGER";
             break;
-        case CLASS:
+        case TokenValue::CLASS:
             value = "CLASS";
             break;
     }
