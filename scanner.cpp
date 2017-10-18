@@ -214,3 +214,4 @@ void lr::Scanner::reduceBuffer()
 {
     buffer_.pop_back();
 }
+

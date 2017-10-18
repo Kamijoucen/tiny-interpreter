@@ -14,11 +14,13 @@ namespace lr
     {
     public:
 
+        inline const Dictionary &getDic() const ;
+
         explicit Scanner(std::string &fileName);
 
         void    next();
 
-        Token   getToken();
+        Token   getToken() const;
 
     private:
 
@@ -74,7 +76,8 @@ namespace lr
 
     };
 
-    inline Token Scanner::getToken() { return currentToken_; }
+    inline Token Scanner::getToken() const { return currentToken_; }
+    inline const Dictionary &Scanner::getDic() const { return dictionary_; }
 
 }
 

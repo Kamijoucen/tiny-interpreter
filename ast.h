@@ -17,9 +17,9 @@ namespace lr
 
     class ExprAST {
     public:
-        ExprASTPtr eval();
+        virtual ExprASTPtr eval() { return nullptr; }
 
-        TokenLocation getTokenLocation();
+        inline TokenLocation getTokenLocation();
 
     public:
         ExprAST() = default;
@@ -39,10 +39,13 @@ namespace lr
     {
     public:
 
+        ExprASTPtr eval() override {}
+
     public:
         BinaryExprAST() = default;
 
         BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &tokenLocation);
+        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &&tokenLocation);
 
     private:
         ExprASTPtr  left_;
@@ -50,30 +53,58 @@ namespace lr
         TokenValue  op_;
     };
 
-    class NumberExprAST : public ExprAST
+    class IntegerNumExprAST : public ExprAST
     {
     public:
+        inline int getVal() const;
+    public:
+        ExprASTPtr eval() override {}
+
+        IntegerNumExprAST(int num, TokenLocation tokenLocation);
     private:
+        int value_;
     };
+    inline int IntegerNumExprAST::getVal() const { return value_; }
+
+    class FloatNumExprAST : public ExprAST
+    {
+    public:
+        inline float getVal() const ;
+    public:
+        inline ExprASTPtr eval() override {}
+
+        FloatNumExprAST(float num, TokenLocation tokenLocation);
+    private:
+        float value_;
+    };
+    inline float FloatNumExprAST::getVal() const { return value_; }
 
     class IfStatementAST : public ExprAST
     {
-
+    public:
+        ExprASTPtr eval() override {}
+    private:
     };
 
     class WhileStatementAST : public ExprAST
     {
-
+    public:
+        ExprASTPtr eval() override {}
+    private:
     };
 
     class ForStatementAST : public ExprAST
     {
-
+    public:
+        ExprASTPtr eval() override {}
+    private:
     };
 
     class DoWhileStatementAST : public ExprAST
     {
-
+    public:
+        ExprASTPtr eval() override {}
+    private:
     };
 
 }

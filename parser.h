@@ -8,12 +8,33 @@
 namespace lr
 {
 
-class Parser {
+class Parser
+{
 public:
+
+    ExprASTPtr parse();
+
     ExprASTPtr parsePrimary();
 
+    ExprASTPtr parseBinOpRHS(ExprASTPtr lhs, int precedence);
+
+    ExprASTPtr parseExpression();
+
+    ExprASTPtr parseParen();
+
+    ExprASTPtr parseBlock();
+
+    ExprASTPtr parseNumber();
+
+    ExprASTPtr parseIdentifier();
+
+public:
+    explicit Parser(Scanner&);
+
 private:
+    Scanner &scanner_;
 };
+
 
 }
 

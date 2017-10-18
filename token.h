@@ -32,7 +32,7 @@ namespace lr
 
     enum class TokenType
     {
-        DELIMITER,      // 分隔符
+        DELIMITER,          // 分隔符
         KEYWORDS,
         IDENTIFIER,
         OPERATORS,
@@ -75,6 +75,7 @@ namespace lr
         LESS_OR_EQUAL,      // <=
         GREATER_THAN,       // >
         LESS_THAN,          // <
+        NOT_ASSIGN,         // !=
 
         // delimiter
         SEMICOLON,          // ;

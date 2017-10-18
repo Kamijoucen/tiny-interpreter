@@ -16,6 +16,8 @@ namespace lr {
 
         std::tuple<TokenType, TokenValue, int> lookup(std::string &name) const;
 
+        std::tuple<TokenType, TokenValue, int> lookup(std::string &&name) const;
+
         bool haveToken(std::string &name) const;
 
     private:
