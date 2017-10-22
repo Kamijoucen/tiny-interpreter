@@ -63,7 +63,7 @@ namespace lr
         explicit BoolValue(bool val);
         bool value_;
     private:
-        ValueType type_ = ValueType::BOOL;
+        const ValueType type_ = ValueType::BOOL;
     };
     inline ValueType BoolValue::getType() const { return type_; }
 

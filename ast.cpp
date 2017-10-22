@@ -4,7 +4,8 @@
 
 #include <iostream>
 #include "ast.h"
-#include "test/test.h"
+#define Int     lr::ValueType::INT
+#define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
@@ -37,49 +38,47 @@ namespace lr
 
     ValuePtr BinaryExprAST::eval()
     {
-        std::cout << op_;
-
         switch (op_)
         {
             case TokenValue::ADD:       return add();
             case TokenValue::MINUS:     return minus();
             case TokenValue::MULTIPLY:  return multiply();
             case TokenValue::DIVIDE:    return divide();
-            default:
-                std::cout << "ast op error" << std::endl;
-                break;
+            default:                    return nullptr;
         }
     }
 
     ValuePtr BinaryExprAST::add()
     {
-        ValueType Int   = ValueType::INT;
-        ValueType Float = ValueType::FLOAT;
-
         ValuePtr lv = left_    ->eval();
         ValuePtr rv = right_   ->eval();
-
         if (lv->getType() == Int && rv->getType() == Int)
         {
-
-            return nullptr;
+            auto l = static_cast<IntValue*>(lv.get());
+            auto r = static_cast<IntValue*>(rv.get());
+            return std::make_shared<IntValue>(l->value_ + r->value_);
         }
 
         if (lv->getType() == Float && rv->getType() == Float)
         {
-
+            auto l = static_cast<FloatValue*>(lv.get());
+            auto r = static_cast<FloatValue*>(rv.get());
+            return std::make_shared<FloatValue>(l->value_ + r->value_);
         }
 
         if (lv->getType() == Float && rv->getType() == Int)
         {
-
+            auto l = static_cast<FloatValue*>(lv.get());
+            auto r = static_cast<IntValue*>(rv.get());
+            return std::make_shared<FloatValue>(l->value_ + r->value_);
         }
 
         if (lv->getType() == Int && rv->getType() == Float)
         {
-
+            auto l = static_cast<IntValue*>(lv.get());
+            auto r = static_cast<FloatValue*>(rv.get());
+            return std::make_shared<FloatValue>(l->value_ + r->value_);
         }
-
         return nullptr;
     }
 
