@@ -4,7 +4,8 @@
 
 
 #include "token.h"
-#include "memory"
+#include "value.h"
+#include <memory>
 
 namespace lr
 {
@@ -15,9 +16,10 @@ namespace lr
     using ExprASTPtr        = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr  = std::unique_ptr<NumberExprAST>;
 
-    class ExprAST {
+    class ExprAST
+    {
     public:
-        virtual ExprASTPtr eval() { return nullptr; }
+        virtual ValuePtr eval() { return nullptr; }
 
         inline TokenLocation getTokenLocation();
 
@@ -39,13 +41,21 @@ namespace lr
     {
     public:
 
-        ExprASTPtr eval() override {}
+        ValuePtr eval() override;
 
     public:
         BinaryExprAST() = default;
-
         BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &tokenLocation);
         BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &&tokenLocation);
+
+    private:
+        ValuePtr add();
+
+        ValuePtr minus();
+
+        ValuePtr multiply();
+
+        ValuePtr divide();
 
     private:
         ExprASTPtr  left_;
@@ -58,7 +68,7 @@ namespace lr
     public:
         inline int getVal() const;
     public:
-        ExprASTPtr eval() override {}
+		ValuePtr eval() override;
 
         IntegerNumExprAST(int num, TokenLocation tokenLocation);
     private:
@@ -71,7 +81,7 @@ namespace lr
     public:
         inline float getVal() const ;
     public:
-        inline ExprASTPtr eval() override {}
+		ValuePtr eval() override;
 
         FloatNumExprAST(float num, TokenLocation tokenLocation);
     private:
@@ -82,28 +92,28 @@ namespace lr
     class IfStatementAST : public ExprAST
     {
     public:
-        ExprASTPtr eval() override {}
+        ValuePtr eval() override {}
     private:
     };
 
     class WhileStatementAST : public ExprAST
     {
     public:
-        ExprASTPtr eval() override {}
+        ValuePtr eval() override {}
     private:
     };
 
     class ForStatementAST : public ExprAST
     {
     public:
-        ExprASTPtr eval() override {}
+        ValuePtr eval() override {}
     private:
     };
 
     class DoWhileStatementAST : public ExprAST
     {
     public:
-        ExprASTPtr eval() override {}
+        ValuePtr eval() override {}
     private:
     };
 

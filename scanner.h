@@ -73,7 +73,7 @@ namespace lr
         std::string     buffer_;
         std::string     filename_;
         Dictionary      dictionary_;
-
+        bool            errorFlag;
     };
 
     inline Token Scanner::getToken() const { return currentToken_; }

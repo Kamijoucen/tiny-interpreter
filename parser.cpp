@@ -1,7 +1,5 @@
 
 #include "parser.h"
-#include "dictionary.h"
-#include <cstdlib>
 #include <iostream>
 
 namespace lr
@@ -41,7 +39,7 @@ namespace lr
     {
         Token token = scanner_.getToken();
         scanner_.next();
-        if (token.getTokenValue() == TokenValue::INTEGER)
+        if (token.getTokenValue() == TokenValue::FLOAT)
         {
             float num = static_cast<float>(std::strtod(token.getStrValue().c_str(), nullptr));
             return std::make_unique<FloatNumExprAST>(num, token.getTokenLocation());
@@ -71,34 +69,36 @@ namespace lr
     {
         while (true)
         {
-            auto curTok = scanner_.getToken();
-            if (curTok.getTokenType() != TokenType::OPERATORS)
-            {
-                // todo
-                std::cout << "op error" << std::endl;
-                return nullptr;
-            }
-            auto opMate     = scanner_.getDic().lookup(curTok.getStrValue());
+            auto curOp      = scanner_.getToken();
+            auto opMate     = scanner_.getDic().lookup(curOp.getStrValue());
             int  curOpPre   = std::get<2>(opMate);
+
             if (curOpPre < precedence)
             {
                 return lhs;
             }
+            if (curOp.getTokenType() != TokenType::OPERATORS)
+            {
+                // todo
+                std::cout << "op error:" << curOp.getStrValue() << std::endl;
+                return nullptr;
+            }
             scanner_.next();
 
-            ExprASTPtr  priPtr      = parsePrimary();
-            auto        nextTok     = scanner_.getToken();
-            auto        nextOpMate  = scanner_.getDic().lookup(nextTok.getStrValue());
+            ExprASTPtr  rhs         = parsePrimary();
+            auto        nextOp      = scanner_.getToken();
+            auto        nextOpMate  = scanner_.getDic().lookup(nextOp.getStrValue());
             int         nextOpPre   = std::get<2>(nextOpMate);
-            if (curOpPre > nextOpPre)
+
+            if (curOpPre < nextOpPre)
             {
-                priPtr = parseBinOpRHS(std::move(priPtr), curOpPre + 1);
-                if (!priPtr)
+                rhs = parseBinOpRHS(std::move(rhs), curOpPre + 1);
+                if (!rhs)
                 {
                     return nullptr;
                 }
             }
-            lhs = std::make_unique<BinaryExprAST>(std::move(lhs), std::move(priPtr), nextTok.getTokenValue(), curTok.getTokenLocation());
+            lhs = std::make_unique<BinaryExprAST>(std::move(lhs), std::move(rhs), curOp.getTokenValue(), curOp.getTokenLocation());
         }
     }
 

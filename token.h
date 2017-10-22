@@ -107,7 +107,7 @@ namespace lr
 
         TokenValue      getTokenValue() const;
 
-        std::string     getStrValue() const ;
+        std::string     getStrValue() const;
 
         TokenLocation   getTokenLocation() const;
 

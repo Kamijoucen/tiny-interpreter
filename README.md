@@ -4,6 +4,6 @@ Working...
 
 License
 =================
-[BSD][3]
+[BSD][1]
 
-[3]:http://opensource.org/licenses/BSD-2-Clause
+[1]:http://opensource.org/licenses/BSD-2-Clause
