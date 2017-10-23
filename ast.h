@@ -49,15 +49,6 @@ namespace lr
         BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &&tokenLocation);
 
     private:
-        ValuePtr add();
-
-        ValuePtr minus();
-
-        ValuePtr multiply();
-
-        ValuePtr divide();
-
-    private:
         ExprASTPtr  left_;
         ExprASTPtr  right_;
         TokenValue  op_;

@@ -55,6 +55,10 @@ namespace lr
     {
         scanner_.next();    // eat (
         ExprASTPtr ptr = parseExpression();
+        if (scanner_.getToken().getTokenValue() != TokenValue::RIGHT_PAREN) {
+            std::cout << "括号不匹配" << std::endl;
+            return nullptr;
+        }
         scanner_.next();    // eat )
         return ptr;
     }

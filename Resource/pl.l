@@ -17,3 +17,5 @@ def fff() {
 	var d = 15 * b / 1 - c;
 	return d;
 }
+
+fff();

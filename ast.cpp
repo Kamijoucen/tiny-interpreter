@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "ast.h"
+#include "primitives/add.h"
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
@@ -40,58 +41,12 @@ namespace lr
     {
         switch (op_)
         {
-            case TokenValue::ADD:       return add();
-            case TokenValue::MINUS:     return minus();
-            case TokenValue::MULTIPLY:  return multiply();
-            case TokenValue::DIVIDE:    return divide();
+            case TokenValue::ADD:       return Add(left_->eval(), right_->eval()).apply();
+            case TokenValue::MINUS:     return nullptr;
+            case TokenValue::MULTIPLY:  return nullptr;
+            case TokenValue::DIVIDE:    return nullptr;
             default:                    return nullptr;
         }
-    }
-
-    ValuePtr BinaryExprAST::add()
-    {
-        ValuePtr lv = left_    ->eval();
-        ValuePtr rv = right_   ->eval();
-        if (lv->getType() == Int && rv->getType() == Int)
-        {
-            auto l = static_cast<IntValue*>(lv.get());
-            auto r = static_cast<IntValue*>(rv.get());
-            return std::make_shared<IntValue>(l->value_ + r->value_);
-        }
-
-        if (lv->getType() == Float && rv->getType() == Float)
-        {
-            auto l = static_cast<FloatValue*>(lv.get());
-            auto r = static_cast<FloatValue*>(rv.get());
-            return std::make_shared<FloatValue>(l->value_ + r->value_);
-        }
-
-        if (lv->getType() == Float && rv->getType() == Int)
-        {
-            auto l = static_cast<FloatValue*>(lv.get());
-            auto r = static_cast<IntValue*>(rv.get());
-            return std::make_shared<FloatValue>(l->value_ + r->value_);
-        }
-
-        if (lv->getType() == Int && rv->getType() == Float)
-        {
-            auto l = static_cast<IntValue*>(lv.get());
-            auto r = static_cast<FloatValue*>(rv.get());
-            return std::make_shared<FloatValue>(l->value_ + r->value_);
-        }
-        return nullptr;
-    }
-
-    ValuePtr BinaryExprAST::minus() {
-        return lr::ValuePtr();
-    }
-
-    ValuePtr BinaryExprAST::multiply() {
-        return lr::ValuePtr();
-    }
-
-    ValuePtr BinaryExprAST::divide() {
-        return lr::ValuePtr();
     }
 
 }
