@@ -12,21 +12,25 @@ class Parser
 {
 public:
 
-    ExprASTPtr parse();
+    ExprASTPtr  parse();
 
-    ExprASTPtr parsePrimary();
+    ExprASTPtr  parsePrimary();
 
-    ExprASTPtr parseBinOpRHS(ExprASTPtr lhs, int precedence);
+    ExprASTPtr  parseBinOpRHS(ExprASTPtr lhs, int precedence);
 
-    ExprASTPtr parseExpression();
+    ExprASTPtr  parseExpression();
 
-    ExprASTPtr parseParen();
+    ExprASTPtr  parseParen();
 
-    ExprASTPtr parseBlock();
+    ExprASTPtr  parseNumber();
 
-    ExprASTPtr parseNumber();
+    ExprASTPtr  parseIdentifier();
 
-    ExprASTPtr parseIdentifier();
+    ExprASTPtr  parseIfStatement();
+
+    ExprASTPtr  parseWhileStatement();
+
+    BlockASTPtr parseBlock();
 
 public:
     explicit Parser(Scanner&);

@@ -5,18 +5,11 @@
 
 namespace lr
 {
-    class Minus
+    struct Minus
     {
-    public:
+        static ValuePtr apply(const ValuePtr &v1, const ValuePtr &v2);
 
-        Minus(const ValuePtr &v1, const ValuePtr &v2);
-
-        ValuePtr apply();
-
-        ValueType typeCheck();
-
-    private:
-        const ValuePtr &v1_, &v2_;
+        static ValueType typeCheck(const ValuePtr &v1, const ValuePtr &v2);
     };
 }
 

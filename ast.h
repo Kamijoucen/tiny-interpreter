@@ -6,15 +6,19 @@
 #include "token.h"
 #include "value.h"
 #include <memory>
+#include <vector>
 
 namespace lr
 {
 
     class ExprAST;
     class NumberExprAST;
+    class BlockAST;
 
     using ExprASTPtr        = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr  = std::unique_ptr<NumberExprAST>;
+    using VecExprASTPtr     = std::vector<std::unique_ptr<ExprAST>>;
+    using BlockASTPtr       = std::unique_ptr<BlockAST>;
 
     class ExprAST
     {
@@ -33,9 +37,19 @@ namespace lr
     protected:
         TokenLocation tokenLocation_;
     };
-
     inline TokenLocation ExprAST::getTokenLocation() { return tokenLocation_; }
 
+
+    class BlockAST : public ExprAST
+    {
+    public:
+        ValuePtr eval() override;
+
+        void addAST(ExprASTPtr ptr);
+
+    private:
+        VecExprASTPtr vec_;
+    };
 
     class BinaryExprAST : public ExprAST
     {

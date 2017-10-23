@@ -12,22 +12,33 @@ namespace lr
         TokenType   tokenType   = scanner_.getToken().getTokenType();
         TokenValue  tokenValue  = scanner_.getToken().getTokenValue();
 
-        if (tokenValue == TokenValue::LEFT_PAREN)
+        switch (tokenType)
         {
-            return parseParen();
+            case TokenType::KEYWORDS:
+                switch (tokenValue)
+                {
+                    case TokenValue::IF:
+                        return parseIfStatement();
+                    case TokenValue::WHILE:
+                        return parseWhileStatement();
+                    default:
+                        return nullptr;
+                }
+            case TokenType::DELIMITER:
+                switch (tokenValue)
+                {
+                    case TokenValue::LEFT_PAREN:
+                        return parseParen();
+                    case TokenValue::LEFT_BRACE:
+                        return parseBlock();
+                    default:
+                        return nullptr;
+                }
+            case TokenType::NUMBER:
+                return parseNumber();
+            default:
+                return nullptr;
         }
-
-        if (tokenType == TokenType::IDENTIFIER)
-        {
-            return parseIdentifier();
-        }
-
-        if (tokenType == TokenType::NUMBER)
-        {
-            return parseNumber();
-        }
-
-        return nullptr;
     }
 
     ExprASTPtr Parser::parseIdentifier()
@@ -106,12 +117,22 @@ namespace lr
         }
     }
 
-    ExprASTPtr Parser::parseBlock()
+    BlockASTPtr Parser::parseBlock()
+    {
+        return lr::BlockASTPtr();
+    }
+
+    ExprASTPtr Parser::parse()
     {
         return lr::ExprASTPtr();
     }
 
-    ExprASTPtr Parser::parse()
+    ExprASTPtr Parser::parseIfStatement()
+    {
+        return lr::ExprASTPtr();
+    }
+
+    ExprASTPtr Parser::parseWhileStatement()
     {
         return lr::ExprASTPtr();
     }

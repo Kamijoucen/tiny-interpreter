@@ -4,12 +4,14 @@
 
 #include <map>
 
-class Environment {
+class Environment
+{
 protected:
 
 };
 
-class GlobalEnvironment {
+class GlobalEnvironment
+{
 
 };
 

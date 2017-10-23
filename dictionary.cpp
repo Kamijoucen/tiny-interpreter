@@ -24,8 +24,8 @@ namespace lr {
         addToken(",",       std::make_tuple(TokenType::DELIMITER,    TokenValue::COMMA,            -1));
         addToken("[",       std::make_tuple(TokenType::DELIMITER,    TokenValue::LEFT_SQUARE,      -1));
         addToken("]",       std::make_tuple(TokenType::DELIMITER,    TokenValue::RIGHT_SQUARE,     -1));
-        addToken("}",       std::make_tuple(TokenType::DELIMITER,    TokenValue::LEFT_BRACE,       -1));
-        addToken("{",       std::make_tuple(TokenType::DELIMITER,    TokenValue::RIGHT_BRACE,      -1));
+        addToken("{",       std::make_tuple(TokenType::DELIMITER,    TokenValue::LEFT_BRACE,       -1));
+        addToken("}",       std::make_tuple(TokenType::DELIMITER,    TokenValue::RIGHT_BRACE,      -1));
         addToken(".",       std::make_tuple(TokenType::DELIMITER,    TokenValue::PERIOD,           -1));
 
         addToken("=",       std::make_tuple(TokenType::OPERATORS,    TokenValue::ASSIGN,           2));

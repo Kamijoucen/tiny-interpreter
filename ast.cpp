@@ -1,10 +1,10 @@
-//
-// Created by X6TI on 2017/10/7.
-//
 
 #include <iostream>
 #include "ast.h"
 #include "primitives/add.h"
+#include "primitives/minus.h"
+#include "primitives/multiply.h"
+#include "primitives/divide.h"
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
@@ -41,10 +41,10 @@ namespace lr
     {
         switch (op_)
         {
-            case TokenValue::ADD:       return Add(left_->eval(), right_->eval()).apply();
-            case TokenValue::MINUS:     return nullptr;
-            case TokenValue::MULTIPLY:  return nullptr;
-            case TokenValue::DIVIDE:    return nullptr;
+            case TokenValue::MINUS:     return Minus::apply(left_->eval(), right_->eval());
+            case TokenValue::ADD:       return Add::apply(left_->eval(), right_->eval());
+            case TokenValue::MULTIPLY:  return Multiply::apply(left_->eval(), right_->eval());
+            case TokenValue::DIVIDE:    return Divide::apply(left_->eval(), right_->eval());
             default:                    return nullptr;
         }
     }

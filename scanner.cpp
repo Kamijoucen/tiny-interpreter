@@ -118,8 +118,7 @@ void lr::Scanner::preprocess()
     } while (std::isspace(currentChar_));
 }
 
-lr::TokenLocation
-lr::Scanner::makeTokenLocation()
+lr::TokenLocation lr::Scanner::makeTokenLocation()
 {
     return TokenLocation(line_, column_, filename_);
 }

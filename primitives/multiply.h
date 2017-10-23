@@ -1,13 +1,12 @@
 
-#ifndef LLANGUAGE_ADD_H
-#define LLANGUAGE_ADD_H
+#ifndef LLANGUAGE_MULTIPLY_H
+#define LLANGUAGE_MULTIPLY_H
 
 #include "../value.h"
-#include "../environment.h"
 
 namespace lr
 {
-    struct Add
+    struct Multiply
     {
         static ValuePtr apply(const ValuePtr &v1, const ValuePtr &v2);
 
@@ -15,4 +14,5 @@ namespace lr
     };
 }
 
-#endif //LLANGUAGE_ADD_H
+
+#endif //LLANGUAGE_MULTIPLY_H
