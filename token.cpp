@@ -1,30 +1,45 @@
 
 #include "token.h"
+#include <sstream>
 
-lr::Token::Token(TokenType tokenType, TokenValue tokenValue, std::string strValue,
-                 const TokenLocation &tokenLocation) : tokenType_(tokenType), tokenValue_(tokenValue),
-                                                       strValue_(std::move(strValue)), tokenLocation_(tokenLocation),
-                                                       symbolPrecedence_(-1) {}
 
-lr::Token::Token(TokenType tokenType, TokenValue tokenValue, std::string strValue,
-                 const TokenLocation &tokenLocation, int symbolPrecedence) : tokenType_(tokenType),
-                                                                             tokenValue_(tokenValue),
-                                                                             strValue_(std::move(strValue)),
-                                                                             tokenLocation_(tokenLocation),
-                                                                             symbolPrecedence_(symbolPrecedence) {}
+namespace lr
+{
+    Token::Token(TokenType tokenType, TokenValue tokenValue, std::string strValue,
+                     const TokenLocation &tokenLocation) : tokenType_(tokenType), tokenValue_(tokenValue),
+                                                           strValue_(std::move(strValue)), tokenLocation_(tokenLocation),
+                                                           symbolPrecedence_(-1) {}
 
-lr::TokenLocation::TokenLocation(int line, int column, std::string filename)
-        : line_(line), column_(column), filename_(std::move(filename)) {}
+    Token::Token(TokenType tokenType, TokenValue tokenValue, std::string strValue,
+                     const TokenLocation &tokenLocation, int symbolPrecedence) : tokenType_(tokenType),
+                                                                                 tokenValue_(tokenValue),
+                                                                                 strValue_(std::move(strValue)),
+                                                                                 tokenLocation_(tokenLocation),
+                                                                                 symbolPrecedence_(symbolPrecedence) {}
 
-lr::TokenLocation::TokenLocation(TokenLocation &&location) noexcept : line_(location.line_),
-                                                                      column_(location.column_),
-                                                                      filename_(std::move(location.filename_)) {}
+    TokenLocation::TokenLocation(int line, int column, std::string filename)
+            : line_(line), column_(column), filename_(std::move(filename)) {}
 
-lr::TokenLocation &lr::TokenLocation::operator=(TokenLocation &&location) noexcept {
-    line_ = location.line_;
-    column_ = location.column_;
-    filename_ = std::move(location.filename_);
-    return *this;
+    TokenLocation::TokenLocation(TokenLocation &&location) noexcept : line_(location.line_),
+                                                                          column_(location.column_),
+                                                                          filename_(std::move(location.filename_)) {}
+
+    TokenLocation &TokenLocation::operator=(TokenLocation &&location) noexcept
+    {
+        line_ = location.line_;
+        column_ = location.column_;
+        filename_ = std::move(location.filename_);
+        return *this;
+    }
+
+    std::string TokenLocation::toString()
+    {
+        std::stringstream ss;
+        ss << "{" << line_ << ", " << column_ << ", " << filename_ << "}";
+        return ss.str();
+    }
+
 }
+
 
 

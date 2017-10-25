@@ -1,9 +1,12 @@
 
 #include "parser.h"
+#include "util/error.h"
 #include <iostream>
 
 namespace lr
 {
+
+    bool Parser::errorFlag = false;
 
     Parser::Parser(Scanner &scanner) : scanner_(scanner) { scanner.next(); }
 
@@ -21,6 +24,8 @@ namespace lr
                         return parseIfStatement();
                     case TokenValue::WHILE:
                         return parseWhileStatement();
+                    case TokenValue::VAR:
+                        return parseAssignStatement();
                     default:
                         return nullptr;
                 }
@@ -66,8 +71,9 @@ namespace lr
     {
         scanner_.next();    // eat (
         ExprASTPtr ptr = parseExpression();
-        if (scanner_.getToken().getTokenValue() != TokenValue::RIGHT_PAREN) {
-            std::cout << "括号不匹配" << std::endl;
+        if (scanner_.getToken().getTokenValue() != TokenValue::RIGHT_PAREN)
+        {
+            errorSyntax("括号未匹配:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
         scanner_.next();    // eat )
@@ -94,8 +100,7 @@ namespace lr
             }
             if (curOp.getTokenType() != TokenType::OPERATORS)
             {
-                // todo
-                std::cout << "op error:" << curOp.getStrValue() << std::endl;
+                errorSyntax("不是有效的操作符:" + scanner_.getToken().getTokenLocation().toString());
                 return nullptr;
             }
             scanner_.next();
@@ -119,13 +124,37 @@ namespace lr
 
     BlockASTPtr Parser::parseBlock()
     {
-        return lr::BlockASTPtr();
+        auto loc = scanner_.getToken().getTokenLocation();
+
+        if (!expectToken(TokenValue::LEFT_BRACE, "{", true))
+        {
+            return nullptr;
+        }
+
+        auto blok = std::make_unique<BlockAST>(loc);
+
+        while (validateToken(TokenValue::RIGHT_BRACE, true))
+        {
+            if (auto stat = parsePrimary())
+            {
+                blok->addAST(std::move(stat));
+            }
+            else
+            {
+                return nullptr;
+            }
+        }
+
+        if (!expectToken(TokenValue::RIGHT_BRACE, "}", true))
+        {
+            return nullptr;
+        }
+
+        return blok;
     }
 
-    ExprASTPtr Parser::parse()
-    {
-        return lr::ExprASTPtr();
-    }
+    VecExprASTPtr Parser::parse()
+    {}
 
     ExprASTPtr Parser::parseIfStatement()
     {
@@ -135,6 +164,54 @@ namespace lr
     ExprASTPtr Parser::parseWhileStatement()
     {
         return lr::ExprASTPtr();
+    }
+
+    void Parser::setErrorFlag(bool flag) { errorFlag = flag; }
+
+    bool Parser::expectToken(TokenValue val, std::string str, bool next)
+    {
+        if (scanner_.getToken().getTokenValue() != val)
+        {
+            auto tok = scanner_.getToken();
+            errorSyntax("出现意料之外的标识符 '" + tok.getStrValue() + "'" + tok.getTokenLocation().toString());
+            return false;
+        }
+        if (next)
+        {
+            scanner_.next();
+        }
+        return true;
+    }
+
+    bool Parser::validateToken(TokenValue val, bool next)
+    {
+        if (scanner_.getToken().getTokenValue() != val)
+        {
+            return false;
+        }
+        if (next)
+        {
+            scanner_.next();
+        }
+        return false;
+    }
+
+    ExprASTPtr Parser::parseAssignStatement()
+    {
+        if (!expectToken(TokenValue::VAR, "var", true))
+        {
+            errorSyntax("未知的标识符" + scanner_.getToken().getStrValue());
+            return nullptr;
+        }
+        auto        tok = scanner_.getToken();
+        ExprASTPtr  lhs = std::make_unique<VariableAST>(tok.getStrValue());
+
+        ExprASTPtr rhs = nullptr;
+        if (validateToken(TokenValue::ASSIGN, true))
+        {
+            rhs = parseExpression();
+        }
+        return std::make_unique<AssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
     }
 
 }

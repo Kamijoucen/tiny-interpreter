@@ -24,6 +24,8 @@ namespace lr
 
         TokenLocation(int line, int column, std::string filename);
 
+        std::string toString();
+
     private:
         int         line_;
         int         column_;

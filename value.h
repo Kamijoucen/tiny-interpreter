@@ -12,6 +12,7 @@ namespace lr
 
     enum class ValueType
     {
+        VOID,
         INT,
         FLOAT,
         STRING,

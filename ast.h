@@ -43,6 +43,8 @@ namespace lr
     class BlockAST : public ExprAST
     {
     public:
+        explicit BlockAST(TokenLocation &);
+    public:
         ValuePtr eval() override;
 
         void addAST(ExprASTPtr ptr);
@@ -50,17 +52,48 @@ namespace lr
     private:
         VecExprASTPtr vec_;
     };
+    inline void BlockAST::addAST(ExprASTPtr ptr) { vec_.push_back(std::move(ptr)); }
+
+
+    class VariableAST : public ExprAST
+    {
+    public:
+        ValuePtr eval() override;
+
+        inline std::string getVarName() const;
+
+    public:
+        explicit VariableAST(std::string str);
+
+    private:
+        std::string varName_;
+    };
+    inline std::string VariableAST::getVarName() const { return varName_; }
+
+
+    class AssignStatementAST : public ExprAST
+    {
+    public:
+        ValuePtr eval() override;
+
+    public:
+        AssignStatementAST(ExprASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
+
+    private:
+        ExprASTPtr lhs_;
+        ExprASTPtr rhs_;
+    };
+
 
     class BinaryExprAST : public ExprAST
     {
     public:
-
         ValuePtr eval() override;
 
     public:
         BinaryExprAST() = default;
-        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &tokenLocation);
-        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, TokenLocation &&tokenLocation);
+
+        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, const TokenLocation &tokenLocation);
 
     private:
         ExprASTPtr  left_;
@@ -68,23 +101,28 @@ namespace lr
         TokenValue  op_;
     };
 
+
     class IntegerNumExprAST : public ExprAST
     {
     public:
         inline int getVal() const;
+
     public:
 		ValuePtr eval() override;
 
         IntegerNumExprAST(int num, TokenLocation tokenLocation);
+
     private:
         int value_;
     };
     inline int IntegerNumExprAST::getVal() const { return value_; }
 
+
     class FloatNumExprAST : public ExprAST
     {
     public:
         inline float getVal() const ;
+
     public:
 		ValuePtr eval() override;
 
@@ -94,31 +132,39 @@ namespace lr
     };
     inline float FloatNumExprAST::getVal() const { return value_; }
 
+
     class IfStatementAST : public ExprAST
     {
     public:
         ValuePtr eval() override {}
+
     private:
     };
+
 
     class WhileStatementAST : public ExprAST
     {
     public:
         ValuePtr eval() override {}
+
     private:
     };
+
 
     class ForStatementAST : public ExprAST
     {
     public:
         ValuePtr eval() override {}
+
     private:
     };
+
 
     class DoWhileStatementAST : public ExprAST
     {
     public:
         ValuePtr eval() override {}
+
     private:
     };
 

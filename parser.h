@@ -8,40 +8,52 @@
 namespace lr
 {
 
-class Parser
-{
-public:
+    class Parser
+    {
+    public:
 
-    ExprASTPtr  parse();
+        VecExprASTPtr   parse();
 
-    ExprASTPtr  parsePrimary();
+        BlockASTPtr     parseBlock();
 
-    ExprASTPtr  parseBinOpRHS(ExprASTPtr lhs, int precedence);
+        ExprASTPtr      parsePrimary();
 
-    ExprASTPtr  parseExpression();
+        ExprASTPtr      parseBinOpRHS(ExprASTPtr lhs, int precedence);
 
-    ExprASTPtr  parseParen();
+        ExprASTPtr      parseExpression();
 
-    ExprASTPtr  parseNumber();
+        ExprASTPtr      parseParen();
 
-    ExprASTPtr  parseIdentifier();
+        ExprASTPtr      parseNumber();
 
-    ExprASTPtr  parseIfStatement();
+        ExprASTPtr      parseIdentifier();
 
-    ExprASTPtr  parseWhileStatement();
+        ExprASTPtr      parseIfStatement();
 
-    BlockASTPtr parseBlock();
+        ExprASTPtr      parseWhileStatement();
 
-public:
-    explicit Parser(Scanner&);
+        ExprASTPtr      parseAssignStatement();
 
-private:
-    Scanner &scanner_;
-};
+    public:
+        explicit Parser(Scanner&);
 
+        static void setErrorFlag(bool flag);
+
+        inline static bool getErrorFlag();
+
+    private:
+
+        bool expectToken(TokenValue val, std::string str, bool next = false);
+
+        bool validateToken(TokenValue val, bool next = false);
+
+    private:
+        Scanner         &scanner_;
+        static bool     errorFlag;
+    };
+
+    bool Parser::getErrorFlag() { return errorFlag; }
 
 }
-
-
 
 #endif //LLANGUAGE_PARSER_H

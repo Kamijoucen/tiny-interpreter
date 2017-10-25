@@ -22,6 +22,10 @@ namespace lr
 
         Token   getToken() const;
 
+        static void setErrorFlag(bool);
+
+        inline static bool getErrorFlag();
+
     private:
 
         void getNextChar();
@@ -73,9 +77,10 @@ namespace lr
         std::string     buffer_;
         std::string     filename_;
         Dictionary      dictionary_;
-        bool            errorFlag;
+        static bool     errorFlag;
     };
 
+    inline bool Scanner::getErrorFlag() { return errorFlag; }
     inline Token Scanner::getToken() const { return currentToken_; }
     inline const Dictionary &Scanner::getDic() const { return dictionary_; }
 
