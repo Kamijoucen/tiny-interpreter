@@ -71,12 +71,11 @@ namespace lr
     {
         scanner_.next();    // eat (
         ExprASTPtr ptr = parseExpression();
-        if (scanner_.getToken().getTokenValue() != TokenValue::RIGHT_PAREN)
+        if (!expectToken(TokenValue::RIGHT_PAREN, ")", true))
         {
             errorSyntax("括号未匹配:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
-        scanner_.next();    // eat )
         return ptr;
     }
 
@@ -193,7 +192,7 @@ namespace lr
         {
             scanner_.next();
         }
-        return false;
+        return true;
     }
 
     ExprASTPtr Parser::parseAssignStatement()
