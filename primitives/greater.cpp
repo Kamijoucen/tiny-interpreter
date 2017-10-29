@@ -21,7 +21,7 @@ namespace lr
 
         // todo 类型检查
 
-        if (t1 == Int && t2 == Int){}
+        if (t1 == Int && t2 == Int)
         {
             const auto l = static_cast<IntValue*>(v1.get());
             const auto r = static_cast<IntValue*>(v2.get());
