@@ -36,10 +36,8 @@ namespace lr
     {
         DELIMITER,          // 分隔符
         KEYWORDS,
-        IDENTIFIER,
         OPERATORS,
-        END_OF_FILE,
-        STRING,
+        UNRESERVED,
         NUMBER,
         UNKNOWN,
     };
@@ -64,7 +62,6 @@ namespace lr
         LEFT_PAREN,         // (
         RIGHT_PAREN,        // )
         ASSIGN,             // =
-        UNRESERVED,
         ADD,                // +
         MINUS,              // -
         MULTIPLY,           // *
@@ -90,7 +87,11 @@ namespace lr
 
         // number
         FLOAT,
-        INTEGER
+        INTEGER,
+
+        IDENTIFIER,
+        END_OF_FILE,
+        STRING
     };
 
     class Token

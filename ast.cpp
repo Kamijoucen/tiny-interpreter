@@ -6,6 +6,8 @@
 #include "primitives/minus.h"
 #include "primitives/multiply.h"
 #include "primitives/divide.h"
+#include "primitives/less.h"
+#include "primitives/greater.h"
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
@@ -45,10 +47,12 @@ namespace lr
     {
         switch (op_)
         {
-            case TokenValue::MINUS:     return Minus::   apply(left_->eval(), right_->eval());
-            case TokenValue::ADD:       return Add::     apply(left_->eval(), right_->eval());
-            case TokenValue::MULTIPLY:  return Multiply::apply(left_->eval(), right_->eval());
-            case TokenValue::DIVIDE:    return Divide::  apply(left_->eval(), right_->eval());
+            case TokenValue::MINUS:         return Minus::   apply(left_->eval(), right_->eval());
+            case TokenValue::ADD:           return Add::     apply(left_->eval(), right_->eval());
+            case TokenValue::MULTIPLY:      return Multiply::apply(left_->eval(), right_->eval());
+            case TokenValue::DIVIDE:        return Divide::  apply(left_->eval(), right_->eval());
+            case TokenValue::GREATER_THAN:  return Greater:: apply(left_->eval(), right_->eval());
+            case TokenValue::LESS_THAN:     return Less::    apply(left_->eval(), right_->eval());
             default:                    return nullptr;
         }
     }
@@ -69,4 +73,8 @@ namespace lr
     {
         return ExprAST::eval();
     }
+
+    IfStatementAST::IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart) : condition_(std::move(condition_)),
+                                                                                thenPart_(std::move(thenPart)),
+                                                                                elsePart_(nullptr) {}
 }

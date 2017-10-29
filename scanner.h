@@ -46,6 +46,8 @@ namespace lr
 
         void handleRemark();
 
+        void handleBlockRemark();
+
         void handleOperation();
 
         void handleEndOfFile();

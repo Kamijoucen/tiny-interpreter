@@ -56,8 +56,8 @@ namespace lr {
 
     std::tuple<TokenType, TokenValue, int> Dictionary::lookup(std::string &name) const
     {
-        TokenType   tokenType   = TokenType::IDENTIFIER;
-        TokenValue  tokenValue  = TokenValue::UNRESERVED;
+        TokenType   tokenType   = TokenType::UNRESERVED;
+        TokenValue  tokenValue  = TokenValue::IDENTIFIER;
         int         precedence  = -1;
 
         auto result = dictionary.find(name);

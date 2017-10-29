@@ -42,8 +42,8 @@ inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenVal
         case lr::TokenValue::ASSIGN:
             value = "ASSIGN";
             break;
-        case lr::TokenValue::UNRESERVED:
-            value = "UNRESERVED";
+        case lr::TokenValue::IDENTIFIER:
+            value = "IDENTIFIER";
             break;
         case lr::TokenValue::ADD:
             value = "ADD";
@@ -111,6 +111,12 @@ inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenVal
         case TokenValue::CLASS:
             value = "CLASS";
             break;
+        case TokenValue::STRING:
+            value = "STRING";
+            break;
+        case TokenValue::END_OF_FILE:
+            value = "END_OF_FILE";
+            break;
     }
     std::cout << value;
     return io;
@@ -124,17 +130,11 @@ inline std::ostream &operator<<(std::ostream &io, const lr::TokenType &tokenType
         case lr::TokenType::KEYWORDS:
             type = "KEYWORDS";
             break;
-        case lr::TokenType::IDENTIFIER:
-            type = "IDENTIFIER";
+        case lr::TokenType::UNRESERVED:
+            type = "UNRESERVED";
             break;
         case lr::TokenType::OPERATORS:
             type = "OPERATORS";
-            break;
-        case lr::TokenType::END_OF_FILE:
-            type = "END_OF_FILE";
-            break;
-        case lr::TokenType::STRING:
-            type = "STRING";
             break;
         case lr::TokenType::NUMBER:
             type = "NUMBER";

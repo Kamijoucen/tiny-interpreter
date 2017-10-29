@@ -96,6 +96,7 @@ namespace lr
         BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, const TokenLocation &tokenLocation);
 
     private:
+
         ExprASTPtr  left_;
         ExprASTPtr  right_;
         TokenValue  op_;
@@ -121,7 +122,7 @@ namespace lr
     class FloatNumExprAST : public ExprAST
     {
     public:
-        inline float getVal() const ;
+        inline float getVal() const;
 
     public:
 		ValuePtr eval() override;
@@ -136,9 +137,15 @@ namespace lr
     class IfStatementAST : public ExprAST
     {
     public:
+        IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart_);
+
+    public:
         ValuePtr eval() override {}
 
     private:
+        ExprASTPtr condition_;
+        ExprASTPtr thenPart_;
+        ExprASTPtr elsePart_;
     };
 
 

@@ -138,7 +138,7 @@ namespace lr
             getNextChar();
         }
         getNextChar(); // eat "
-        makeToken(TokenType::STRING, TokenValue::UNRESERVED, buffer_, -1, tokenLocation_);
+        makeToken(TokenType::UNRESERVED, TokenValue::STRING, buffer_, -1, tokenLocation_);
     }
 
     void Scanner::handleNumber()
@@ -210,7 +210,7 @@ namespace lr
     void Scanner::handleEndOfFile()
     {
         tokenLocation_ = makeTokenLocation();
-        makeToken(TokenType::END_OF_FILE, TokenValue::UNRESERVED, "END_OF_FILE", -1, tokenLocation_);
+        makeToken(TokenType::UNRESERVED, TokenValue::END_OF_FILE, "END_OF_FILE", -1, tokenLocation_);
         input_.close();
     }
 
@@ -220,6 +220,11 @@ namespace lr
     }
 
     void Scanner::setErrorFlag(bool flag) { errorFlag = flag; }
+
+    void Scanner::handleBlockRemark()
+    {
+        // todo
+    }
 
 }
 

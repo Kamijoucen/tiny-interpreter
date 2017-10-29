@@ -39,6 +39,7 @@ namespace lr
                     default:
                         return nullptr;
                 }
+            case TokenType::OPERATORS:
             case TokenType::NUMBER:
                 return parseNumber();
             default:
@@ -53,18 +54,30 @@ namespace lr
 
     ExprASTPtr Parser::parseNumber()
     {
+        bool isNeg = false;
+        if (validateToken(TokenValue::MINUS, true))
+        {
+            isNeg = true;
+        }
         Token token = scanner_.getToken();
         scanner_.next();
+
+        ExprASTPtr expr = nullptr;
         if (token.getTokenValue() == TokenValue::FLOAT)
         {
             float num = static_cast<float>(std::strtod(token.getStrValue().c_str(), nullptr));
-            return std::make_unique<FloatNumExprAST>(num, token.getTokenLocation());
+            expr = std::make_unique<FloatNumExprAST>(num, token.getTokenLocation());
         }
         else
         {
             int num = std::strtol(token.getStrValue().c_str(), nullptr, 10);
-            return std::make_unique<IntegerNumExprAST>(num, token.getTokenLocation());
+            expr = std::make_unique<IntegerNumExprAST>(num, token.getTokenLocation());
         }
+        if (isNeg)
+        {
+            // todo 处理负数
+        }
+        return expr;
     }
 
     ExprASTPtr Parser::parseParen()
@@ -82,6 +95,10 @@ namespace lr
     ExprASTPtr Parser::parseExpression()
     {
         ExprASTPtr ptr = parsePrimary();
+        if (!ptr)
+        {
+            return nullptr;
+        }
         return parseBinOpRHS(std::move(ptr), 1);
     }
 
@@ -105,6 +122,7 @@ namespace lr
             scanner_.next();
 
             ExprASTPtr  rhs         = parsePrimary();
+            // next op
             auto        nextOp      = scanner_.getToken();
             auto        nextOpMate  = scanner_.getDic().lookup(nextOp.getStrValue());
             int         nextOpPre   = std::get<2>(nextOpMate);
@@ -157,6 +175,13 @@ namespace lr
 
     ExprASTPtr Parser::parseIfStatement()
     {
+        if (expectToken(TokenValue::IF, "if", true))
+        {
+            errorSyntax("'if' not found:" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
+        }
+        ExprASTPtr condition = parseExpression();
+
         return lr::ExprASTPtr();
     }
 
@@ -166,6 +191,37 @@ namespace lr
     }
 
     void Parser::setErrorFlag(bool flag) { errorFlag = flag; }
+
+    ExprASTPtr Parser::parseAssignStatement()
+    {
+        if (!expectToken(TokenValue::VAR, "var", true))
+        {
+            errorSyntax("未知的标识符" + scanner_.getToken().getStrValue());
+            return nullptr;
+        }
+        auto        tok = scanner_.getToken();
+
+        if (!expectToken(TokenValue::IDENTIFIER, "", true))
+        {
+            errorSyntax("错误的标识符" + scanner_.getToken().getStrValue());
+            return nullptr;
+        }
+
+        ExprASTPtr  lhs = std::make_unique<VariableAST>(tok.getStrValue());
+
+        ExprASTPtr rhs = nullptr;
+        if (validateToken(TokenValue::ASSIGN, true))
+        {
+            rhs = parseExpression();
+            if (!rhs)
+            {
+                errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
+                return nullptr;
+            }
+        }
+        return std::make_unique<AssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
+    }
+
 
     bool Parser::expectToken(TokenValue val, std::string str, bool next)
     {
@@ -193,24 +249,6 @@ namespace lr
             scanner_.next();
         }
         return true;
-    }
-
-    ExprASTPtr Parser::parseAssignStatement()
-    {
-        if (!expectToken(TokenValue::VAR, "var", true))
-        {
-            errorSyntax("未知的标识符" + scanner_.getToken().getStrValue());
-            return nullptr;
-        }
-        auto        tok = scanner_.getToken();
-        ExprASTPtr  lhs = std::make_unique<VariableAST>(tok.getStrValue());
-
-        ExprASTPtr rhs = nullptr;
-        if (validateToken(TokenValue::ASSIGN, true))
-        {
-            rhs = parseExpression();
-        }
-        return std::make_unique<AssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
     }
 
 }
