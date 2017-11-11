@@ -7,16 +7,15 @@
 #include <ostream>
 #include "token.h"
 
-namespace lr {
+namespace lr
+{
 
     class Dictionary
     {
     public:
         Dictionary();
 
-        std::tuple<TokenType, TokenValue, int> lookup(std::string &name) const;
-
-        std::tuple<TokenType, TokenValue, int> lookup(std::string &&name) const;
+        std::tuple<TokenType, TokenValue, int> lookup(const std::string &name) const;
 
         bool haveToken(std::string &name) const;
 

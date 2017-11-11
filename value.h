@@ -17,7 +17,8 @@ namespace lr
         FLOAT,
         STRING,
         BOOL,
-        ANY
+        ANY,
+        UNKNOWN
     };
 
     class Value
@@ -27,6 +28,21 @@ namespace lr
         virtual ~Value() = default;
     private:
     };
+
+
+
+    class BoolValue : public Value
+    {
+    public:
+        ValueType getType() const override;
+    public:
+        explicit BoolValue(bool val);
+        bool value_;
+    private:
+        const ValueType type_ = ValueType::BOOL;
+    };
+    inline ValueType BoolValue::getType() const { return type_; }
+
 
 
     class IntValue : public Value
@@ -42,10 +58,12 @@ namespace lr
     inline ValueType IntValue::getType() const { return type_; }
 
 
+
     class FloatValue : public Value
     {
     public:
         ValueType getType() const override;
+
     public:
         explicit FloatValue(float val);
 
@@ -54,19 +72,6 @@ namespace lr
         const ValueType type_ = ValueType::FLOAT;
     };
     inline ValueType FloatValue::getType() const { return type_; }
-
-
-    class BoolValue : public Value
-    {
-    public:
-        ValueType getType() const override;
-    public:
-        explicit BoolValue(bool val);
-        bool value_;
-    private:
-        const ValueType type_ = ValueType::BOOL;
-    };
-    inline ValueType BoolValue::getType() const { return type_; }
 
 
 }

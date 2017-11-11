@@ -14,16 +14,18 @@ namespace lr
     class ExprAST;
     class NumberExprAST;
     class BlockAST;
+    class VariableAST;
 
     using ExprASTPtr        = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr  = std::unique_ptr<NumberExprAST>;
-    using VecExprASTPtr     = std::vector<std::unique_ptr<ExprAST>>;
     using BlockASTPtr       = std::unique_ptr<BlockAST>;
+    using VariableASTPtr    = std::unique_ptr<VariableAST>;
+    using VecExprASTPtr     = std::vector<std::unique_ptr<ExprAST>>;
 
     class ExprAST
     {
     public:
-        virtual ValuePtr eval() { return nullptr; }
+        virtual ValuePtr eval() {};
 
         inline TokenLocation getTokenLocation();
 
@@ -40,6 +42,7 @@ namespace lr
     inline TokenLocation ExprAST::getTokenLocation() { return tokenLocation_; }
 
 
+
     class BlockAST : public ExprAST
     {
     public:
@@ -53,6 +56,7 @@ namespace lr
         VecExprASTPtr vec_;
     };
     inline void BlockAST::addAST(ExprASTPtr ptr) { vec_.push_back(std::move(ptr)); }
+
 
 
     class VariableAST : public ExprAST
@@ -71,18 +75,35 @@ namespace lr
     inline std::string VariableAST::getVarName() const { return varName_; }
 
 
-    class AssignStatementAST : public ExprAST
+
+    class VariableDefinitionStatementAST : public ExprAST
     {
     public:
         ValuePtr eval() override;
 
     public:
-        AssignStatementAST(ExprASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
+        VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
 
     private:
-        ExprASTPtr lhs_;
-        ExprASTPtr rhs_;
+        VariableASTPtr  lhs_;
+        ExprASTPtr      rhs_;
     };
+
+
+
+    class VariableAssignStatementAST : public ExprAST
+    {
+    public:
+        ValuePtr eval() override;
+
+    public:
+        VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
+
+    private:
+        VariableASTPtr  lhs_;
+        ExprASTPtr      rhs_;
+    };
+
 
 
     class BinaryExprAST : public ExprAST
@@ -103,6 +124,7 @@ namespace lr
     };
 
 
+
     class IntegerNumExprAST : public ExprAST
     {
     public:
@@ -119,19 +141,37 @@ namespace lr
     inline int IntegerNumExprAST::getVal() const { return value_; }
 
 
+
     class FloatNumExprAST : public ExprAST
     {
     public:
-        inline float getVal() const;
+        FloatNumExprAST(float num, TokenLocation tokenLocation);
 
     public:
-		ValuePtr eval() override;
+        inline float getVal() const;
 
-        FloatNumExprAST(float num, TokenLocation tokenLocation);
+		ValuePtr eval() override;
     private:
         float value_;
     };
     inline float FloatNumExprAST::getVal() const { return value_; }
+
+
+
+    class BoolAST : public ExprAST
+    {
+    public:
+        BoolAST(bool val, const TokenLocation &lok);
+
+    public:
+        inline bool getVal() const;
+
+        ValuePtr eval() override;
+    private:
+        bool value_;
+    };
+    inline bool BoolAST::getVal() const { return value_; }
+
 
 
     class IfStatementAST : public ExprAST
@@ -149,6 +189,7 @@ namespace lr
     };
 
 
+
     class WhileStatementAST : public ExprAST
     {
     public:
@@ -158,6 +199,7 @@ namespace lr
     };
 
 
+
     class ForStatementAST : public ExprAST
     {
     public:
@@ -165,6 +207,7 @@ namespace lr
 
     private:
     };
+
 
 
     class DoWhileStatementAST : public ExprAST

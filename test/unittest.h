@@ -8,8 +8,18 @@
 
 using namespace lr;
 
-TEST(compExpr, expr)
+
+TEST(parse, parseAll)
 {
+    std::string f("../Resource/vars.l");
+    Scanner scanner(f);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    ASSERT_EQ(vec.size(), 6);
+}
+
+
+TEST(compExpr, expr) {
     std::string a("../Resource/comp.l");
     Scanner scanner(a);
     Parser parser(scanner);
@@ -33,17 +43,15 @@ TEST(varExpr, expr)
     Parser parser(scanner);
     ExprASTPtr exp = parser.parsePrimary();
     ASSERT_TRUE(exp != nullptr);
-    AssignStatementAST* asa = dynamic_cast<AssignStatementAST*>(exp.get());
+    VariableDefinitionStatementAST *asa = dynamic_cast<VariableDefinitionStatementAST *>(exp.get());
     ASSERT_TRUE(asa != nullptr);
 }
 
-TEST(scannerType, scanner)
-{
+TEST(scannerType, scanner) {
     std::string a("../Resource/var.l");
     Scanner scanner(a);
     scanner.next();
-    while (scanner.getToken().getTokenValue() != TokenValue::END_OF_FILE)
-    {
+    while (scanner.getToken().getTokenValue() != TokenValue::END_OF_FILE) {
         std::cout << scanner.getToken().getTokenValue() << std::endl;
         scanner.next();
     }

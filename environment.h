@@ -8,6 +8,9 @@
 
 namespace lr
 {
+
+    class GlobalEnvironment;
+
     class Environment
     {
     public:

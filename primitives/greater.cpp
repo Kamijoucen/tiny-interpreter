@@ -18,7 +18,6 @@ namespace lr
         ValueType t1 = v1->getType();
         ValueType t2 = v2->getType();
 
-
         // todo 类型检查
 
         if (t1 == Int && t2 == Int)

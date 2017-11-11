@@ -1,7 +1,8 @@
 
 #include "dictionary.h"
 
-namespace lr {
+namespace lr
+{
 
     Dictionary::Dictionary()
     {
@@ -44,17 +45,12 @@ namespace lr {
         addToken("!=",      std::make_tuple(TokenType::OPERATORS,    TokenValue::NOT_ASSIGN,       2));
     }
 
-    void lr::Dictionary::addToken(std::string name, std::tuple<TokenType, TokenValue, int> tokenMate)
+    void Dictionary::addToken(std::string name, std::tuple<TokenType, TokenValue, int> tokenMate)
     {
         dictionary.insert(std::pair<decltype(name), decltype(tokenMate)>(name, tokenMate));
     }
 
-    std::tuple<TokenType, TokenValue, int> Dictionary::lookup(std::string &&name) const
-    {
-        return lookup(name);
-    }
-
-    std::tuple<TokenType, TokenValue, int> Dictionary::lookup(std::string &name) const
+    std::tuple<TokenType, TokenValue, int> Dictionary::lookup(const std::string &name) const
     {
         TokenType   tokenType   = TokenType::UNRESERVED;
         TokenValue  tokenValue  = TokenValue::IDENTIFIER;

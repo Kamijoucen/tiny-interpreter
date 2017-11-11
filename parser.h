@@ -26,13 +26,15 @@ namespace lr
 
         ExprASTPtr      parseNumber();
 
-        ExprASTPtr      parseIdentifier();
-
         ExprASTPtr      parseIfStatement();
 
         ExprASTPtr      parseWhileStatement();
 
-        ExprASTPtr      parseAssignStatement();
+        ExprASTPtr      parseBool();
+
+        ExprASTPtr      parseVariableDefinitionStatement();
+
+        ExprASTPtr      parseVariableAssignStatement();
 
     public:
         explicit Parser(Scanner&);
@@ -43,7 +45,7 @@ namespace lr
 
     private:
 
-        bool expectToken(TokenValue val, std::string str, bool next = false);
+        bool expectToken(TokenValue val, bool next = false);
 
         bool validateToken(TokenValue val, bool next = false);
 
@@ -53,6 +55,13 @@ namespace lr
     };
 
     bool Parser::getErrorFlag() { return errorFlag; }
+
+    inline ExprASTPtr Parser::parseBool()
+    {
+        Token tok = scanner_.getToken();
+        scanner_.next();
+        return std::make_unique<BoolAST>(tok.getTokenValue() == TokenValue::TRUE, tok.getTokenLocation());
+    }
 
 }
 
