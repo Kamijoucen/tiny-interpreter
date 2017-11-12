@@ -10,7 +10,7 @@ tiny L
 2. 实现支持GC的LVM
 >自己实现支持GC的VM (todo...)
 3. LLVM
->... (todo...)
+>...
 
 License
 =================
