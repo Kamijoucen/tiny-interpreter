@@ -79,7 +79,7 @@ namespace lr
     class VariableDefinitionStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
     public:
         VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
@@ -123,7 +123,7 @@ namespace lr
     class BinaryExprAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
     public:
         BinaryExprAST() = default;
@@ -229,9 +229,23 @@ namespace lr
     public:
         ValuePtr eval(EnvPtr ptr) override {}
 
+
     private:
     };
 
+
+    // todo 简单实现方便调试
+    class PrintStatementAST : public ExprAST
+    {
+    public:
+        explicit PrintStatementAST(ExprASTPtr val);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
+    private:
+        ExprASTPtr val_;
+    };
 }
 
 #endif //SIMPLEL_AST_H

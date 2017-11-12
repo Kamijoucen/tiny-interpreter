@@ -40,10 +40,10 @@ namespace lr
               op_(tokenValue) {}
 
 
-    ValuePtr BinaryExprAST::eval(EnvPtr ptr)
+    ValuePtr BinaryExprAST::eval(EnvPtr env)
     {
-        std::vector<ValuePtr> vec = {left_->eval(ptr), right_->eval(ptr)};
-        auto fun = ptr->lookupOp(op_);
+        std::vector<ValuePtr> vec = {left_->eval(env), right_->eval(env)};
+        auto fun = env->lookupOp(op_);
         if (!fun)
         {
             errorSyntax("没有发现操作符 todo");
@@ -66,11 +66,9 @@ namespace lr
               rhs_(std::move(rhs)) {}
 
 
-    ValuePtr VariableDefinitionStatementAST::eval(EnvPtr ptr)
+    ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env)
     {
-        std::string vname = lhs_->getVarName();
-
-
+        env->putValue(lhs_->getVarName(), rhs_->eval(env));
         return nullptr;
     }
 
@@ -108,4 +106,13 @@ namespace lr
         }
         return var;
     }
+
+    ValuePtr PrintStatementAST::eval(EnvPtr env)
+    {
+        using namespace std;
+        cout << val_->eval(env)->toString() << endl;
+        return nullptr;
+    }
+
+    PrintStatementAST::PrintStatementAST(ExprASTPtr val) : val_(std::move(val)) {}
 }

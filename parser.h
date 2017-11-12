@@ -12,31 +12,31 @@ namespace lr
     {
     public:
 
-        VecExprASTPtr   parse();
+        VecExprASTPtr parse();
 
-        BlockASTPtr     parseBlock();
+        BlockASTPtr   parseBlock();
 
-        ExprASTPtr      parsePrimary();
+        ExprASTPtr    parsePrimary();
 
-        ExprASTPtr      parseBinOpRHS(ExprASTPtr lhs, int precedence);
+        ExprASTPtr    parseBinOpRHS(ExprASTPtr lhs, int precedence);
 
-        ExprASTPtr      parseExpression();
+        ExprASTPtr    parseExpression();
 
-        ExprASTPtr      parseParen();
+        ExprASTPtr    parseParen();
 
-        ExprASTPtr      parseNumber();
+        ExprASTPtr    parseNumber();
 
-        ExprASTPtr      parseIfStatement();
+        ExprASTPtr    parseIfStatement();
 
-        ExprASTPtr      parseWhileStatement();
+        ExprASTPtr    parseWhileStatement();
 
-        ExprASTPtr      parseBool();
+        ExprASTPtr    parseBool();
 
-        ExprASTPtr      parseVariableDefinitionStatement();
+        ExprASTPtr    parseVariableDefinitionStatement();
 
-        ExprASTPtr      parseVariableAssignStatement();
+        ExprASTPtr    parseVariableUse();
 
-        ExprASTPtr      parseVariableUse();
+        ExprASTPtr    parsePrintStatement();
 
     public:
         explicit Parser(Scanner&);

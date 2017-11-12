@@ -10,6 +10,19 @@
 using namespace lr;
 
 
+TEST(eval, fz)
+{
+    std::string f("../Resource/fz.l");
+    Scanner scanner(f);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    EnvPtr env = Environment::buildInitScope();
+    for (auto &stat : vec)
+    {
+        stat->eval(env);
+    }
+}
+
 TEST(parse, parseAll)
 {
     std::string f("../Resource/vars.l");

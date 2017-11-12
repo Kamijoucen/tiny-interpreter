@@ -46,6 +46,8 @@ namespace lr
                     case TokenValue::TRUE:
                     case TokenValue::FALSE:
                         return parseBool();
+                    case TokenValue::PRINT:
+                        return parsePrintStatement();
                     default:
                         return nullptr;
                 }
@@ -66,7 +68,7 @@ namespace lr
                 switch (tokenValue)
                 {
                     case TokenValue::IDENTIFIER:
-                        return parseVariableAssignStatement();
+                        return parseVariableUse();
                     default:
                         return nullptr;
                 }
@@ -130,9 +132,9 @@ namespace lr
     {
         while (true)
         {
-            auto curOp      = scanner_.getToken();
-            auto opMate     = scanner_.getDic().lookup(curOp.getStrValue());
-            int  curOpPre   = std::get<2>(opMate);
+            auto curOp    = scanner_.getToken();
+            auto opMate   = scanner_.getDic().lookup(curOp.getStrValue());
+            int  curOpPre = std::get<2>(opMate);
 
             if (curOpPre < precedence)
             {
@@ -145,11 +147,11 @@ namespace lr
             }
             scanner_.next();
 
-            ExprASTPtr  rhs         = parsePrimary();
+            ExprASTPtr  rhs        = parsePrimary();
             // next op
-            auto        nextOp      = scanner_.getToken();
-            auto        nextOpMate  = scanner_.getDic().lookup(nextOp.getStrValue());
-            int         nextOpPre   = std::get<2>(nextOpMate);
+            auto        nextOp     = scanner_.getToken();
+            auto        nextOpMate = scanner_.getDic().lookup(nextOp.getStrValue());
+            int         nextOpPre  = std::get<2>(nextOpMate);
 
             if (curOpPre < nextOpPre)
             {
@@ -171,7 +173,6 @@ namespace lr
         {
             return nullptr;
         }
-
         auto blok = std::make_unique<BlockAST>(loc);
 
         while (validateToken(TokenValue::RIGHT_BRACE, true))
@@ -253,48 +254,56 @@ namespace lr
 
 
 
-    ExprASTPtr Parser::parseVariableAssignStatement()
+    ExprASTPtr Parser::parseVariableUse()
     {
-        if (!expectToken(TokenValue::IDENTIFIER))
+        Token tok = scanner_.getToken();
+
+        if (!expectToken(TokenValue::IDENTIFIER, true))
         {
             errorSyntax("未找到变量名字" + scanner_.getToken().getTokenLocation().toString());
         }
 
-        TokenLocation lok = scanner_.getToken().getTokenLocation();
-        VariableASTPtr lhs = std::make_unique<VariableAST>(scanner_.getToken().getStrValue());
-
-        if (!expectToken(TokenValue::ASSIGN, true))
+        if (validateToken(TokenValue::ASSIGN, true))
         {
-            errorSyntax("没有找到赋值运算符" + scanner_.getToken().getTokenLocation().toString());
+            VariableASTPtr lhs = std::make_unique<VariableAST>(tok.getStrValue());
+
+            ExprASTPtr rhs = parseExpression();
+
+            if (!rhs)
+            {
+                errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
+                return nullptr;
+            }
+
+            if (!expectToken(TokenValue::SEMICOLON, true))
+            {
+                errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
+                return nullptr;
+            }
+            return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
+        }
+        else
+        {
+            return std::make_unique<VariableUseStatementAST>(tok.getStrValue());
+        }
+    }
+
+
+    ExprASTPtr Parser::parsePrintStatement()
+    {
+        if (!expectToken(TokenValue::PRINT, true))
+        {
+            errorSyntax("'print' not found");
             return nullptr;
         }
-
-        ExprASTPtr rhs = parseExpression();
-
-        if (!rhs)
-        {
-            errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        ExprASTPtr exp = parsePrimary();
 
         if (!expectToken(TokenValue::SEMICOLON, true))
         {
             errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
-        return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), lok);
-    }
-
-
-    ExprASTPtr Parser::parseVariableUse()
-    {
-        if (!expectToken(TokenValue::IDENTIFIER))
-        {
-            errorSyntax("未找到变量名字" + scanner_.getToken().getTokenLocation().toString());
-        }
-
-        TokenLocation lok = scanner_.getToken().getTokenLocation();
-        return std::make_unique<VariableUseStatementAST>(scanner_.getToken().getStrValue());
+        return std::make_unique<PrintStatementAST>(std::move(exp));
     }
 
 

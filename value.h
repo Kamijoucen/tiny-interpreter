@@ -26,8 +26,13 @@ namespace lr
     class Value
     {
     public:
-		virtual ValueType getType() const { return ValueType::ANY;  };
+		virtual ValueType getType() const = 0;
+
+        virtual std::string toString() const = 0;
+
+    public:
         virtual ~Value() = default;
+
     private:
     };
 
@@ -37,13 +42,19 @@ namespace lr
     {
     public:
         ValueType getType() const override;
+
     public:
         explicit BoolValue(bool val);
+
+        inline std::string toString() const override;
+
         bool value_;
+
     private:
         const ValueType type_ = ValueType::BOOL;
     };
     inline ValueType BoolValue::getType() const { return type_; }
+    inline std::string BoolValue::toString() const { return std::to_string(value_); }
 
 
 
@@ -51,13 +62,19 @@ namespace lr
     {
     public:
         ValueType getType() const override;
+
     public:
         explicit IntValue(int val);
+
+        inline std::string toString() const override;
+
         int value_;
+
     private:
         const ValueType type_ = ValueType::INT;
     };
     inline ValueType IntValue::getType() const { return type_; }
+    inline std::string IntValue::toString() const { return std::to_string(value_); }
 
 
 
@@ -69,11 +86,14 @@ namespace lr
     public:
         explicit FloatValue(float val);
 
+        inline std::string toString() const override;
+
         float value_;
     private:
         const ValueType type_ = ValueType::FLOAT;
     };
     inline ValueType FloatValue::getType() const { return type_; }
+    inline std::string FloatValue::toString() const { return std::to_string(value_); }
 
 
 }
