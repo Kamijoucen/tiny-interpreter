@@ -2,15 +2,16 @@
 #ifndef LLANGUAGE_DIVIDE_H
 #define LLANGUAGE_DIVIDE_H
 
+#include "primFun.h"
 #include "../value.h"
 
 namespace lr
 {
-    struct Divide
+    struct Divide : PrimFun
     {
-        static ValuePtr apply(const ValuePtr &v1, const ValuePtr &v2);
+        ValuePtr apply(const ValuePtrVec &vec, const TokenLocation& lok) override;
 
-        static ValueType typeCheck(const ValuePtr &v1, const ValuePtr &v2);
+        ValueType typeCheck(const ValuePtrVec &vec) override;
     };
 
 }

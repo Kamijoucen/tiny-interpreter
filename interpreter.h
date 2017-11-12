@@ -1,0 +1,12 @@
+
+#ifndef LLANGUAGE_INTERPRETER_H
+#define LLANGUAGE_INTERPRETER_H
+
+
+class Interpreter
+{
+
+};
+
+
+#endif //LLANGUAGE_INTERPRETER_H

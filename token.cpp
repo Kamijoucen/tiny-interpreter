@@ -32,7 +32,7 @@ namespace lr
         return *this;
     }
 
-    std::string TokenLocation::toString()
+    std::string TokenLocation::toString() const
     {
         std::stringstream ss;
         ss << "{" << line_ << ", " << column_ << ", " << filename_ << "}";

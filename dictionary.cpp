@@ -18,6 +18,8 @@ namespace lr
         addToken("import",  std::make_tuple(TokenType::KEYWORDS,     TokenValue::IMPORT,           -1));
         addToken("false",   std::make_tuple(TokenType::KEYWORDS,     TokenValue::FALSE,            -1));
         addToken("true",    std::make_tuple(TokenType::KEYWORDS,     TokenValue::TRUE,             -1));
+        addToken("print",   std::make_tuple(TokenType::KEYWORDS,     TokenValue::PRINT,            -1));
+        addToken("input",   std::make_tuple(TokenType::KEYWORDS,     TokenValue::INPUT,            -1));
 
         addToken(";",       std::make_tuple(TokenType::DELIMITER,    TokenValue::SEMICOLON,        -1));
         addToken("(",       std::make_tuple(TokenType::DELIMITER,    TokenValue::LEFT_PAREN,       -1));

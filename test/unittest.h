@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 #include <iostream>
+#include "../environment.h"
 #include "test.h"
 #include "../parser.h"
 
@@ -25,7 +26,7 @@ TEST(compExpr, expr) {
     Parser parser(scanner);
     ExprASTPtr val = parser.parseExpression();
     ASSERT_TRUE(val != nullptr);
-    ValuePtr vp = val->eval();
+    ValuePtr vp = val->eval(Environment::buildInitScope());
     ASSERT_TRUE(vp != nullptr);
     if (vp->getType() == ValueType::FLOAT) {
         FloatValue *fv = static_cast<FloatValue *>(vp.get());

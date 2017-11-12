@@ -2,15 +2,16 @@
 #ifndef LLANGUAGE_MULTIPLY_H
 #define LLANGUAGE_MULTIPLY_H
 
+#include "primFun.h"
 #include "../value.h"
 
 namespace lr
 {
-    struct Multiply
+    struct Multiply : PrimFun
     {
-        static ValuePtr apply(const ValuePtr &v1, const ValuePtr &v2);
+        ValuePtr apply(const ValuePtrVec &vec, const TokenLocation &lok) override;
 
-        static ValueType typeCheck(const ValuePtr &v1, const ValuePtr &v2);
+        ValueType typeCheck(const ValuePtrVec &vec) override;
     };
 }
 

@@ -36,6 +36,8 @@ namespace lr
 
         ExprASTPtr      parseVariableAssignStatement();
 
+        ExprASTPtr      parseVariableUse();
+
     public:
         explicit Parser(Scanner&);
 

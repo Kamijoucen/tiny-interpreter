@@ -5,27 +5,40 @@
 #include <string>
 #include <map>
 #include "value.h"
+#include "token.h"
+#include "primitives/primFun.h"
 
 namespace lr
 {
 
-    class GlobalEnvironment;
+    class Environment;
+
+    using EnvPtr = std::shared_ptr<Environment>;
 
     class Environment
     {
     public:
-        ValuePtr get() const;
+        Environment() = default;
 
-        void     put(std::string key, ValuePtr val);
+        explicit Environment(EnvPtr penv);
+
+    public:
+        static EnvPtr buildInitScope();
+
+        ValuePtr lookup(const std::string &key) const;
+
+        void     putValue(const std::string &key, const ValuePtr &ptr);
+
+        void     putOp(const TokenValue &key, const PrimFunPtr &pfun);
+
+        PrimFunPtr lookupOp(const TokenValue &key);
+
     protected:
-        std::map<std::string, ValuePtr> envs;
+        EnvPtr parent_ = nullptr;
+        std::map<std::string, ValuePtr>   varibs_;
+        std::map<TokenValue, PrimFunPtr>  prifun_;
     };
 
-
-    class GlobalEnvironment : public Environment
-    {
-
-    };
 
 }
 

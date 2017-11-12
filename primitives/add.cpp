@@ -1,12 +1,21 @@
 #include "add.h"
+#include "../util/error.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
-    ValuePtr Add::apply(const ValuePtr &v1, const ValuePtr &v2)
+    ValuePtr Add::apply(const ValuePtrVec &vec, const TokenLocation &lok)
     {
+        if (vec.size() != 2)
+        {
+            errorSyntax("'+'必须作用于两个以上的值");
+            return nullptr;
+        }
+
+        ValuePtr  v1 = vec[0];
+        ValuePtr  v2 = vec[1];
         ValueType t1 = v1->getType();
         ValueType t2 = v2->getType();
         if (t1 == Int && t2 == Int)
@@ -36,18 +45,20 @@ namespace lr
             const auto r = static_cast<FloatValue*>(v2.get());
             return std::make_shared<FloatValue>(l->value_ + r->value_);
         }
+
+        errorSyntax("类型错误:" + lok.toString());
         return nullptr;
     }
 
-    ValueType Add::typeCheck(const ValuePtr &v1, const ValuePtr &v2)
+    ValueType Add::typeCheck(const ValuePtrVec &vec)
     {
-        if (v1->getType() == Int && v2->getType() == Int)
+        if (vec.size() != 2)
         {
-            return ValueType::INT;
+            errorSyntax("'+'必须作用于两个以上的值");
+            return ValueType::UNKNOWN;
         }
-        else
-        {
-            return ValueType::FLOAT;
-        }
+
+        // todo xixixi
+        return ValueType::UNKNOWN;
     }
 }

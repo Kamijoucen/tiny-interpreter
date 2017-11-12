@@ -1,13 +1,21 @@
 
 #include "divide.h"
+#include "../util/error.h"
+
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
-    ValuePtr Divide::apply(const ValuePtr &v1, const ValuePtr &v2)
+    ValuePtr Divide::apply(const ValuePtrVec &vec, const TokenLocation& lok)
     {
-        // todo
+        if (vec.size() != 2)
+        {
+            errorSyntax("'/'必须作用于两个以上的值");
+            return nullptr;
+        }
+        ValuePtr  v1 = vec[0];
+        ValuePtr  v2 = vec[1];
         ValueType t1 = v1->getType();
         ValueType t2 = v2->getType();
         if (t1 == Int && t2 == Int)
@@ -40,15 +48,16 @@ namespace lr
         return nullptr;
     }
 
-    ValueType Divide::typeCheck(const ValuePtr &v1, const ValuePtr &v2)
+    ValueType Divide::typeCheck(const ValuePtrVec &vec)
     {
-        if (v1->getType() == Int && v2->getType() == Int)
+
+        if (vec.size() != 2)
         {
-            return ValueType::INT;
+            errorSyntax("'/'必须作用于两个以上的值");
+            return ValueType::UNKNOWN;
         }
-        else
-        {
-            return ValueType::FLOAT;
-        }
+
+        // todo
+        return ValueType::UNKNOWN;
     }
 }

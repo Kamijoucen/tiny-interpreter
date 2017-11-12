@@ -2,16 +2,17 @@
 #ifndef LLANGUAGE_ADD_H
 #define LLANGUAGE_ADD_H
 
-#include "../value.h"
+#include "primFun.h"
 #include "../environment.h"
 
 namespace lr
 {
-    struct Add
+    struct Add : PrimFun
     {
-        static ValuePtr apply(const ValuePtr &v1, const ValuePtr &v2);
 
-        static ValueType typeCheck(const ValuePtr &v1, const ValuePtr &v2);
+        ValuePtr apply(const ValuePtrVec &vec, const TokenLocation& lok) override;
+
+        ValueType typeCheck(const ValuePtrVec &vec) override;
     };
 }
 

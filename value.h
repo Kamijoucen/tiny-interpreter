@@ -3,6 +3,7 @@
 #define LLANGUAGE_RESULT_H
 
 #include <memory>
+#include <ostream>
 
 namespace lr
 {
@@ -20,6 +21,7 @@ namespace lr
         ANY,
         UNKNOWN
     };
+
 
     class Value
     {

@@ -2,7 +2,7 @@
 #ifndef SIMPLEL_AST_H
 #define SIMPLEL_AST_H
 
-
+#include "environment.h"
 #include "token.h"
 #include "value.h"
 #include <memory>
@@ -25,7 +25,7 @@ namespace lr
     class ExprAST
     {
     public:
-        virtual ValuePtr eval() {};
+        virtual ValuePtr eval(EnvPtr ptr) {};
 
         inline TokenLocation getTokenLocation();
 
@@ -48,7 +48,7 @@ namespace lr
     public:
         explicit BlockAST(TokenLocation &);
     public:
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
 
         void addAST(ExprASTPtr ptr);
 
@@ -62,7 +62,7 @@ namespace lr
     class VariableAST : public ExprAST
     {
     public:
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
 
         inline std::string getVarName() const;
 
@@ -79,7 +79,7 @@ namespace lr
     class VariableDefinitionStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
 
     public:
         VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
@@ -94,7 +94,7 @@ namespace lr
     class VariableAssignStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
 
     public:
         VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
@@ -106,10 +106,24 @@ namespace lr
 
 
 
+    class VariableUseStatementAST : public ExprAST
+    {
+    public:
+        ValuePtr eval(EnvPtr ptr) override;
+
+    public:
+        explicit VariableUseStatementAST(const std::string &varname);
+
+    private:
+        std::string varname_;
+    };
+
+
+
     class BinaryExprAST : public ExprAST
     {
     public:
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
 
     public:
         BinaryExprAST() = default;
@@ -131,7 +145,7 @@ namespace lr
         inline int getVal() const;
 
     public:
-		ValuePtr eval() override;
+		ValuePtr eval(EnvPtr ptr) override;
 
         IntegerNumExprAST(int num, TokenLocation tokenLocation);
 
@@ -150,7 +164,7 @@ namespace lr
     public:
         inline float getVal() const;
 
-		ValuePtr eval() override;
+		ValuePtr eval(EnvPtr ptr) override;
     private:
         float value_;
     };
@@ -166,7 +180,7 @@ namespace lr
     public:
         inline bool getVal() const;
 
-        ValuePtr eval() override;
+        ValuePtr eval(EnvPtr ptr) override;
     private:
         bool value_;
     };
@@ -180,7 +194,7 @@ namespace lr
         IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart_);
 
     public:
-        ValuePtr eval() override {}
+        ValuePtr eval(EnvPtr ptr) override {}
 
     private:
         ExprASTPtr condition_;
@@ -193,7 +207,7 @@ namespace lr
     class WhileStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval() override {}
+        ValuePtr eval(EnvPtr ptr) override {}
 
     private:
     };
@@ -203,7 +217,7 @@ namespace lr
     class ForStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval() override {}
+        ValuePtr eval(EnvPtr ptr) override {}
 
     private:
     };
@@ -213,7 +227,7 @@ namespace lr
     class DoWhileStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval() override {}
+        ValuePtr eval(EnvPtr ptr) override {}
 
     private:
     };

@@ -1,23 +1,22 @@
 
 #include "less.h"
-#include "util.h"
+#include "../util/error.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
-    ValueType Less::typeCheck(const ValuePtr &v1, const ValuePtr &v2)
-    {
-        return ValueType::BOOL;
-    }
 
-    ValuePtr Less::apply(const ValuePtr &v1, const ValuePtr &v2)
+    ValuePtr Less::apply(const ValuePtrVec &vec, const TokenLocation &lok)
     {
-        if (!isNumber(v1) || !isNumber(v2))
+        if (vec.size() != 2)
         {
+            errorSyntax("'<'必须作用于两个以上的值");
             return nullptr;
         }
+        ValuePtr  v1 = vec[0];
+        ValuePtr  v2 = vec[1];
         ValueType t1 = v1->getType();
         ValueType t2 = v2->getType();
 
@@ -49,6 +48,19 @@ namespace lr
             return std::make_shared<BoolValue>(l->value_ < r->value_);
         }
         return nullptr;
+    }
+
+    ValueType Less::typeCheck(const ValuePtrVec &vec)
+    {
+        if (vec.size() != 2)
+        {
+            errorSyntax("'<'必须作用于两个以上的值");
+            return ValueType::UNKNOWN;
+        }
+
+        // todo
+
+        return ValueType::UNKNOWN;
     }
 
 }

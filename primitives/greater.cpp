@@ -1,24 +1,25 @@
 
 #include "../util/error.h"
 #include "greater.h"
-#include "util.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
-    ValueType Greater::typeCheck(const ValuePtr &v1, const ValuePtr &v2)
-    {
-        return ValueType::BOOL;
-    }
 
-    ValuePtr Greater::apply(const ValuePtr &v1, const ValuePtr &v2)
+    ValuePtr Greater::apply(const ValuePtrVec& vec, const TokenLocation &lok)
     {
+        if (vec.size() != 2)
+        {
+            errorSyntax("'*'必须作用于两个以上的值");
+            return nullptr;
+        }
+
+        ValuePtr  v1 = vec[0];
+        ValuePtr  v2 = vec[1];
         ValueType t1 = v1->getType();
         ValueType t2 = v2->getType();
-
-        // todo 类型检查
 
         if (t1 == Int && t2 == Int)
         {
@@ -48,5 +49,18 @@ namespace lr
             return std::make_shared<BoolValue>(l->value_ > r->value_);
         }
         return nullptr;
+    }
+
+    ValueType Greater::typeCheck(const ValuePtrVec& vec)
+    {
+        if (vec.size() != 2)
+        {
+            errorSyntax("'*'必须作用于两个以上的值");
+            return ValueType::UNKNOWN;
+        }
+
+        // todo
+
+        return ValueType::UNKNOWN;
     }
 }

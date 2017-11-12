@@ -1,7 +1,6 @@
 
 #include "parser.h"
 #include "util/error.h"
-#include <iostream>
 
 namespace lr
 {
@@ -203,6 +202,8 @@ namespace lr
         }
         ExprASTPtr condition = parseExpression();
 
+        // todo
+
         return lr::ExprASTPtr();
     }
 
@@ -260,7 +261,7 @@ namespace lr
         }
 
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-        VariableASTPtr variablePtr = std::make_unique<VariableAST>(scanner_.getToken().getStrValue());
+        VariableASTPtr lhs = std::make_unique<VariableAST>(scanner_.getToken().getStrValue());
 
         if (!expectToken(TokenValue::ASSIGN, true))
         {
@@ -268,9 +269,9 @@ namespace lr
             return nullptr;
         }
 
-        ExprASTPtr exp = parseExpression();
+        ExprASTPtr rhs = parseExpression();
 
-        if (!exp)
+        if (!rhs)
         {
             errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
@@ -281,7 +282,19 @@ namespace lr
             errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
-        return std::make_unique<VariableAssignStatementAST>(std::move(variablePtr), std::move(exp), lok);
+        return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), lok);
+    }
+
+
+    ExprASTPtr Parser::parseVariableUse()
+    {
+        if (!expectToken(TokenValue::IDENTIFIER))
+        {
+            errorSyntax("未找到变量名字" + scanner_.getToken().getTokenLocation().toString());
+        }
+
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        return std::make_unique<VariableUseStatementAST>(scanner_.getToken().getStrValue());
     }
 
 

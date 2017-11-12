@@ -24,7 +24,7 @@ namespace lr
 
         TokenLocation(int line, int column, std::string filename);
 
-        std::string toString();
+        std::string toString() const;
 
     private:
         int         line_;
@@ -57,6 +57,8 @@ namespace lr
         IMPORT,
         FALSE,
         TRUE,
+        PRINT,
+        INPUT,
 
         // symbols
         LEFT_PAREN,         // (

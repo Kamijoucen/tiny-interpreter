@@ -2,12 +2,7 @@
 #include <iostream>
 #include <utility>
 #include "ast.h"
-#include "primitives/add.h"
-#include "primitives/minus.h"
-#include "primitives/multiply.h"
-#include "primitives/divide.h"
-#include "primitives/less.h"
-#include "primitives/greater.h"
+#include "util/error.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
@@ -15,7 +10,7 @@
 namespace lr
 {
 
-    ValuePtr VariableAST::eval() { return nullptr; }
+    ValuePtr VariableAST::eval(EnvPtr ptr) { return nullptr; }
 
     VariableAST::VariableAST(std::string str) : varName_(std::move(str)) {}
 
@@ -23,11 +18,11 @@ namespace lr
     IntegerNumExprAST::IntegerNumExprAST(int num, TokenLocation tokenLocation) : ExprAST(std::move(tokenLocation)),
                                                                                  value_(num) {}
 
-    ValuePtr IntegerNumExprAST::eval() {
+    ValuePtr IntegerNumExprAST::eval(EnvPtr ptr) {
         return std::make_shared<IntValue>(value_);
     }
 
-    ValuePtr FloatNumExprAST::eval() {
+    ValuePtr FloatNumExprAST::eval(EnvPtr ptr) {
         return std::make_shared<FloatValue>(value_);
     }
 
@@ -45,29 +40,21 @@ namespace lr
               op_(tokenValue) {}
 
 
-    ValuePtr BinaryExprAST::eval()
+    ValuePtr BinaryExprAST::eval(EnvPtr ptr)
     {
-        switch (op_)
+        std::vector<ValuePtr> vec = {left_->eval(ptr), right_->eval(ptr)};
+        auto fun = ptr->lookupOp(op_);
+        if (!fun)
         {
-            case TokenValue::MINUS:
-                return Minus::apply(left_->eval(), right_->eval());
-            case TokenValue::ADD:
-                return Add::apply(left_->eval(), right_->eval());
-            case TokenValue::MULTIPLY:
-                return Multiply::apply(left_->eval(), right_->eval());
-            case TokenValue::DIVIDE:
-                return Divide::apply(left_->eval(), right_->eval());
-            case TokenValue::GREATER_THAN:
-                return Greater::apply(left_->eval(), right_->eval());
-            case TokenValue::LESS_THAN:
-                return Less::apply(left_->eval(), right_->eval());
-            default:
-                return nullptr;
+            errorSyntax("没有发现操作符 todo");
+            return nullptr;
         }
+
+        return fun->apply(vec, getTokenLocation());
     }
 
-    ValuePtr BlockAST::eval() {
-        return ExprAST::eval();
+    ValuePtr BlockAST::eval(EnvPtr ptr)
+    {
     }
 
     BlockAST::BlockAST(TokenLocation &lok) : ExprAST(lok) {}
@@ -79,18 +66,21 @@ namespace lr
               rhs_(std::move(rhs)) {}
 
 
-    ValuePtr VariableDefinitionStatementAST::eval()
+    ValuePtr VariableDefinitionStatementAST::eval(EnvPtr ptr)
     {
-        return ExprAST::eval();
+        std::string vname = lhs_->getVarName();
+
+
+        return nullptr;
     }
 
     IfStatementAST::IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart) : condition_(std::move(condition_)),
                                                                                 thenPart_(std::move(thenPart)),
                                                                                 elsePart_(nullptr) {}
 
-    ValuePtr VariableAssignStatementAST::eval()
+    ValuePtr VariableAssignStatementAST::eval(EnvPtr ptr)
     {
-        return ExprAST::eval();
+
     }
 
     VariableAssignStatementAST::VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs,
@@ -101,8 +91,21 @@ namespace lr
     BoolAST::BoolAST(bool val, const TokenLocation &lok) : ExprAST(lok),
                                                            value_(val) {}
 
-    ValuePtr BoolAST::eval()
+    ValuePtr BoolAST::eval(EnvPtr ptr)
     {
         return std::make_unique<BoolValue>(value_);
+    }
+
+    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname) : varname_(std::move(varname)) {}
+
+    ValuePtr VariableUseStatementAST::eval(EnvPtr ptr)
+    {
+        auto var = ptr->lookup(varname_);
+        if (!var)
+        {
+            errorSyntax("No definitions or declarations of variables found in the scope:" + varname_);
+            return nullptr;
+        }
+        return var;
     }
 }
