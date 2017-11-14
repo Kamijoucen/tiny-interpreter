@@ -1,7 +1,7 @@
 // woshizs
-var a=15.5214;
+var a=15.521;
 
-if (15 >5 )
+if (15 >a )
 {
     a = 15;
 }else   {

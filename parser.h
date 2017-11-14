@@ -24,19 +24,23 @@ namespace lr
 
         ExprASTPtr    parseParen();
 
+        ExprASTPtr    parseString();
+
+        ExprASTPtr    parseBool();
+
         ExprASTPtr    parseNumber();
 
         ExprASTPtr    parseIfStatement();
 
         ExprASTPtr    parseWhileStatement();
 
-        ExprASTPtr    parseBool();
-
         ExprASTPtr    parseVariableDefinitionStatement();
 
         ExprASTPtr    parseVariableUse();
 
         ExprASTPtr    parsePrintStatement();
+
+        ExprASTPtr    parseInputStatement();
 
     public:
         explicit Parser(Scanner&);

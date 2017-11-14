@@ -1,4 +1,4 @@
-var a = 55;
-var b = a;
-print b;
-print a;
+var i = 4;
+i = i + 1;
+print i;
+

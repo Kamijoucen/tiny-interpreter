@@ -25,15 +25,25 @@ namespace lr
     public:
         static EnvPtr buildInitScope();
 
-        ValuePtr lookup(const std::string &key) const;
+        bool       changeOp(const TokenValue &key, const PrimFunPtr &pfun);
 
-        void     putValue(const std::string &key, const ValuePtr &ptr);
+        bool       changeValue(const std::string &key, const ValuePtr &ptr);
 
-        void     putOp(const TokenValue &key, const PrimFunPtr &pfun);
+        // location
 
-        PrimFunPtr lookupOp(const TokenValue &key);
+        void       putLocationOp(const TokenValue &key, const PrimFunPtr &pfun);
 
-    protected:
+        void       putLocationValue(const std::string &key, const ValuePtr &ptr);
+
+        ValuePtr   lookup(const std::string &key) const;
+
+        ValuePtr   lookupLocation(const std::string &key) const;
+
+        PrimFunPtr lookupOp(const TokenValue &key) const;
+
+        PrimFunPtr lookupOpLocation(const TokenValue &key) const;
+
+    private:
         EnvPtr parent_ = nullptr;
         std::map<std::string, ValuePtr>   varibs_;
         std::map<TokenValue, PrimFunPtr>  prifun_;

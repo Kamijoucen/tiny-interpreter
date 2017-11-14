@@ -69,12 +69,26 @@ namespace lr
                 {
                     case TokenValue::IDENTIFIER:
                         return parseVariableUse();
+                    case TokenValue::STRING:
+                        return parseString();
                     default:
                         return nullptr;
                 }
             default:
                 return nullptr;
         }
+    }
+
+
+    ExprASTPtr Parser::parseString()
+    {
+        Token token = scanner_.getToken();
+        if (!expectToken(TokenValue::STRING, true))
+        {
+            errorSyntax("need string:" + token.getTokenLocation().toString());
+            return nullptr;
+        }
+        return std::make_unique<StringAST>(token.getStrValue(), token.getTokenLocation());
     }
 
 
@@ -106,6 +120,7 @@ namespace lr
         return expr;
     }
 
+
     ExprASTPtr Parser::parseParen()
     {
         scanner_.next();    // eat (
@@ -128,6 +143,7 @@ namespace lr
         return parseBinOpRHS(std::move(ptr), 1);
     }
 
+
     ExprASTPtr Parser::parseBinOpRHS(ExprASTPtr lhs, int precedence)
     {
         while (true)
@@ -142,16 +158,16 @@ namespace lr
             }
             if (curOp.getTokenType() != TokenType::OPERATORS)
             {
-                errorSyntax("不是有效的操作符:" + scanner_.getToken().getTokenLocation().toString());
+                errorSyntax("not support op:" + scanner_.getToken().getTokenLocation().toString());
                 return nullptr;
             }
             scanner_.next();
 
-            ExprASTPtr  rhs        = parsePrimary();
+            ExprASTPtr rhs        = parsePrimary();
             // next op
-            auto        nextOp     = scanner_.getToken();
-            auto        nextOpMate = scanner_.getDic().lookup(nextOp.getStrValue());
-            int         nextOpPre  = std::get<2>(nextOpMate);
+            auto       nextOp     = scanner_.getToken();
+            auto       nextOpMate = scanner_.getDic().lookup(nextOp.getStrValue());
+            int        nextOpPre  = std::get<2>(nextOpMate);
 
             if (curOpPre < nextOpPre)
             {
@@ -165,34 +181,34 @@ namespace lr
         }
     }
 
+
     BlockASTPtr Parser::parseBlock()
     {
         auto loc = scanner_.getToken().getTokenLocation();
 
         if (!expectToken(TokenValue::LEFT_BRACE, true))
         {
+            errorSyntax("Block start need '{'" + loc.toString());
             return nullptr;
         }
         auto blok = std::make_unique<BlockAST>(loc);
 
-        while (validateToken(TokenValue::RIGHT_BRACE, true))
+        while (!validateToken(TokenValue::RIGHT_BRACE))
         {
             if (auto stat = parsePrimary())
             {
                 blok->addAST(std::move(stat));
             }
-            else
-            {
-                return nullptr;
-            }
         }
 
         if (!expectToken(TokenValue::RIGHT_BRACE, true))
         {
+            errorSyntax("Block end need '}'" + loc.toString());
             return nullptr;
         }
         return blok;
     }
+
 
     ExprASTPtr Parser::parseIfStatement()
     {
@@ -208,9 +224,34 @@ namespace lr
         return lr::ExprASTPtr();
     }
 
+
     ExprASTPtr Parser::parseWhileStatement()
     {
-        return lr::ExprASTPtr();
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+
+        if (!expectToken(TokenValue::WHILE, true))
+        {
+            errorSyntax("'while' not found:" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
+        }
+
+        ExprASTPtr condition = parseParen();
+
+        if (!condition)
+        {
+            errorSyntax("parse error while condition is null : " + lok.toString());
+            return nullptr;
+        }
+
+        BlockASTPtr body = parseBlock();
+
+        if (!body)
+        {
+            errorSyntax("parse error while body is null : " + lok.toString());
+            return nullptr;
+        }
+
+        return std::make_unique<WhileStatementAST>(std::move(condition), std::move(body), std::move(lok));
     }
 
 
@@ -245,7 +286,7 @@ namespace lr
 
         if (!expectToken(TokenValue::SEMICOLON, true))
         {
-            errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
+            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
 
@@ -261,6 +302,7 @@ namespace lr
         if (!expectToken(TokenValue::IDENTIFIER, true))
         {
             errorSyntax("未找到变量名字" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
         }
 
         if (validateToken(TokenValue::ASSIGN, true))
@@ -289,18 +331,43 @@ namespace lr
     }
 
 
-    ExprASTPtr Parser::parsePrintStatement()
+
+    ExprASTPtr Parser::parseInputStatement()
     {
-        if (!expectToken(TokenValue::PRINT, true))
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        if (!expectToken(TokenValue::INPUT, true))
         {
-            errorSyntax("'print' not found");
+            errorSyntax("'input' not found:" + lok.toString());
             return nullptr;
         }
-        ExprASTPtr exp = parsePrimary();
+
+        if (!expectToken(TokenValue::IDENTIFIER))
+        {
+            errorSyntax("需要一个变量名字" + lok.toString());
+            return nullptr;
+        }
+
+        // todo
+
+
+        return lr::ExprASTPtr();
+    }
+
+
+
+    ExprASTPtr Parser::parsePrintStatement()
+    {
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        if (!expectToken(TokenValue::PRINT, true))
+        {
+            errorSyntax("'print' not found:" + lok.toString());
+            return nullptr;
+        }
+        ExprASTPtr exp = parseExpression();
 
         if (!expectToken(TokenValue::SEMICOLON, true))
         {
-            errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
+            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
         return std::make_unique<PrintStatementAST>(std::move(exp));

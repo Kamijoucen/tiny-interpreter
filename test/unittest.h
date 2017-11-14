@@ -71,5 +71,31 @@ TEST(scannerType, scanner) {
     }
 }
 
+TEST(eval, whiletest)
+{
+    std::string a("../Resource/while.l");
+    Scanner scanner(a);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    EnvPtr env = Environment::buildInitScope();
+    for (auto &stat : vec)
+    {
+        stat->eval(env);
+    }
+}
+
+TEST(eval, string)
+{
+    std::string a("../Resource/str.l");
+    Scanner scanner(a);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    EnvPtr env = Environment::buildInitScope();
+    for (auto &stat : vec)
+    {
+        stat->eval(env);
+    }
+}
+
 
 #endif //LLANGUAGE_UNITTEST_H

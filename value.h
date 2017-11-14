@@ -96,5 +96,20 @@ namespace lr
     inline std::string FloatValue::toString() const { return std::to_string(value_); }
 
 
+
+    class StringValue : public Value
+    {
+    public:
+        ValueType getType() const override;
+
+        inline std::string toString() const override;
+
+    public:
+        explicit StringValue(const std::string &str);
+
+        std::string value_;
+    };
+    inline ValueType StringValue::getType() const { return ValueType::STRING; }
+    inline std::string StringValue::toString() const { return value_; }
 }
 #endif //LLANGUAGE_RESULT_H

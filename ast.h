@@ -16,16 +16,16 @@ namespace lr
     class BlockAST;
     class VariableAST;
 
-    using ExprASTPtr        = std::unique_ptr<ExprAST>;
-    using NumberExprASTPtr  = std::unique_ptr<NumberExprAST>;
-    using BlockASTPtr       = std::unique_ptr<BlockAST>;
-    using VariableASTPtr    = std::unique_ptr<VariableAST>;
-    using VecExprASTPtr     = std::vector<std::unique_ptr<ExprAST>>;
+    using ExprASTPtr       = std::unique_ptr<ExprAST>;
+    using NumberExprASTPtr = std::unique_ptr<NumberExprAST>;
+    using BlockASTPtr      = std::unique_ptr<BlockAST>;
+    using VariableASTPtr   = std::unique_ptr<VariableAST>;
+    using VecExprASTPtr    = std::vector<std::unique_ptr<ExprAST>>;
 
     class ExprAST
     {
     public:
-        virtual ValuePtr eval(EnvPtr ptr) {};
+        virtual ValuePtr eval(EnvPtr env) = 0;
 
         inline TokenLocation getTokenLocation();
 
@@ -47,16 +47,19 @@ namespace lr
     {
     public:
         explicit BlockAST(TokenLocation &);
+
     public:
         ValuePtr eval(EnvPtr ptr) override;
 
         void addAST(ExprASTPtr ptr);
 
+        inline const VecExprASTPtr& getBody() const;
+
     private:
         VecExprASTPtr vec_;
     };
     inline void BlockAST::addAST(ExprASTPtr ptr) { vec_.push_back(std::move(ptr)); }
-
+    inline const VecExprASTPtr& BlockAST::getBody() const { return vec_; }
 
 
     class VariableAST : public ExprAST
@@ -180,11 +183,26 @@ namespace lr
     public:
         inline bool getVal() const;
 
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr evn) override;
+
     private:
         bool value_;
     };
     inline bool BoolAST::getVal() const { return value_; }
+
+
+
+    class StringAST : public ExprAST
+    {
+    public:
+        StringAST(std::string str, const TokenLocation &lok);
+
+    public:
+        ValuePtr eval(EnvPtr evn) override;
+
+    private:
+        std::string value_;
+    };
 
 
 
@@ -207,9 +225,14 @@ namespace lr
     class WhileStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override {}
+        WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, const TokenLocation &lok);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
 
     private:
+        ExprASTPtr  condition_;
+        BlockASTPtr body_;
     };
 
 

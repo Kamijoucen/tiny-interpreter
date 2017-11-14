@@ -18,7 +18,8 @@ namespace lr
     IntegerNumExprAST::IntegerNumExprAST(int num, TokenLocation tokenLocation) : ExprAST(std::move(tokenLocation)),
                                                                                  value_(num) {}
 
-    ValuePtr IntegerNumExprAST::eval(EnvPtr ptr) {
+    ValuePtr IntegerNumExprAST::eval(EnvPtr ptr)
+    {
         return std::make_shared<IntValue>(value_);
     }
 
@@ -53,8 +54,14 @@ namespace lr
         return fun->apply(vec, getTokenLocation());
     }
 
-    ValuePtr BlockAST::eval(EnvPtr ptr)
+    ValuePtr BlockAST::eval(EnvPtr env)
     {
+        EnvPtr lenv = std::make_shared<Environment>(env);
+        for (auto &stat : vec_)
+        {
+            stat->eval(lenv);
+        }
+        return nullptr;
     }
 
     BlockAST::BlockAST(TokenLocation &lok) : ExprAST(lok) {}
@@ -68,7 +75,12 @@ namespace lr
 
     ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env)
     {
-        env->putValue(lhs_->getVarName(), rhs_->eval(env));
+        if (env->lookupLocation(lhs_->getVarName()))
+        {
+            errorSyntax("variable redefinition:" + lhs_->getTokenLocation().toString());
+            return nullptr;
+        }
+        env->putLocationValue(lhs_->getVarName(), rhs_->eval(env));
         return nullptr;
     }
 
@@ -76,9 +88,19 @@ namespace lr
                                                                                 thenPart_(std::move(thenPart)),
                                                                                 elsePart_(nullptr) {}
 
-    ValuePtr VariableAssignStatementAST::eval(EnvPtr ptr)
+    ValuePtr VariableAssignStatementAST::eval(EnvPtr env)
     {
-
+        auto name = lhs_->getVarName();
+        auto val  = env->lookup(name);
+        if (!val)
+        {
+            errorSyntax("No definitions or declarations of variables found in the scope: " + name);
+        }
+        else
+        {
+            env->changeValue(name, rhs_->eval(env));
+        }
+        return nullptr;
     }
 
     VariableAssignStatementAST::VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs,
@@ -94,14 +116,14 @@ namespace lr
         return std::make_unique<BoolValue>(value_);
     }
 
-    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname) : varname_(std::move(varname)) {}
+    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname) : varname_(varname) {}
 
     ValuePtr VariableUseStatementAST::eval(EnvPtr ptr)
     {
         auto var = ptr->lookup(varname_);
         if (!var)
         {
-            errorSyntax("No definitions or declarations of variables found in the scope:" + varname_);
+            errorSyntax("No definitions or declarations of variables found in the scope: " + varname_);
             return nullptr;
         }
         return var;
@@ -110,9 +132,41 @@ namespace lr
     ValuePtr PrintStatementAST::eval(EnvPtr env)
     {
         using namespace std;
+
         cout << val_->eval(env)->toString() << endl;
         return nullptr;
     }
 
     PrintStatementAST::PrintStatementAST(ExprASTPtr val) : val_(std::move(val)) {}
+
+
+    WhileStatementAST::WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, const TokenLocation &lok)
+            : ExprAST(lok),
+              condition_(std::move(condion)),
+              body_(std::move(body)) {}
+
+    ValuePtr WhileStatementAST::eval(EnvPtr env)
+    {
+        ValuePtr val = condition_->eval(env);
+        if (val->getType() != ValueType::BOOL)
+        {
+            errorSyntax("while condition need bool val");
+            return nullptr;
+        }
+
+        while (static_cast<BoolValue*>(val.get())->value_)
+        {
+            body_->eval(env);
+            val = condition_->eval(env);
+        }
+
+        return nullptr;
+    }
+
+    StringAST::StringAST(std::string str, const TokenLocation &lok) : ExprAST(lok), value_(std::move(str)) {}
+
+    ValuePtr StringAST::eval(EnvPtr env)
+    {
+        return std::make_shared<StringValue>(value_);
+    }
 }
