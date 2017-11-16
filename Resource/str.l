@@ -1,2 +1,2 @@
 var str = "xixixi";
-print "lisicen";
+print str;

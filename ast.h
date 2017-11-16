@@ -85,7 +85,7 @@ namespace lr
         ValuePtr eval(EnvPtr env) override;
 
     public:
-        VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
+        VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
 
     private:
         VariableASTPtr  lhs_;
@@ -100,7 +100,7 @@ namespace lr
         ValuePtr eval(EnvPtr ptr) override;
 
     public:
-        VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &location);
+        VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
 
     private:
         VariableASTPtr  lhs_;
@@ -123,6 +123,23 @@ namespace lr
 
 
 
+    class UnaryExprAST : public ExprAST
+    {
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
+    public:
+        UnaryExprAST() = default;
+
+        UnaryExprAST(ExprASTPtr hs, TokenValue tv, const TokenLocation &lok);
+
+    private:
+        ExprASTPtr hs_;
+        TokenValue op_;
+    };
+
+
+
     class BinaryExprAST : public ExprAST
     {
     public:
@@ -131,7 +148,7 @@ namespace lr
     public:
         BinaryExprAST() = default;
 
-        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tokenValue, const TokenLocation &tokenLocation);
+        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tv, const TokenLocation &lok);
 
     private:
 
@@ -209,10 +226,10 @@ namespace lr
     class IfStatementAST : public ExprAST
     {
     public:
-        IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart_);
+        IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart, ExprASTPtr elsePart, const TokenLocation &lok);
 
     public:
-        ValuePtr eval(EnvPtr ptr) override {}
+        ValuePtr eval(EnvPtr ptr) override;
 
     private:
         ExprASTPtr condition_;

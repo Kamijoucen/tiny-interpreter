@@ -13,6 +13,7 @@ namespace lr
         addToken("for",     std::make_tuple(TokenType::KEYWORDS,     TokenValue::FOR,              -1));
         addToken("while",   std::make_tuple(TokenType::KEYWORDS,     TokenValue::WHILE,            -1));
         addToken("else",    std::make_tuple(TokenType::KEYWORDS,     TokenValue::ELSE,             -1));
+        addToken("elseif",  std::make_tuple(TokenType::KEYWORDS,     TokenValue::ELSEIF,            -1));
         addToken("return",  std::make_tuple(TokenType::KEYWORDS,     TokenValue::RETURN,           -1));
         addToken("class",   std::make_tuple(TokenType::KEYWORDS,     TokenValue::CLASS,            -1));
         addToken("import",  std::make_tuple(TokenType::KEYWORDS,     TokenValue::IMPORT,           -1));

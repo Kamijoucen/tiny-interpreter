@@ -52,6 +52,7 @@ namespace lr
         FOR,
         WHILE,
         ELSE,
+        ELSEIF,
         RETURN,
         CLASS,
         IMPORT,

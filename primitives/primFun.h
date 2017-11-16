@@ -15,9 +15,9 @@ namespace lr
 
     struct PrimFun
     {
-        virtual ValuePtr    apply(const ValuePtrVec &vec, const TokenLocation& lok) = 0;
+        virtual ValuePtr  apply(const ValuePtrVec &vec, const TokenLocation& lok) = 0;
 
-        virtual ValueType   typeCheck(const ValuePtrVec &vec) = 0;
+        virtual ValueType typeCheck(const ValuePtrVec &vec) = 0;
     };
 }
 

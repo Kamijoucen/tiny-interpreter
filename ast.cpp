@@ -3,6 +3,7 @@
 #include <utility>
 #include "ast.h"
 #include "util/error.h"
+#include "parser.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
@@ -84,9 +85,37 @@ namespace lr
         return nullptr;
     }
 
-    IfStatementAST::IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart) : condition_(std::move(condition_)),
-                                                                                thenPart_(std::move(thenPart)),
-                                                                                elsePart_(nullptr) {}
+    IfStatementAST::IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart, ExprASTPtr elsePart, const TokenLocation &lok)
+            : ExprAST(lok),
+              condition_(std::move(condition)),
+              thenPart_(std::move(thenPart)),
+              elsePart_(std::move(elsePart)) {}
+
+    ValuePtr IfStatementAST::eval(EnvPtr env)
+    {
+        ValuePtr condiv = condition_->eval(env);
+
+        if (!condiv)
+        {
+            errorSyntax("if condition is null");
+            return nullptr;
+        }
+
+        if (condiv->getType() != ValueType::BOOL)
+        {
+            errorSyntax("if condition need bool val");
+            return nullptr;
+        }
+
+        if (static_cast<BoolValue *>(condiv.get())->value_)
+        {
+            return thenPart_->eval(env);
+        }
+        else
+        {
+            return elsePart_->eval(env);
+        }
+    }
 
     ValuePtr VariableAssignStatementAST::eval(EnvPtr env)
     {
@@ -145,6 +174,7 @@ namespace lr
               condition_(std::move(condion)),
               body_(std::move(body)) {}
 
+
     ValuePtr WhileStatementAST::eval(EnvPtr env)
     {
         ValuePtr val = condition_->eval(env);
@@ -154,7 +184,7 @@ namespace lr
             return nullptr;
         }
 
-        while (static_cast<BoolValue*>(val.get())->value_)
+        while (static_cast<BoolValue*>(val.get())->value_ && !Parser::getErrorFlag())
         {
             body_->eval(env);
             val = condition_->eval(env);
@@ -168,5 +198,16 @@ namespace lr
     ValuePtr StringAST::eval(EnvPtr env)
     {
         return std::make_shared<StringValue>(value_);
+    }
+
+    UnaryExprAST::UnaryExprAST(ExprASTPtr hs, TokenValue tv, const TokenLocation &lok)
+            : ExprAST(lok),
+              hs_(std::move(hs)),
+              op_(tv) {}
+
+    ValuePtr UnaryExprAST::eval(EnvPtr env)
+    {
+        // todo
+        return nullptr;
     }
 }

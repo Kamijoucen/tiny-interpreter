@@ -98,4 +98,18 @@ TEST(eval, string)
 }
 
 
+TEST(eval, iftest)
+{
+    std::string a("../Resource/iftest.l");
+    Scanner scanner(a);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    EnvPtr env = Environment::buildInitScope();
+    for (auto &stat : vec)
+    {
+        stat->eval(env);
+    }
+}
+
+
 #endif //LLANGUAGE_UNITTEST_H

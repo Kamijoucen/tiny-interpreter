@@ -27,10 +27,10 @@ namespace lr
         return vec;
     }
 
-    ExprASTPtr lr::Parser::parsePrimary()
+    ExprASTPtr Parser::parsePrimary()
     {
-        TokenType   tokenType   = scanner_.getToken().getTokenType();
-        TokenValue  tokenValue  = scanner_.getToken().getTokenValue();
+        TokenType   tokenType  = scanner_.getToken().getTokenType();
+        TokenValue  tokenValue = scanner_.getToken().getTokenValue();
 
         switch (tokenType)
         {
@@ -48,6 +48,8 @@ namespace lr
                         return parseBool();
                     case TokenValue::PRINT:
                         return parsePrintStatement();
+                    case TokenValue::INPUT:
+                        return parseInputStatement();
                     default:
                         return nullptr;
                 }
@@ -163,11 +165,11 @@ namespace lr
             }
             scanner_.next();
 
-            ExprASTPtr rhs        = parsePrimary();
+            ExprASTPtr rhs  = parsePrimary();
             // next op
-            auto       nextOp     = scanner_.getToken();
-            auto       nextOpMate = scanner_.getDic().lookup(nextOp.getStrValue());
-            int        nextOpPre  = std::get<2>(nextOpMate);
+            auto nextOp     = scanner_.getToken();
+            auto nextOpMate = scanner_.getDic().lookup(nextOp.getStrValue());
+            int  nextOpPre  = std::get<2>(nextOpMate);
 
             if (curOpPre < nextOpPre)
             {
@@ -210,18 +212,44 @@ namespace lr
     }
 
 
+
     ExprASTPtr Parser::parseIfStatement()
     {
-        if (expectToken(TokenValue::IF, true))
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+
+        if (!expectToken(TokenValue::IF, true))
         {
-            errorSyntax("'if' not found:" + scanner_.getToken().getTokenLocation().toString());
+            errorSyntax("'if' not found:" + lok.toString());
             return nullptr;
         }
-        ExprASTPtr condition = parseExpression();
+        ExprASTPtr condition = parseParen();
 
-        // todo
+        if (!condition)
+        {
+            errorSyntax("if condition not found:" + lok.toString());
+            return nullptr;
+        }
 
-        return lr::ExprASTPtr();
+        if (!expectToken(TokenValue::LEFT_BRACE))
+        {
+            errorSyntax("if block '{' not found:" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
+        }
+        ExprASTPtr then = parseBlock();
+
+        if (!then) {
+            errorSyntax("if block not found:" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
+        }
+
+        ExprASTPtr elsethen = nullptr;
+
+        if (validateToken(TokenValue::ELSE, true))
+        {
+            elsethen = parseBlock();
+        }
+
+        return std::make_unique<IfStatementAST>(std::move(condition), std::move(then), std::move(elsethen), lok);
     }
 
 
@@ -350,7 +378,7 @@ namespace lr
         // todo
 
 
-        return lr::ExprASTPtr();
+        return nullptr;
     }
 
 
@@ -371,6 +399,46 @@ namespace lr
             return nullptr;
         }
         return std::make_unique<PrintStatementAST>(std::move(exp));
+    }
+
+
+    ExprASTPtr Parser::parseForStatement()
+    {
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        if (!expectToken(TokenValue::FOR, true))
+        {
+            errorSyntax("'for' not found:" + lok.toString());
+            return nullptr;
+        }
+
+        if (!expectToken(TokenValue::RIGHT_BRACE, true))
+        {
+            errorSyntax("for condition right brace not found" + lok.toString());
+            return nullptr;
+        }
+
+        ExprASTPtr initPart = parseExpression();
+
+        if (!expectToken(TokenValue::SEMICOLON, true))
+        {
+            errorSyntax("for condition ; not found:" + lok.toString());
+            return nullptr;
+        }
+
+        ExprASTPtr condi = parseExpression();
+
+        if (!expectToken(TokenValue::SEMICOLON, true))
+        {
+            errorSyntax("for condition ; not found:" + lok.toString());
+            return nullptr;
+        }
+
+        ExprASTPtr step = parseExpression();
+
+
+        // todo
+
+        return nullptr;
     }
 
 
@@ -401,6 +469,7 @@ namespace lr
         }
         return true;
     }
+
 
 
 }
