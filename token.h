@@ -51,6 +51,8 @@ namespace lr
         DO,
         FOR,
         WHILE,
+        BREAK,
+        CONTINUE,
         ELSE,
         ELSEIF,
         RETURN,

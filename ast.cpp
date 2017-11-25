@@ -62,7 +62,7 @@ namespace lr
         {
             stat->eval(lenv);
         }
-        return nullptr;
+        return VoidValue::instance();
     }
 
     BlockAST::BlockAST(TokenLocation &lok) : ExprAST(lok) {}
@@ -82,7 +82,7 @@ namespace lr
             return nullptr;
         }
         env->putLocationValue(lhs_->getVarName(), rhs_->eval(env));
-        return nullptr;
+        return VoidValue::instance();
     }
 
     IfStatementAST::IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart, ExprASTPtr elsePart, const TokenLocation &lok)
@@ -129,7 +129,7 @@ namespace lr
         {
             env->changeValue(name, rhs_->eval(env));
         }
-        return nullptr;
+        return VoidValue::instance();
     }
 
     VariableAssignStatementAST::VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs,
@@ -161,9 +161,8 @@ namespace lr
     ValuePtr PrintStatementAST::eval(EnvPtr env)
     {
         using namespace std;
-
         cout << val_->eval(env)->toString() << endl;
-        return nullptr;
+        return VoidValue::instance();
     }
 
     PrintStatementAST::PrintStatementAST(ExprASTPtr val) : val_(std::move(val)) {}
@@ -190,7 +189,7 @@ namespace lr
             val = condition_->eval(env);
         }
 
-        return nullptr;
+        return VoidValue::instance();
     }
 
     StringAST::StringAST(std::string str, const TokenLocation &lok) : ExprAST(lok), value_(std::move(str)) {}

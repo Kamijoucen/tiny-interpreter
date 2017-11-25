@@ -3,6 +3,8 @@
 
 namespace lr
 {
+    VoidValue::VoidValuePtr VoidValue::voidPtr_ = std::make_shared<VoidValue>();
+
     FloatValue::FloatValue(float val) : value_(val) {}
 
     IntValue::IntValue(int val) : value_(val) {}

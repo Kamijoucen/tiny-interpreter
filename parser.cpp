@@ -237,7 +237,8 @@ namespace lr
         }
         ExprASTPtr then = parseBlock();
 
-        if (!then) {
+        if (!then)
+        {
             errorSyntax("if block not found:" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
@@ -411,34 +412,34 @@ namespace lr
             return nullptr;
         }
 
-        if (!expectToken(TokenValue::RIGHT_BRACE, true))
+        if (!expectToken(TokenValue::LEFT_BRACE, true))
+        {
+            errorSyntax("for condition left brace not found" + lok.toString());
+            return nullptr;
+        }
+
+        VecExprASTPtr exps = parseMoreExpression(TokenValue::SEMICOLON);
+
+        // todo
+
+        if (!expectToken(TokenValue::RIGHT_BRACE))
         {
             errorSyntax("for condition right brace not found" + lok.toString());
             return nullptr;
         }
 
-        ExprASTPtr initPart = parseExpression();
-
-        if (!expectToken(TokenValue::SEMICOLON, true))
-        {
-            errorSyntax("for condition ; not found:" + lok.toString());
-            return nullptr;
-        }
-
-        ExprASTPtr condi = parseExpression();
-
-        if (!expectToken(TokenValue::SEMICOLON, true))
-        {
-            errorSyntax("for condition ; not found:" + lok.toString());
-            return nullptr;
-        }
-
-        ExprASTPtr step = parseExpression();
-
+        ExprASTPtr body = parseBlock();
 
         // todo
 
         return nullptr;
+    }
+
+
+    VecExprASTPtr Parser::parseMoreExpression(const TokenValue &sep)
+    {
+
+        return lr::VecExprASTPtr();
     }
 
 
@@ -447,7 +448,7 @@ namespace lr
         if (scanner_.getToken().getTokenValue() != val)
         {
             auto tok = scanner_.getToken();
-            errorSyntax("出现意料之外的标识符 '" + tok.getStrValue() + "'" + tok.getTokenLocation().toString());
+            errorSyntax("unknown token:" + tok.getStrValue() + "" + tok.getTokenLocation().toString());
             return false;
         }
         if (next)
@@ -469,7 +470,6 @@ namespace lr
         }
         return true;
     }
-
 
 
 }

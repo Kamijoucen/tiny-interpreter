@@ -100,7 +100,7 @@ namespace lr
     class StringValue : public Value
     {
     public:
-        ValueType getType() const override;
+        inline ValueType getType() const override;
 
         inline std::string toString() const override;
 
@@ -111,5 +111,27 @@ namespace lr
     };
     inline ValueType StringValue::getType() const { return ValueType::STRING; }
     inline std::string StringValue::toString() const { return value_; }
+
+
+    class VoidValue : public Value
+    {
+    public:
+        VoidValue() = default;
+
+        using VoidValuePtr = std::shared_ptr<VoidValue>;
+
+        inline ValueType getType() const override;
+
+        inline std::string toString() const override;
+
+        static inline VoidValuePtr instance();
+
+    private:
+        static VoidValuePtr voidPtr_;
+
+    };
+    inline std::string VoidValue::toString() const { return "void"; }
+    inline ValueType VoidValue::getType() const { return ValueType::VOID; }
+    inline VoidValue::VoidValuePtr VoidValue::instance() { return voidPtr_; }
 }
 #endif //LLANGUAGE_RESULT_H

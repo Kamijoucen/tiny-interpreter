@@ -1,7 +1,6 @@
 
 #include "environment.h"
 
-#include <utility>
 #include "primitives/add.h"
 #include "primitives/divide.h"
 #include "primitives/greater.h"
