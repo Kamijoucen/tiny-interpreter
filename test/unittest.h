@@ -6,9 +6,15 @@
 #include "../environment.h"
 #include "test.h"
 #include "../parser.h"
+#include "../value.h"
 
 using namespace lr;
 
+
+TEST(breaktest, t)
+{
+    ASSERT_EQ(typeid(std::shared_ptr<BreakAST>) == typeid(std::make_shared<BreakAST>()), true);
+}
 
 TEST(eval, fz)
 {

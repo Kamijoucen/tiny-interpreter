@@ -22,7 +22,7 @@ namespace lr
     private:
         void addToken(std::string name, std::tuple<TokenType, TokenValue, int> tokenMate);
     private:
-        std::map<std::string, std::tuple<TokenType, TokenValue, int>> dictionary;
+        std::map<std::string, std::tuple<TokenType, TokenValue, int>> dictionary_;
     };
 }
 

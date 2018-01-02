@@ -286,6 +286,31 @@ namespace lr
     private:
         ExprASTPtr val_;
     };
+
+
+    class BreakAST : public ExprAST
+    {
+    public:
+        BreakAST() = default;
+
+        explicit BreakAST(const TokenLocation &tokenLocation);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+    };
+
+
+    class ContinueAST : public ExprAST
+    {
+    public:
+        ContinueAST() = default;
+
+        explicit ContinueAST(const TokenLocation &lok);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+    };
+
 }
 
 #endif //SIMPLEL_AST_H

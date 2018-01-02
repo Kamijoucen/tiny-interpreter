@@ -60,6 +60,13 @@ namespace lr
         EnvPtr lenv = std::make_shared<Environment>(env);
         for (auto &stat : vec_)
         {
+            if (typeid(std::shared_ptr<BreakAST>) == typeid(stat)) {
+                env->changeValue("isNeedBreak", std::make_shared<BoolValue>(true));
+                break;
+            }
+            if (typeid(std::shared_ptr<ContinueAST>) == typeid(stat)) {
+                break;
+            }
             stat->eval(lenv);
         }
         return VoidValue::instance();
@@ -183,10 +190,15 @@ namespace lr
             return nullptr;
         }
 
+        env->putLocationValue("isNeedBreak", std::make_shared<BoolValue>(false));
+
         while (static_cast<BoolValue*>(val.get())->value_ && !Parser::getErrorFlag())
         {
             body_->eval(env);
             val = condition_->eval(env);
+
+            if (static_cast<BoolValue*>(env->lookup("isNeedBreak").get())->value_)
+                break;
         }
 
         return VoidValue::instance();
@@ -208,5 +220,16 @@ namespace lr
     {
         // todo
         return nullptr;
+    }
+
+    BreakAST::BreakAST(const TokenLocation &lok) : ExprAST(lok) {}
+
+    ValuePtr BreakAST::eval(EnvPtr env)
+    {
+        return lr::ValuePtr();
+    }
+
+    ValuePtr ContinueAST::eval(EnvPtr env) {
+        return lr::ValuePtr();
     }
 }

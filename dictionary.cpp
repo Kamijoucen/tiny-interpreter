@@ -52,27 +52,27 @@ namespace lr
 
     void Dictionary::addToken(std::string name, std::tuple<TokenType, TokenValue, int> tokenMate)
     {
-        dictionary.insert(std::pair<decltype(name), decltype(tokenMate)>(name, tokenMate));
+        dictionary_.insert(std::pair<decltype(name), decltype(tokenMate)>(name, tokenMate));
     }
 
     std::tuple<TokenType, TokenValue, int> Dictionary::lookup(const std::string &name) const
     {
-        TokenType   tokenType   = TokenType::UNRESERVED;
-        TokenValue  tokenValue  = TokenValue::IDENTIFIER;
-        int         precedence  = -1;
+        TokenType  tokenType  = TokenType::UNRESERVED;
+        TokenValue tokenValue = TokenValue::IDENTIFIER;
+        int        precedence = -1;
 
-        auto result = dictionary.find(name);
-        if (result != dictionary.end())
+        auto result = dictionary_.find(name);
+        if (result != dictionary_.end())
         {
-            tokenType   = std::get<0>(result->second);
-            tokenValue  = std::get<1>(result->second);
-            precedence  = std::get<2>(result->second);
+            tokenType  = std::get<0>(result->second);
+            tokenValue = std::get<1>(result->second);
+            precedence = std::get<2>(result->second);
         }
         return std::make_tuple(tokenType, tokenValue, precedence);
     }
 
     bool Dictionary::haveToken(std::string &name) const
     {
-        return dictionary.find(name) != dictionary.end();
+        return dictionary_.find(name) != dictionary_.end();
     }
 }

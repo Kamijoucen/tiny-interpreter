@@ -4,11 +4,12 @@ project(LLanguage)
 set(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
-add_subdirectory(./googletest)
 
-include_directories(./googletest/include)
+add_subdirectory(googletest)
 
-link_directories(./googletest)
+include_directories(googletest/include)
+
+link_directories(googletest)
 
 set(LIBRARIES
         gtest

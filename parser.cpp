@@ -50,6 +50,10 @@ namespace lr
                         return parsePrintStatement();
                     case TokenValue::INPUT:
                         return parseInputStatement();
+                    case TokenValue::BREAK:
+                    case TokenValue::CONTINUE:
+                    case TokenValue::RETURN:
+                        // todo
                     default:
                         return nullptr;
                 }
