@@ -311,6 +311,16 @@ namespace lr
         ValuePtr eval(EnvPtr env) override;
     };
 
+
+    class ReturnAST : public ExprAST {
+    public:
+        ReturnAST() = default;
+
+        explicit ReturnAST(const TokenLocation &lok);
+    public:
+        ValuePtr eval(EnvPtr env) override;
+    };
+
 }
 
 #endif //SIMPLEL_AST_H

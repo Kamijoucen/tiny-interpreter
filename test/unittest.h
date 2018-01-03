@@ -7,13 +7,14 @@
 #include "test.h"
 #include "../parser.h"
 #include "../value.h"
-
+#include "../ast.h"
 using namespace lr;
 
 
 TEST(breaktest, t)
 {
-    ASSERT_EQ(typeid(std::shared_ptr<BreakAST>) == typeid(std::make_shared<BreakAST>()), true);
+    lr::ExprASTPtr p = std::make_unique<BreakAST>();
+    ASSERT_EQ(typeid(BreakAST) == typeid(*p), true);
 }
 
 TEST(eval, fz)
@@ -107,6 +108,19 @@ TEST(eval, string)
 TEST(eval, iftest)
 {
     std::string a("../Resource/iftest.l");
+    Scanner scanner(a);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+    EnvPtr env = Environment::buildInitScope();
+    for (auto &stat : vec)
+    {
+        stat->eval(env);
+    }
+}
+
+TEST(eval, flowctest)
+{
+    std::string a("../Resource/flowc.l");
     Scanner scanner(a);
     Parser parser(scanner);
     VecExprASTPtr vec = parser.parse();

@@ -60,11 +60,12 @@ namespace lr
         EnvPtr lenv = std::make_shared<Environment>(env);
         for (auto &stat : vec_)
         {
-            if (typeid(std::shared_ptr<BreakAST>) == typeid(stat)) {
+            if (typeid(BreakAST) == typeid(*stat))
+            {
                 env->changeValue("isNeedBreak", std::make_shared<BoolValue>(true));
                 break;
             }
-            if (typeid(std::shared_ptr<ContinueAST>) == typeid(stat)) {
+            if (typeid(ContinueAST) == typeid(*stat)) {
                 break;
             }
             stat->eval(lenv);
@@ -230,6 +231,14 @@ namespace lr
     }
 
     ValuePtr ContinueAST::eval(EnvPtr env) {
+        return lr::ValuePtr();
+    }
+
+    ContinueAST::ContinueAST(const TokenLocation &lok) : ExprAST(lok) {}
+
+    ReturnAST::ReturnAST(const TokenLocation &lok) : ExprAST(lok) {}
+
+    ValuePtr ReturnAST::eval(EnvPtr env) {
         return lr::ValuePtr();
     }
 }

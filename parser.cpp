@@ -53,7 +53,7 @@ namespace lr
                     case TokenValue::BREAK:
                     case TokenValue::CONTINUE:
                     case TokenValue::RETURN:
-                        // todo
+                        return parseFlowControllerStatement();
                     default:
                         return nullptr;
                 }
@@ -444,6 +444,32 @@ namespace lr
     {
 
         return lr::VecExprASTPtr();
+    }
+
+
+    ExprASTPtr Parser::parseFlowControllerStatement()
+    {
+        TokenValue tokenValue = scanner_.getToken().getTokenValue();
+        TokenLocation toklocn = scanner_.getToken().getTokenLocation();
+        scanner_.next();
+
+        if (!expectToken(TokenValue::SEMICOLON, true))
+        {
+            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
+            return nullptr;
+        }
+
+        switch (tokenValue)
+        {
+            case TokenValue::BREAK:
+                return std::make_unique<BreakAST>(toklocn);
+            case TokenValue::CONTINUE:
+                return std::make_unique<ContinueAST>(toklocn);
+            case TokenValue::RETURN:
+                return std::make_unique<ReturnAST>(toklocn);
+            default:
+                return nullptr;
+        }
     }
 
 

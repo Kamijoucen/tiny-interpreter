@@ -46,6 +46,8 @@ namespace lr
 
         ExprASTPtr    parseInputStatement();
 
+        ExprASTPtr    parseFlowControllerStatement();
+
     public:
         explicit Parser(Scanner&);
 

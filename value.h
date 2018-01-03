@@ -19,6 +19,7 @@ namespace lr
         STRING,
         BOOL,
         ANY,
+        NONE,
         UNKNOWN
     };
 
@@ -111,6 +112,27 @@ namespace lr
     };
     inline ValueType StringValue::getType() const { return ValueType::STRING; }
     inline std::string StringValue::toString() const { return value_; }
+
+
+    class NoneValue : public Value {
+    public:
+        NoneValue() = default;
+
+        using NoneValuePtr = std::shared_ptr<NoneValue>;
+
+        inline ValueType getType() const override;
+
+        inline std::string toString() const override;
+
+        static inline NoneValuePtr instance();
+
+    private:
+        static NoneValuePtr nonePtr_;
+    };
+    inline std::string NoneValue::toString() const { return "void"; }
+    inline ValueType NoneValue::getType() const { return ValueType::VOID; }
+    inline NoneValue::NoneValuePtr NoneValue::instance() { return nonePtr_; }
+
 
 
     class VoidValue : public Value

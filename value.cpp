@@ -3,6 +3,8 @@
 
 namespace lr
 {
+    NoneValue::NoneValuePtr NoneValue::nonePtr_ = std::make_shared<NoneValue>();
+
     VoidValue::VoidValuePtr VoidValue::voidPtr_ = std::make_shared<VoidValue>();
 
     FloatValue::FloatValue(float val) : value_(val) {}
