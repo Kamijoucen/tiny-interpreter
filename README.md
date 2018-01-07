@@ -1,4 +1,4 @@
-tiny L
+Tiny programming language
 ==================
 
 目标:
