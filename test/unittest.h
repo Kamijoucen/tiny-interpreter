@@ -4,12 +4,12 @@
 #include <gtest/gtest.h>
 #include <iostream>
 #include "../include/environment.h"
-#include "test.h"
+#include "../util/util.h"
+#include "../include/interpreter.h"
 #include "../include/parser.h"
 #include "../include/value.h"
 #include "../include/ast.h"
 using namespace lr;
-
 
 TEST(breaktest, t)
 {
@@ -131,6 +131,12 @@ TEST(eval, flowctest)
             stat->eval(env);
         }
     }
+}
+
+TEST(iter, iter)
+{
+    Interpreter iter;
+    iter.interp("../Resource/flowc.l");
 }
 
 

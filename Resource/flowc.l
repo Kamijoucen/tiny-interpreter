@@ -12,5 +12,6 @@ while (j > 0) {
     print "测试输出";
     j = j - 1;
 }
+var i;
 
 print "我是测试";

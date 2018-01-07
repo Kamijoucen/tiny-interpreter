@@ -1,8 +1,9 @@
 
 #include <iostream>
 #include <utility>
-#include "../include/ast.h"
+#include "../util/util.h"
 #include "../util/error.h"
+#include "../include/ast.h"
 #include "../include/parser.h"
 
 #define Int     lr::ValueType::INT
@@ -50,7 +51,7 @@ namespace lr
         auto fun = env->lookupOp(op_);
         if (!fun)
         {
-            errorSyntax("没有发现操作符 todo");
+            errorInterp("没有发现操作符:");
             return nullptr;
         }
 
@@ -88,7 +89,7 @@ namespace lr
     {
         if (env->lookupLocation(lhs_->getVarName()))
         {
-            errorSyntax("variable redefinition:" + lhs_->getTokenLocation().toString());
+            errorInterp("变量定义重复:" + lhs_->getTokenLocation().toString());
             return nullptr;
         }
         env->putLocationValue(lhs_->getVarName(), rhs_->eval(env));
@@ -107,13 +108,13 @@ namespace lr
 
         if (!condiv)
         {
-            errorSyntax("if condition is null");
+            errorInterp("未找到 if 的条件语句");
             return nullptr;
         }
 
         if (condiv->getType() != ValueType::BOOL)
         {
-            errorSyntax("if condition need bool val");
+            errorInterp("if 的条件语句需要一个布尔值");
             return nullptr;
         }
 
@@ -133,7 +134,7 @@ namespace lr
         auto val  = env->lookup(name);
         if (!val)
         {
-            errorSyntax("No definitions or declarations of variables found in the scope: " + name);
+            errorInterp("作用域内没有发现变量: " + name);
         }
         else
         {
@@ -162,7 +163,7 @@ namespace lr
         auto var = ptr->lookup(varname_);
         if (!var)
         {
-            errorSyntax("No definitions or declarations of variables found in the scope: " + varname_);
+            errorInterp("作用域内没有发现变量: " + varname_);
             return nullptr;
         }
         return var;
@@ -187,10 +188,11 @@ namespace lr
     ValuePtr WhileStatementAST::eval(EnvPtr env)
     {
         EnvPtr whileEnv = makeNewEnv(env);
+
         ValuePtr val = condition_->eval(whileEnv);
         if (val->getType() != ValueType::BOOL)
         {
-            errorSyntax("while 的条件语句需要一个布尔值:");
+            errorInterp("while 的条件语句需要一个布尔值:");
             return nullptr;
         }
 

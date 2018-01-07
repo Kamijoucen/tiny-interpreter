@@ -84,7 +84,7 @@ namespace lr
         return static_cast<char>(input_.peek());
     }
 
-    Scanner::Scanner(std::string &fileName) : currentChar_(0), line_(1), column_(0), state_(State::NONE), filename_(fileName)
+    Scanner::Scanner(const std::string &fileName) : currentChar_(0), line_(1), column_(0), state_(State::NONE), filename_(fileName)
     {
         input_.open(fileName);
         if (input_.fail())
@@ -218,8 +218,6 @@ namespace lr
     {
         buffer_.pop_back();
     }
-
-    void Scanner::setErrorFlag(bool flag) { errorFlag = flag; }
 
     void Scanner::handleBlockRemark()
     {

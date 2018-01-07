@@ -8,6 +8,7 @@ namespace lr
 {
     extern void errorToken(const std::string& msg);
     extern void errorSyntax(const std::string& msg);
+    extern void errorInterp(const std::string &msg);
 }
 
 

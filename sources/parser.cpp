@@ -14,12 +14,12 @@ namespace lr
     VecExprASTPtr Parser::parse()
     {
         VecExprASTPtr vec;
-        while (!validateToken(TokenValue::END_OF_FILE))
+        while (!validateToken(TokenValue::END_OF_FILE) && !Parser::getErrorFlag())
         {
             ExprASTPtr expp = parsePrimary();
             if (!expp)
             {
-                errorSyntax("parseError");
+                errorSyntax("解析错误");
                 return vec;
             }
             vec.push_back(std::move(expp));
@@ -91,7 +91,7 @@ namespace lr
         Token token = scanner_.getToken();
         if (!expectToken(TokenValue::STRING, true))
         {
-            errorSyntax("need string:" + token.getTokenLocation().toString());
+            errorSyntax("需要一个字符串:" + token.getTokenLocation().toString());
             return nullptr;
         }
         return std::make_unique<StringAST>(token.getStrValue(), token.getTokenLocation());
@@ -164,7 +164,7 @@ namespace lr
             }
             if (curOp.getTokenType() != TokenType::OPERATORS)
             {
-                errorSyntax("not support op:" + scanner_.getToken().getTokenLocation().toString());
+                errorSyntax("不支持该操作符:" + scanner_.getToken().getTokenLocation().toString());
                 return nullptr;
             }
             scanner_.next();
@@ -194,7 +194,7 @@ namespace lr
 
         if (!expectToken(TokenValue::LEFT_BRACE, true))
         {
-            errorSyntax("Block start need '{'" + loc.toString());
+            errorSyntax("块语句的开始需要一个 '{'" + loc.toString());
             return nullptr;
         }
         auto blok = std::make_unique<BlockAST>(loc);
@@ -209,7 +209,7 @@ namespace lr
 
         if (!expectToken(TokenValue::RIGHT_BRACE, true))
         {
-            errorSyntax("Block end need '}'" + loc.toString());
+            errorSyntax("块语句的结束需要一个 '}'" + loc.toString());
             return nullptr;
         }
         return blok;
@@ -223,14 +223,14 @@ namespace lr
 
         if (!expectToken(TokenValue::IF, true))
         {
-            errorSyntax("'if' not found:" + lok.toString());
+            errorSyntax("'if' 关键字未找到:" + lok.toString());
             return nullptr;
         }
         ExprASTPtr condition = parseParen();
 
         if (!condition)
         {
-            errorSyntax("if condition not found:" + lok.toString());
+            errorSyntax("if 的条件语句未找到:" + lok.toString());
             return nullptr;
         }
 
@@ -352,7 +352,7 @@ namespace lr
 
             if (!expectToken(TokenValue::SEMICOLON, true))
             {
-                errorSyntax("没有找到结束符:" + scanner_.getToken().getTokenLocation().toString());
+                errorSyntax("没有找到语句结束分号:" + scanner_.getToken().getTokenLocation().toString());
                 return nullptr;
             }
             return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());

@@ -16,7 +16,7 @@ namespace lr
 
         inline const Dictionary &getDic() const ;
 
-        explicit Scanner(std::string &fileName);
+        explicit Scanner(const std::string &fileName);
 
         void    next();
 
@@ -82,6 +82,7 @@ namespace lr
         static bool     errorFlag;
     };
 
+    inline void Scanner::setErrorFlag(bool flag) { errorFlag = flag; }
     inline bool Scanner::getErrorFlag() { return errorFlag; }
     inline Token Scanner::getToken() const { return currentToken_; }
     inline const Dictionary &Scanner::getDic() const { return dictionary_; }
