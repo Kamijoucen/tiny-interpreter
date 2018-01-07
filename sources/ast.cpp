@@ -2,8 +2,8 @@
 #include <iostream>
 #include <utility>
 #include "ast.h"
-#include "util/error.h"
-#include "parser.h"
+#include "../util/error.h"
+#include "../include/parser.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT

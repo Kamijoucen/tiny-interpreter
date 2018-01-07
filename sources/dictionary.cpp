@@ -1,5 +1,5 @@
 
-#include "dictionary.h"
+#include "../include/dictionary.h"
 
 namespace lr
 {

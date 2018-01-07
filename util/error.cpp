@@ -1,8 +1,8 @@
 
 #include <iostream>
 #include "error.h"
-#include "../scanner.h"
-#include "../parser.h"
+#include "../include/scanner.h"
+#include "../include/parser.h"
 
 namespace lr
 {

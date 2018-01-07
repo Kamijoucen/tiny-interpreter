@@ -1,6 +1,6 @@
 
-#include "scanner.h"
-#include "util/error.h"
+#include "../include/scanner.h"
+#include "../util/error.h"
 
 namespace lr
 {

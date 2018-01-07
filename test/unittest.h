@@ -3,11 +3,11 @@
 
 #include <gtest/gtest.h>
 #include <iostream>
-#include "../environment.h"
+#include "../include/environment.h"
 #include "test.h"
-#include "../parser.h"
-#include "../value.h"
-#include "../ast.h"
+#include "../include/parser.h"
+#include "../include/value.h"
+#include "../sources/ast.h"
 using namespace lr;
 
 
@@ -127,7 +127,9 @@ TEST(eval, flowctest)
     EnvPtr env = Environment::buildInitScope();
     for (auto &stat : vec)
     {
-        stat->eval(env);
+        if (!Parser::getErrorFlag()) {
+            stat->eval(env);
+        }
     }
 }
 

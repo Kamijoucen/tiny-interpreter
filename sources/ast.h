@@ -2,9 +2,9 @@
 #ifndef SIMPLEL_AST_H
 #define SIMPLEL_AST_H
 
-#include "environment.h"
-#include "token.h"
-#include "value.h"
+#include "../include/environment.h"
+#include "../include/token.h"
+#include "../include/value.h"
 #include <memory>
 #include <vector>
 

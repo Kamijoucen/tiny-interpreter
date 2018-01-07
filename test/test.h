@@ -3,7 +3,7 @@
 #define LLANGUAGE_TEST_H
 
 #include <iostream>
-#include "../token.h"
+#include "../include/token.h"
 
 inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenValue) {
     std::string value;

@@ -1,6 +1,6 @@
 
-#include "parser.h"
-#include "util/error.h"
+#include "../include/parser.h"
+#include "../util/error.h"
 
 namespace lr
 {

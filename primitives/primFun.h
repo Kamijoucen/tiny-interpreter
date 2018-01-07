@@ -3,8 +3,8 @@
 #define LLANGUAGE_PRIMFUN_H
 
 #include <vector>
-#include "../value.h"
-#include "../token.h"
+#include "../include/value.h"
+#include "../include/token.h"
 
 namespace lr
 {

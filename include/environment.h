@@ -6,7 +6,7 @@
 #include <map>
 #include "value.h"
 #include "token.h"
-#include "primitives/primFun.h"
+#include "../primitives/primFun.h"
 
 namespace lr
 {
