@@ -11,7 +11,9 @@
 namespace lr
 {
 
-    ValuePtr VariableAST::eval(EnvPtr ptr) { return nullptr; }
+    ValuePtr VariableAST::eval(EnvPtr ptr) {
+        return nullptr;
+    }
 
     VariableAST::VariableAST(std::string str) : varName_(std::move(str)) {}
 
