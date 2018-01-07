@@ -1,13 +1,13 @@
 
-#ifndef LLANGUAGE_LESS_H
-#define LLANGUAGE_LESS_H
+#ifndef LLANGUAGE_MULTIPLY_H
+#define LLANGUAGE_MULTIPLY_H
 
 #include "primFun.h"
-#include "../include/value.h"
+#include "../value.h"
 
 namespace lr
 {
-    struct Less : PrimFun
+    struct Multiply : PrimFun
     {
         ValuePtr apply(const ValuePtrVec &vec, const TokenLocation &lok) override;
 
@@ -15,4 +15,5 @@ namespace lr
     };
 }
 
-#endif //LLANGUAGE_LESS_H
+
+#endif //LLANGUAGE_MULTIPLY_H

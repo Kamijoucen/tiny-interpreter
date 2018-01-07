@@ -3,7 +3,7 @@
 #define LLANGUAGE_GREATER_H
 
 #include "primFun.h"
-#include "../include/value.h"
+#include "../value.h"
 
 namespace lr
 {

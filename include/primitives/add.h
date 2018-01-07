@@ -1,20 +1,19 @@
 
-#ifndef LLANGUAGE_DIVIDE_H
-#define LLANGUAGE_DIVIDE_H
+#ifndef LLANGUAGE_ADD_H
+#define LLANGUAGE_ADD_H
 
 #include "primFun.h"
-#include "../include/value.h"
+#include "../environment.h"
 
 namespace lr
 {
-    struct Divide : PrimFun
+    struct Add : PrimFun
     {
+
         ValuePtr apply(const ValuePtrVec &vec, const TokenLocation& lok) override;
 
         ValueType typeCheck(const ValuePtrVec &vec) override;
     };
-
 }
 
-
-#endif //LLANGUAGE_DIVIDE_H
+#endif //LLANGUAGE_ADD_H

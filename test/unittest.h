@@ -7,7 +7,7 @@
 #include "test.h"
 #include "../include/parser.h"
 #include "../include/value.h"
-#include "../sources/ast.h"
+#include "../include/ast.h"
 using namespace lr;
 
 

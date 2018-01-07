@@ -1,13 +1,13 @@
 
-#include "multiply.h"
-#include "../util/error.h"
-
+#include "../../include/primitives/minus.h"
+#include "../../util/error.h"
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
 namespace lr
 {
-    ValuePtr Multiply::apply(const ValuePtrVec &vec, const TokenLocation &lok)
+
+    ValuePtr Minus::apply(const ValuePtrVec &vec, const TokenLocation &lok)
     {
         if (vec.size() != 2)
         {
@@ -22,35 +22,33 @@ namespace lr
         {
             const auto l = static_cast<IntValue*>(v1.get());
             const auto r = static_cast<IntValue*>(v2.get());
-            return std::make_shared<IntValue>(l->value_ * r->value_);
+            return std::make_shared<IntValue>(l->value_ - r->value_);
         }
 
         if (t1 == Float && t2 == Float)
         {
             const auto l = static_cast<FloatValue*>(v1.get());
             const auto r = static_cast<FloatValue*>(v2.get());
-            return std::make_shared<FloatValue>(l->value_ * r->value_);
+            return std::make_shared<FloatValue>(l->value_ - r->value_);
         }
 
         if (t1 == Float && t2 == Int)
         {
             const auto l = static_cast<FloatValue*>(v1.get());
             const auto r = static_cast<IntValue*>(v2.get());
-            float i = l->value_;
-            int i1 = r->value_;
-            return std::make_shared<FloatValue>(l->value_ * r->value_);
+            return std::make_shared<FloatValue>(l->value_ - r->value_);
         }
 
         if (t1 == Int && t2 == Float)
         {
             const auto l = static_cast<IntValue*>(v1.get());
             const auto r = static_cast<FloatValue*>(v2.get());
-            return std::make_shared<FloatValue>(l->value_ * r->value_);
+            return std::make_shared<FloatValue>(l->value_ - r->value_);
         }
         return nullptr;
     }
 
-    ValueType Multiply::typeCheck(const ValuePtrVec &vec)
+    ValueType Minus::typeCheck(const ValuePtrVec &vec)
     {
         if (vec.size() != 2)
         {
@@ -62,4 +60,6 @@ namespace lr
 
         return ValueType::UNKNOWN;
     }
+
+
 }

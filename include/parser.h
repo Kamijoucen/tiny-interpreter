@@ -3,7 +3,7 @@
 #define LLANGUAGE_PARSER_H
 
 #include "scanner.h"
-#include "../sources/ast.h"
+#include "ast.h"
 
 namespace lr
 {

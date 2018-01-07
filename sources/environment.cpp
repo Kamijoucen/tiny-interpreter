@@ -1,12 +1,12 @@
 
 #include "../include/environment.h"
 
-#include "../primitives/add.h"
-#include "../primitives/divide.h"
-#include "../primitives/greater.h"
-#include "../primitives/less.h"
-#include "../primitives/multiply.h"
-#include "../primitives/minus.h"
+#include "../include/primitives/add.h"
+#include "../include/primitives/divide.h"
+#include "../include/primitives/greater.h"
+#include "../include/primitives/less.h"
+#include "../include/primitives/multiply.h"
+#include "../include/primitives/minus.h"
 
 namespace lr
 {

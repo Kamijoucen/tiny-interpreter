@@ -1,7 +1,7 @@
 
 #include <iostream>
 #include <utility>
-#include "ast.h"
+#include "../include/ast.h"
 #include "../util/error.h"
 #include "../include/parser.h"
 
@@ -57,7 +57,7 @@ namespace lr
 
     ValuePtr BlockAST::eval(EnvPtr env)
     {
-        EnvPtr lenv = std::make_shared<Environment>(env);
+        EnvPtr lenv = makeNewEnv(env);
         for (auto &stat : vec_)
         {
             if (typeid(BreakAST) == typeid(*stat))
@@ -184,21 +184,22 @@ namespace lr
 
     ValuePtr WhileStatementAST::eval(EnvPtr env)
     {
-        ValuePtr val = condition_->eval(env);
+        EnvPtr whileEnv = makeNewEnv(env);
+        ValuePtr val = condition_->eval(whileEnv);
         if (val->getType() != ValueType::BOOL)
         {
-            errorSyntax("while condition need bool val");
+            errorSyntax("while 的条件语句需要一个布尔值:");
             return nullptr;
         }
 
-        env->putLocationValue("isNeedBreak", std::make_shared<BoolValue>(false));
+        whileEnv->putLocationValue("isNeedBreak", std::make_shared<BoolValue>(false));
 
         while (static_cast<BoolValue*>(val.get())->value_ && !Parser::getErrorFlag())
         {
-            body_->eval(env);
-            val = condition_->eval(env);
+            body_->eval(whileEnv);
+            val = condition_->eval(whileEnv);
 
-            if (static_cast<BoolValue*>(env->lookup("isNeedBreak").get())->value_)
+            if (static_cast<BoolValue*>(whileEnv->lookup("isNeedBreak").get())->value_)
                 break;
         }
 
