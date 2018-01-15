@@ -9,6 +9,8 @@ namespace lr
 {
     class Value;
 
+    class Fun;
+
     using ValuePtr = std::shared_ptr<Value>;
 
     enum class ValueType
@@ -155,5 +157,18 @@ namespace lr
     inline std::string VoidValue::toString() const { return "void"; }
     inline ValueType VoidValue::getType() const { return ValueType::VOID; }
     inline VoidValue::VoidValuePtr VoidValue::instance() { return voidPtr_; }
+
+
+    class Closure : public Value
+    {
+    public:
+        Closure() = default;
+
+        ValueType getType() const override;
+
+        std::string toString() const override;
+
+    private:
+    };
 }
 #endif //LLANGUAGE_RESULT_H

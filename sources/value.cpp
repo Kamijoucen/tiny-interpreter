@@ -14,4 +14,12 @@ namespace lr
     BoolValue::BoolValue(bool val) : value_(val) {}
 
     StringValue::StringValue(const std::string &str) : value_(str) {}
+
+    ValueType Closure::getType() const {
+        return ValueType::NONE;
+    }
+
+    std::string Closure::toString() const {
+        return "";
+    }
 }

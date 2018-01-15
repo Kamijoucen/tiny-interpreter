@@ -78,9 +78,8 @@ namespace lr
 
     BlockAST::BlockAST(TokenLocation &lok) : ExprAST(lok) {}
 
-    VariableDefinitionStatementAST::VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs,
-                                                                   const TokenLocation &location)
-            : ExprAST(location),
+    VariableDefinitionStatementAST::VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, TokenLocation location)
+            : ExprAST(std::move(location)),
               lhs_(std::move(lhs)),
               rhs_(std::move(rhs)) {}
 
@@ -89,7 +88,7 @@ namespace lr
     {
         if (env->lookupLocation(lhs_->getVarName()))
         {
-            errorInterp("变量定义重复:" + lhs_->getTokenLocation().toString());
+            errorInterp("变量 " + lhs_->getVarName() + " 定义重复:" + tokenLocation_.toString());
             return nullptr;
         }
         env->putLocationValue(lhs_->getVarName(), rhs_->eval(env));
@@ -156,14 +155,15 @@ namespace lr
         return std::make_unique<BoolValue>(value_);
     }
 
-    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname) : varname_(varname) {}
+    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                                      varname_(varname) {}
 
     ValuePtr VariableUseStatementAST::eval(EnvPtr ptr)
     {
         auto var = ptr->lookup(varname_);
         if (!var)
         {
-            errorInterp("作用域内没有发现变量: " + varname_);
+            errorInterp("作用域内没有发现变量: " + varname_ + "\t" + tokenLocation_.toString());
             return nullptr;
         }
         return var;

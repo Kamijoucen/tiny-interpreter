@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include "../include/parser.h"
 #include "../util/error.h"
 
@@ -25,6 +26,14 @@ namespace lr
             vec.push_back(std::move(expp));
         }
         return vec;
+    }
+
+
+    ExprASTPtr Parser::parseStatement() {
+
+        // todo 语句
+
+        return lr::ExprASTPtr();
     }
 
     ExprASTPtr Parser::parsePrimary()
@@ -199,7 +208,8 @@ namespace lr
         }
         auto blok = std::make_unique<BlockAST>(loc);
 
-        while (!validateToken(TokenValue::RIGHT_BRACE))
+        while (!validateToken(TokenValue::RIGHT_BRACE)
+               && !validateToken(TokenValue::END_OF_FILE))
         {
             if (auto stat = parsePrimary())
             {
@@ -322,7 +332,6 @@ namespace lr
             errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
-
         return std::make_unique<VariableDefinitionStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
     }
 
@@ -359,7 +368,7 @@ namespace lr
         }
         else
         {
-            return std::make_unique<VariableUseStatementAST>(tok.getStrValue());
+            return std::make_unique<VariableUseStatementAST>(tok.getStrValue(), tok.getTokenLocation());
         }
     }
 

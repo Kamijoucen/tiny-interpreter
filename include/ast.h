@@ -85,7 +85,7 @@ namespace lr
         ValuePtr eval(EnvPtr env) override;
 
     public:
-        VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
+        VariableDefinitionStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, TokenLocation lok);
 
     private:
         VariableASTPtr  lhs_;
@@ -115,7 +115,7 @@ namespace lr
         ValuePtr eval(EnvPtr ptr) override;
 
     public:
-        explicit VariableUseStatementAST(const std::string &varname);
+        explicit VariableUseStatementAST(const std::string &varname, TokenLocation lok);
 
     private:
         std::string varname_;
@@ -312,7 +312,8 @@ namespace lr
     };
 
 
-    class ReturnAST : public ExprAST {
+    class ReturnAST : public ExprAST
+    {
     public:
         ReturnAST() = default;
 
@@ -324,6 +325,14 @@ namespace lr
     inline EnvPtr makeNewEnv(EnvPtr env) {
         return std::make_shared<Environment>(env);
     }
+
+
+    class FunAST : public ExprAST
+    {
+    public:
+        std::map<std::string, > param;
+    private:
+    };
 
 }
 

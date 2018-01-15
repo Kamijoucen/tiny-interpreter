@@ -8,7 +8,7 @@
 namespace lr {
 
     inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenValue) {
-        std::string value;
+        std::string value = "unkonw token value!";
         using lr::TokenValue;
         switch (tokenValue) {
             case lr::TokenValue::VAR:
@@ -77,37 +77,37 @@ namespace lr {
             case lr::TokenValue::LESS_OR_EQUAL:
                 value = "LESS_OR_EQUAL";
                 break;
-            case lr::TokenValue::GREATER_THAN:
+            case TokenValue::GREATER_THAN:
                 value = "GREATER_THAN";
                 break;
-            case lr::TokenValue::LESS_THAN:
+            case TokenValue::LESS_THAN:
                 value = "LESS_THAN";
                 break;
-            case lr::TokenValue::SEMICOLON:
+            case TokenValue::SEMICOLON:
                 value = "SEMICOLON";
                 break;
-            case lr::TokenValue::COMMA:
+            case TokenValue::COMMA:
                 value = "COMMA";
                 break;
-            case lr::TokenValue::LEFT_SQUARE:
+            case TokenValue::LEFT_SQUARE:
                 value = "LEFT_SQUARE";
                 break;
-            case lr::TokenValue::RIGHT_SQUARE:
+            case TokenValue::RIGHT_SQUARE:
                 value = "RIGHT_SQUARE";
                 break;
-            case lr::TokenValue::LEFT_BRACE:
+            case TokenValue::LEFT_BRACE:
                 value = "LEFT_BRACE";
                 break;
-            case lr::TokenValue::RIGHT_BRACE:
+            case TokenValue::RIGHT_BRACE:
                 value = "RIGHT_BRACE";
                 break;
-            case lr::TokenValue::PERIOD:
+            case TokenValue::PERIOD:
                 value = "PERIOD";
                 break;
-            case lr::TokenValue::FLOAT:
+            case TokenValue::FLOAT:
                 value = "FLOAT";
                 break;
-            case lr::TokenValue::INTEGER:
+            case TokenValue::INTEGER:
                 value = "INTEGER";
                 break;
             case TokenValue::CLASS:

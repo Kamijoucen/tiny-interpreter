@@ -9,10 +9,7 @@ namespace lr
 
     bool Interpreter::errorFlag = false;
 
-    Interpreter::Interpreter() : globalEnv_(nullptr)
-    {
-        globalEnv_ = Environment::buildInitScope();
-    }
+    Interpreter::Interpreter() : globalEnv_(Environment::buildInitScope()) {}
 
     void Interpreter::interp(const std::string &file)
     {

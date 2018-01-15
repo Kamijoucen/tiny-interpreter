@@ -14,6 +14,8 @@ namespace lr
 
         VecExprASTPtr parse();
 
+        ExprASTPtr    parseStatement();
+
         BlockASTPtr   parseBlock();
 
         ExprASTPtr    parsePrimary();
