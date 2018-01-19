@@ -179,8 +179,8 @@ namespace lr
     PrintStatementAST::PrintStatementAST(ExprASTPtr val) : val_(std::move(val)) {}
 
 
-    WhileStatementAST::WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, const TokenLocation &lok)
-            : ExprAST(lok),
+    WhileStatementAST::WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, TokenLocation lok)
+            : ExprAST(std::move(lok)),
               condition_(std::move(condion)),
               body_(std::move(body)) {}
 
@@ -236,6 +236,7 @@ namespace lr
     }
 
     ValuePtr ContinueAST::eval(EnvPtr env) {
+
         return lr::ValuePtr();
     }
 

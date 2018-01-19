@@ -44,6 +44,8 @@ namespace lr
 
         ExprASTPtr    parseVariableUse();
 
+        ExprASTPtr    parseFunctionDefinitionStatement();
+
         ExprASTPtr    parsePrintStatement();
 
         ExprASTPtr    parseInputStatement();

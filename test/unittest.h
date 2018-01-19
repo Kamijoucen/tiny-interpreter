@@ -69,7 +69,7 @@ TEST(varExpr, expr)
 }
 
 TEST(scannerType, scanner) {
-    std::string a("../Resource/var.l");
+    std::string a("../Resource/fun.l");
     Scanner scanner(a);
     scanner.next();
     while (scanner.getToken().getTokenValue() != TokenValue::END_OF_FILE) {
@@ -139,5 +139,12 @@ TEST(iter, iter)
     iter.interp("../Resource/flowc.l");
 }
 
+
+TEST(eval, fun)
+{
+    Scanner scanner("../Resource/fun.l");
+    Parser p(scanner);
+    p.parseFunctionDefinitionStatement();
+}
 
 #endif //LLANGUAGE_UNITTEST_H

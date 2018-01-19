@@ -63,4 +63,12 @@ namespace lr
         return ValueType::UNKNOWN;
     }
 
+    ValueType Less::getType() const {
+        return ValueType::OP;
+    }
+
+    std::string Less::toString() const {
+        return "<";
+    }
+
 }

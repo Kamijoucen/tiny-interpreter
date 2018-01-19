@@ -7,74 +7,73 @@
 
 namespace lr {
 
-    inline std::ostream &operator<<(std::ostream &io, const lr::TokenValue &tokenValue) {
+    inline std::ostream &operator<<(std::ostream &io, const TokenValue &tokenValue) {
         std::string value = "unkonw token value!";
-        using lr::TokenValue;
         switch (tokenValue) {
-            case lr::TokenValue::VAR:
+            case TokenValue::VAR:
                 value = "VAR";
                 break;
-            case lr::TokenValue::DEF:
+            case TokenValue::DEF:
                 value = "DEF";
                 break;
-            case lr::TokenValue::IF:
+            case TokenValue::IF:
                 value = "IF";
                 break;
-            case lr::TokenValue::DO:
+            case TokenValue::DO:
                 value = "DO";
                 break;
-            case lr::TokenValue::FOR:
+            case TokenValue::FOR:
                 value = "FOR";
                 break;
-            case lr::TokenValue::WHILE:
+            case TokenValue::WHILE:
                 value = "WHILE";
                 break;
-            case lr::TokenValue::ELSE:
+            case TokenValue::ELSE:
                 value = "ELSE";
                 break;
-            case lr::TokenValue::RETURN:
+            case TokenValue::RETURN:
                 value = "RETURN";
                 break;
-            case lr::TokenValue::LEFT_PAREN:
+            case TokenValue::LEFT_PAREN:
                 value = "LEFT_PAREN";
                 break;
-            case lr::TokenValue::RIGHT_PAREN:
+            case TokenValue::RIGHT_PAREN:
                 value = "RIGHT_PAREN";
                 break;
-            case lr::TokenValue::ASSIGN:
+            case TokenValue::ASSIGN:
                 value = "ASSIGN";
                 break;
             case lr::TokenValue::IDENTIFIER:
                 value = "IDENTIFIER";
                 break;
-            case lr::TokenValue::ADD:
+            case TokenValue::ADD:
                 value = "ADD";
                 break;
-            case lr::TokenValue::MINUS:
+            case TokenValue::MINUS:
                 value = "MINUS";
                 break;
-            case lr::TokenValue::MULTIPLY:
+            case TokenValue::MULTIPLY:
                 value = "MULTIPLY";
                 break;
-            case lr::TokenValue::DIVIDE:
+            case TokenValue::DIVIDE:
                 value = "DIVIDE";
                 break;
-            case lr::TokenValue::AND:
+            case TokenValue::AND:
                 value = "AND";
                 break;
-            case lr::TokenValue::OR:
+            case TokenValue::OR:
                 value = "OR";
                 break;
-            case lr::TokenValue::NOT:
+            case TokenValue::NOT:
                 value = "NOT";
                 break;
-            case lr::TokenValue::EQUAL:
+            case TokenValue::EQUAL:
                 value = "EQUAL";
                 break;
-            case lr::TokenValue::GREATER_OR_EQUAL:
+            case TokenValue::GREATER_OR_EQUAL:
                 value = "GREATER_OR_EQUAL";
                 break;
-            case lr::TokenValue::LESS_OR_EQUAL:
+            case TokenValue::LESS_OR_EQUAL:
                 value = "LESS_OR_EQUAL";
                 break;
             case TokenValue::GREATER_THAN:
@@ -119,30 +118,33 @@ namespace lr {
             case TokenValue::END_OF_FILE:
                 value = "END_OF_FILE";
                 break;
+            case TokenValue::PRINT:
+                value = "PRINT";
+                break;
         }
         std::cout << value;
         return io;
     }
 
-    inline std::ostream &operator<<(std::ostream &io, const lr::TokenType &tokenType) {
-        std::string type;
+    inline std::ostream &operator<<(std::ostream &io, const TokenType &tokenType) {
+        std::string type = "unkonw token type!";
         switch (tokenType) {
-            case lr::TokenType::DELIMITER:
+            case TokenType::DELIMITER:
                 type = "DELIMITER";
                 break;
-            case lr::TokenType::KEYWORDS:
+            case TokenType::KEYWORDS:
                 type = "KEYWORDS";
                 break;
-            case lr::TokenType::UNRESERVED:
+            case TokenType::UNRESERVED:
                 type = "UNRESERVED";
                 break;
-            case lr::TokenType::OPERATORS:
+            case TokenType::OPERATORS:
                 type = "OPERATORS";
                 break;
-            case lr::TokenType::NUMBER:
+            case TokenType::NUMBER:
                 type = "NUMBER";
                 break;
-            case lr::TokenType::UNKNOWN:
+            case TokenType::UNKNOWN:
                 type = "UNKNOWN";
                 break;
         }

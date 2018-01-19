@@ -13,7 +13,7 @@ namespace lr
     using PrimFunPtr  = std::shared_ptr<PrimFun>;
     using ValuePtrVec = std::vector<ValuePtr>;
 
-    struct PrimFun
+    struct PrimFun : public Value
     {
         virtual ValuePtr  apply(const ValuePtrVec &vec, const TokenLocation& lok) = 0;
 

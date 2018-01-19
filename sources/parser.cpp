@@ -482,6 +482,41 @@ namespace lr
     }
 
 
+    ExprASTPtr Parser::parseFunctionDefinitionStatement()
+    {
+        using namespace std;
+        TokenLocation deflok = scanner_.getToken().getTokenLocation();
+        if (!expectToken(TokenValue::DEF, true))
+        {
+            errorSyntax("'def' 关键字未找到:" + deflok.toString());
+            return nullptr;
+        }
+
+        if (expectToken(TokenValue::IDENTIFIER))
+        {
+            vector<string> param;
+            string funname = scanner_.getToken().getStrValue();
+            scanner_.next();
+            if (expectToken(TokenValue::LEFT_PAREN, true))
+            {
+                while (!validateToken(TokenValue::RIGHT_PAREN, true) &&
+                        scanner_.getToken().getTokenValue() != TokenValue::END_OF_FILE)
+                {
+                    Token tok = scanner_.getToken();
+                    if (!expectToken(TokenValue::IDENTIFIER, true)) {
+                        errorSyntax("形式参数需要一个变量名字:" + tok.getTokenLocation().toString());
+                        return nullptr;
+                    }
+                    param.push_back(std::move(tok.getStrValue()));
+                }
+            }
+            BlockASTPtr funbody = parseBlock();
+        }
+        errorSyntax("errorSyntax");
+        return nullptr;
+    }
+
+
     bool Parser::expectToken(TokenValue val, bool next)
     {
         if (scanner_.getToken().getTokenValue() != val)

@@ -61,4 +61,14 @@ namespace lr
         // todo xixixi
         return ValueType::UNKNOWN;
     }
+
+    ValueType Add::getType() const
+    {
+        return ValueType::OP;
+    }
+
+    std::string Add::toString() const
+    {
+        return "+";
+    }
 }

@@ -61,5 +61,13 @@ namespace lr
         return ValueType::UNKNOWN;
     }
 
+    ValueType Minus::getType() const {
+        return ValueType::OP;
+    }
+
+    std::string Minus::toString() const {
+        return "-";
+    }
+
 
 }

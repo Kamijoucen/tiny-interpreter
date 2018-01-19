@@ -242,7 +242,7 @@ namespace lr
     class WhileStatementAST : public ExprAST
     {
     public:
-        WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, const TokenLocation &lok);
+        WhileStatementAST(ExprASTPtr condion, BlockASTPtr body, TokenLocation lok);
 
     public:
         ValuePtr eval(EnvPtr env) override;
@@ -330,7 +330,7 @@ namespace lr
     class FunAST : public ExprAST
     {
     public:
-        std::map<std::string, > param;
+//        std::map<std::string, > param;
     private:
     };
 

@@ -7,11 +7,16 @@
 
 namespace lr
 {
-    struct Divide : PrimFun
+    struct Divide : public PrimFun
     {
         ValuePtr apply(const ValuePtrVec &vec, const TokenLocation& lok) override;
 
         ValueType typeCheck(const ValuePtrVec &vec) override;
+
+        ValueType getType() const override;
+
+        std::string toString() const override;
+
     };
 
 }

@@ -60,4 +60,12 @@ namespace lr
         // todo
         return ValueType::UNKNOWN;
     }
+
+    ValueType Divide::getType() const {
+        return ValueType::OP;
+    }
+
+    std::string Divide::toString() const {
+        return "/";
+    }
 }

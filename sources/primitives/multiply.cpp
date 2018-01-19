@@ -54,12 +54,20 @@ namespace lr
     {
         if (vec.size() != 2)
         {
-            errorSyntax("'-'必须作用于两个以上的值");
+            errorSyntax("'*'必须作用于两个以上的值");
             return ValueType::UNKNOWN;
         }
 
         // todo
 
         return ValueType::UNKNOWN;
+    }
+
+    ValueType Multiply::getType() const {
+        return ValueType::OP;
+    }
+
+    std::string Multiply::toString() const {
+        return "*";
     }
 }
