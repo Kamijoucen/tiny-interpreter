@@ -5,7 +5,7 @@ while (i > 0) {
     i = i - 1;
     break;
 }
-var i;
+// var i;
 
 var j = 5;
 while (j > 0) {

@@ -7,7 +7,7 @@
 #include "environment.h"
 
 
-namespace lr
+namespace cen
 {
 
     class Interpreter

@@ -5,7 +5,7 @@
 #include "primFun.h"
 #include "../value.h"
 
-namespace lr
+namespace cen
 {
     struct Greater : public PrimFun
     {

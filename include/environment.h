@@ -8,7 +8,7 @@
 #include "token.h"
 #include "primitives/primFun.h"
 
-namespace lr
+namespace cen
 {
 
     class Environment;

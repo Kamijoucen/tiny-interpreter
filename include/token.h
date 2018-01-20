@@ -6,7 +6,7 @@
 #include <utility>
 #include <ostream>
 
-namespace lr
+namespace cen
 {
 
     class TokenLocation

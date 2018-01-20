@@ -1,7 +1,7 @@
 
 #include "../include/value.h"
 
-namespace lr
+namespace cen
 {
     NoneValue::NoneValuePtr NoneValue::nonePtr_ = std::make_shared<NoneValue>();
 

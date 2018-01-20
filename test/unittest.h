@@ -9,11 +9,13 @@
 #include "../include/parser.h"
 #include "../include/value.h"
 #include "../include/ast.h"
-using namespace lr;
+#include "../include/exception.h"
+
+using namespace cen;
 
 TEST(breaktest, t)
 {
-    lr::ExprASTPtr p = std::make_unique<BreakAST>();
+    cen::ExprASTPtr p = std::make_unique<BreakAST>();
     ASSERT_EQ(typeid(BreakAST) == typeid(*p), true);
 }
 
@@ -142,9 +144,13 @@ TEST(iter, iter)
 
 TEST(eval, fun)
 {
-    Scanner scanner("../Resource/fun.l");
-    Parser p(scanner);
-    p.parseFunctionDefinitionStatement();
+    try {
+        Scanner scanner("../Resource/fuccn.l");
+        Parser p(scanner);
+        p.parseFunctionDefinitionStatement();
+    } catch (const FileAccessError &error) {
+        std::cout << error.what() << std::endl;
+    }
 }
 
 #endif //LLANGUAGE_UNITTEST_H

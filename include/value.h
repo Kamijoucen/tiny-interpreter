@@ -5,7 +5,7 @@
 #include <memory>
 #include <ostream>
 
-namespace lr
+namespace cen
 {
     class Value;
 

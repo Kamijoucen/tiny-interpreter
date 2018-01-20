@@ -5,7 +5,7 @@
 #include "scanner.h"
 #include "ast.h"
 
-namespace lr
+namespace cen
 {
 
     class Parser
@@ -61,7 +61,11 @@ namespace lr
 
     private:
 
-        bool expectToken(TokenValue val, bool next = false);
+        void expectToken(TokenValue val, bool next = false);
+
+        void expectToken(TokenValue val, const std::string &msg, bool next = false);
+
+        void expectToken(TokenValue val, const char *msg, bool next = false);
 
         bool validateToken(TokenValue val, bool next = false);
 

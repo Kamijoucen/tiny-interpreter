@@ -5,7 +5,7 @@
 #include "primFun.h"
 #include "../environment.h"
 
-namespace lr
+namespace cen
 {
     struct Add : public PrimFun
     {

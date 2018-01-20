@@ -1,10 +1,20 @@
 
 #include "../include/scanner.h"
-#include "../util/error.h"
+#include "../include/exception.h"
 
-namespace lr
+namespace cen
 {
     bool Scanner::errorFlag = false;
+
+
+    Scanner::Scanner(const std::string &fileName) : currentChar_(0), line_(1), column_(0),
+                                                    state_(State::NONE), filename_(fileName)
+    {
+        input_.open(fileName);
+        if (input_.fail()) {
+            throw FileAccessError("文件无法访问: " + fileName);
+        }
+    }
 
     void Scanner::next()
     {
@@ -82,15 +92,6 @@ namespace lr
     char Scanner::peekChar()
     {
         return static_cast<char>(input_.peek());
-    }
-
-    Scanner::Scanner(const std::string &fileName) : currentChar_(0), line_(1), column_(0), state_(State::NONE), filename_(fileName)
-    {
-        input_.open(fileName);
-        if (input_.fail())
-        {
-            errorToken("无法读取文件");
-        }
     }
 
     void Scanner::addBuffer(char ch)

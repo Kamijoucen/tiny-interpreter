@@ -6,7 +6,7 @@
 #include "../value.h"
 #include "../token.h"
 
-namespace lr
+namespace cen
 {
     class PrimFun;
 

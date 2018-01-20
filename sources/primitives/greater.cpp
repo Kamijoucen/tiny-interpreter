@@ -2,10 +2,10 @@
 #include "../../util/error.h"
 #include "../../include/primitives/greater.h"
 
-#define Int     lr::ValueType::INT
-#define Float   lr::ValueType::FLOAT
+#define Int     cen::ValueType::INT
+#define Float   cen::ValueType::FLOAT
 
-namespace lr
+namespace cen
 {
 
     ValuePtr Greater::apply(const ValuePtrVec& vec, const TokenLocation &lok)

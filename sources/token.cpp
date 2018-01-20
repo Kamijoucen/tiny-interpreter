@@ -3,7 +3,7 @@
 #include <sstream>
 
 
-namespace lr
+namespace cen
 {
     Token::Token(TokenType tokenType, TokenValue tokenValue, std::string strValue,
                      const TokenLocation &tokenLocation) : tokenType_(tokenType), tokenValue_(tokenValue),

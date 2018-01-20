@@ -7,7 +7,7 @@
 #include <string>
 #include <fstream>
 
-namespace lr
+namespace cen
 {
 
     class Scanner

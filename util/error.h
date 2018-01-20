@@ -4,7 +4,7 @@
 
 #include "string"
 
-namespace lr
+namespace cen
 {
     extern void errorToken(const std::string& msg);
     extern void errorSyntax(const std::string& msg);

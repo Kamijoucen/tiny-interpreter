@@ -2,10 +2,10 @@
 #include "../../include/primitives/less.h"
 #include "../../util/error.h"
 
-#define Int     lr::ValueType::INT
-#define Float   lr::ValueType::FLOAT
+#define Int     cen::ValueType::INT
+#define Float   cen::ValueType::FLOAT
 
-namespace lr
+namespace cen
 {
 
     ValuePtr Less::apply(const ValuePtrVec &vec, const TokenLocation &lok)

@@ -9,7 +9,7 @@
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
 
-namespace lr
+namespace cen
 {
 
     ValuePtr VariableAST::eval(EnvPtr ptr) {
@@ -232,12 +232,12 @@ namespace lr
 
     ValuePtr BreakAST::eval(EnvPtr env)
     {
-        return lr::ValuePtr();
+        return cen::ValuePtr();
     }
 
     ValuePtr ContinueAST::eval(EnvPtr env) {
 
-        return lr::ValuePtr();
+        return cen::ValuePtr();
     }
 
     ContinueAST::ContinueAST(const TokenLocation &lok) : ExprAST(lok) {}
@@ -245,6 +245,6 @@ namespace lr
     ReturnAST::ReturnAST(const TokenLocation &lok) : ExprAST(lok) {}
 
     ValuePtr ReturnAST::eval(EnvPtr env) {
-        return lr::ValuePtr();
+        return cen::ValuePtr();
     }
 }

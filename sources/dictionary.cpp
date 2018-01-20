@@ -1,7 +1,7 @@
 
 #include "../include/dictionary.h"
 
-namespace lr
+namespace cen
 {
 
     Dictionary::Dictionary()

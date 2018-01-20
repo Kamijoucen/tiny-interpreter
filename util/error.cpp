@@ -4,16 +4,18 @@
 #include "../include/scanner.h"
 #include "../include/parser.h"
 #include "../include/interpreter.h"
+#include "../include/exception.h"
 
-namespace lr {
+namespace cen {
+
+    // todo
     void errorToken(const std::string &msg) {
         std::cerr << "词法错误:" << msg << std::endl;
         Scanner::setErrorFlag(true);
     }
 
     void errorSyntax(const std::string &msg) {
-        std::cerr << "语法错误: " << msg << std::endl;
-        Parser::setErrorFlag(true);
+        throw SyntaxError("语法错误: " + msg);
     }
 
     void errorInterp(const std::string &msg) {

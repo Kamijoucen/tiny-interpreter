@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-namespace lr
+namespace cen
 {
 
     class ExprAST;

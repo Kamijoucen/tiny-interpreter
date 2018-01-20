@@ -8,7 +8,7 @@
 #include "../include/primitives/multiply.h"
 #include "../include/primitives/minus.h"
 
-namespace lr
+namespace cen
 {
     Environment::Environment(EnvPtr penv) : parent_(std::move(penv)) {}
 

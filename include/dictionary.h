@@ -7,7 +7,7 @@
 #include <ostream>
 #include "token.h"
 
-namespace lr
+namespace cen
 {
 
     class Dictionary

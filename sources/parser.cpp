@@ -1,9 +1,10 @@
 
 #include <iostream>
 #include "../include/parser.h"
+#include "../include/exception.h"
 #include "../util/error.h"
 
-namespace lr
+namespace cen
 {
 
     bool Parser::errorFlag = false;
@@ -33,7 +34,7 @@ namespace lr
 
         // todo 语句
 
-        return lr::ExprASTPtr();
+        return cen::ExprASTPtr();
     }
 
     ExprASTPtr Parser::parsePrimary()
@@ -98,11 +99,7 @@ namespace lr
     ExprASTPtr Parser::parseString()
     {
         Token token = scanner_.getToken();
-        if (!expectToken(TokenValue::STRING, true))
-        {
-            errorSyntax("需要一个字符串:" + token.getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::STRING, "需要一个字符串", true);
         return std::make_unique<StringAST>(token.getStrValue(), token.getTokenLocation());
     }
 
@@ -140,11 +137,7 @@ namespace lr
     {
         scanner_.next();    // eat (
         ExprASTPtr ptr = parseExpression();
-        if (!expectToken(TokenValue::RIGHT_PAREN, true))
-        {
-            errorSyntax("括号未匹配:" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::RIGHT_PAREN, "括号未匹配", true);
         return ptr;
     }
 
@@ -200,14 +193,9 @@ namespace lr
     BlockASTPtr Parser::parseBlock()
     {
         auto loc = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::LEFT_BRACE, "块语句的开始需要一个 '{'", true);
 
-        if (!expectToken(TokenValue::LEFT_BRACE, true))
-        {
-            errorSyntax("块语句的开始需要一个 '{'" + loc.toString());
-            return nullptr;
-        }
         auto blok = std::make_unique<BlockAST>(loc);
-
         while (!validateToken(TokenValue::RIGHT_BRACE)
                && !validateToken(TokenValue::END_OF_FILE))
         {
@@ -216,12 +204,7 @@ namespace lr
                 blok->addAST(std::move(stat));
             }
         }
-
-        if (!expectToken(TokenValue::RIGHT_BRACE, true))
-        {
-            errorSyntax("块语句的结束需要一个 '}'" + loc.toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::RIGHT_BRACE, "块语句的结束需要一个 '}'", true);
         return blok;
     }
 
@@ -230,40 +213,26 @@ namespace lr
     ExprASTPtr Parser::parseIfStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::IF, "'if' 关键字未找到", true);
 
-        if (!expectToken(TokenValue::IF, true))
-        {
-            errorSyntax("'if' 关键字未找到:" + lok.toString());
-            return nullptr;
-        }
         ExprASTPtr condition = parseParen();
-
         if (!condition)
         {
             errorSyntax("if 的条件语句未找到:" + lok.toString());
             return nullptr;
         }
-
-        if (!expectToken(TokenValue::LEFT_BRACE))
-        {
-            errorSyntax("if block '{' not found:" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
         ExprASTPtr then = parseBlock();
-
         if (!then)
         {
-            errorSyntax("if block not found:" + scanner_.getToken().getTokenLocation().toString());
+            errorSyntax("if语句的语句块未找到: " + scanner_.getToken().getTokenLocation().toString());
             return nullptr;
         }
 
         ExprASTPtr elsethen = nullptr;
-
         if (validateToken(TokenValue::ELSE, true))
         {
             elsethen = parseBlock();
         }
-
         return std::make_unique<IfStatementAST>(std::move(condition), std::move(then), std::move(elsethen), lok);
     }
 
@@ -271,23 +240,16 @@ namespace lr
     ExprASTPtr Parser::parseWhileStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-
-        if (!expectToken(TokenValue::WHILE, true))
-        {
-            errorSyntax("'while' not found:" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::WHILE, "'while' 关键字未找到", true);
 
         ExprASTPtr condition = parseParen();
-
         if (!condition)
         {
-            errorSyntax("parse error while condition is null : " + lok.toString());
+            errorSyntax("while的条件语句未找到 : " + lok.toString());
             return nullptr;
         }
 
         BlockASTPtr body = parseBlock();
-
         if (!body)
         {
             errorSyntax("parse error while body is null : " + lok.toString());
@@ -301,18 +263,10 @@ namespace lr
 
     ExprASTPtr Parser::parseVariableDefinitionStatement()
     {
-        if (!expectToken(TokenValue::VAR, true))
-        {
-            errorSyntax("未知的标识符" + scanner_.getToken().getStrValue());
-            return nullptr;
-        }
-        auto tok = scanner_.getToken();
+        expectToken(TokenValue::VAR, "'var' 关键字未找到", true);
 
-        if (!expectToken(TokenValue::IDENTIFIER, true))
-        {
-            errorSyntax("错误的标识符" + scanner_.getToken().getStrValue());
-            return nullptr;
-        }
+        auto tok = scanner_.getToken();
+        expectToken(TokenValue::IDENTIFIER, "未识别的变量名", true);
 
         VariableASTPtr lhs = std::make_unique<VariableAST>(tok.getStrValue());
 
@@ -327,11 +281,7 @@ namespace lr
             }
         }
 
-        if (!expectToken(TokenValue::SEMICOLON, true))
-        {
-            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::SEMICOLON, "';' 未找到", true);
         return std::make_unique<VariableDefinitionStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
     }
 
@@ -340,30 +290,19 @@ namespace lr
     ExprASTPtr Parser::parseVariableUse()
     {
         Token tok = scanner_.getToken();
-
-        if (!expectToken(TokenValue::IDENTIFIER, true))
-        {
-            errorSyntax("未找到变量名字" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::IDENTIFIER, "未找到变量名", true);
 
         if (validateToken(TokenValue::ASSIGN, true))
         {
             VariableASTPtr lhs = std::make_unique<VariableAST>(tok.getStrValue());
 
             ExprASTPtr rhs = parseExpression();
-
             if (!rhs)
             {
                 errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
                 return nullptr;
             }
-
-            if (!expectToken(TokenValue::SEMICOLON, true))
-            {
-                errorSyntax("没有找到语句结束分号:" + scanner_.getToken().getTokenLocation().toString());
-                return nullptr;
-            }
+            expectToken(TokenValue::SEMICOLON, "';'未找到", true);
             return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
         }
         else
@@ -377,17 +316,17 @@ namespace lr
     ExprASTPtr Parser::parseInputStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-        if (!expectToken(TokenValue::INPUT, true))
-        {
-            errorSyntax("'input' not found:" + lok.toString());
-            return nullptr;
-        }
-
-        if (!expectToken(TokenValue::IDENTIFIER))
-        {
-            errorSyntax("需要一个变量名字" + lok.toString());
-            return nullptr;
-        }
+//        if (!expectToken(TokenValue::INPUT, true))
+//        {
+//            errorSyntax("'input' not found:" + lok.toString());
+//            return nullptr;
+//        }
+//
+//        if (!expectToken(TokenValue::IDENTIFIER))
+//        {
+//            errorSyntax("需要一个变量名字" + lok.toString());
+//            return nullptr;
+//        }
 
         // todo
 
@@ -400,18 +339,9 @@ namespace lr
     ExprASTPtr Parser::parsePrintStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-        if (!expectToken(TokenValue::PRINT, true))
-        {
-            errorSyntax("'print' not found:" + lok.toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::PRINT, "'print' 关键字未找到", true);
         ExprASTPtr exp = parseExpression();
-
-        if (!expectToken(TokenValue::SEMICOLON, true))
-        {
-            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::SEMICOLON, "';'未找到", true);
         return std::make_unique<PrintStatementAST>(std::move(exp));
     }
 
@@ -419,27 +349,15 @@ namespace lr
     ExprASTPtr Parser::parseForStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-        if (!expectToken(TokenValue::FOR, true))
-        {
-            errorSyntax("'for' not found:" + lok.toString());
-            return nullptr;
-        }
 
-        if (!expectToken(TokenValue::LEFT_BRACE, true))
-        {
-            errorSyntax("for condition left brace not found" + lok.toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::FOR, "for 关键字未找到", true);
+        expectToken(TokenValue::LEFT_BRACE, "for 语句的左括号未找到", true);
 
         VecExprASTPtr exps = parseMoreExpression(TokenValue::SEMICOLON);
 
         // todo
 
-        if (!expectToken(TokenValue::RIGHT_BRACE))
-        {
-            errorSyntax("for condition right brace not found" + lok.toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::RIGHT_BRACE, "for 的条件语句未找到");
 
         ExprASTPtr body = parseBlock();
 
@@ -452,7 +370,7 @@ namespace lr
     VecExprASTPtr Parser::parseMoreExpression(const TokenValue &sep)
     {
 
-        return lr::VecExprASTPtr();
+        return cen::VecExprASTPtr();
     }
 
 
@@ -462,11 +380,7 @@ namespace lr
         TokenLocation toklocn = scanner_.getToken().getTokenLocation();
         scanner_.next();
 
-        if (!expectToken(TokenValue::SEMICOLON, true))
-        {
-            errorSyntax("';' not found :" + scanner_.getToken().getTokenLocation().toString());
-            return nullptr;
-        }
+        expectToken(TokenValue::SEMICOLON, "; 未找到", true);
 
         switch (tokenValue)
         {
@@ -485,51 +399,46 @@ namespace lr
     ExprASTPtr Parser::parseFunctionDefinitionStatement()
     {
         using namespace std;
-        TokenLocation deflok = scanner_.getToken().getTokenLocation();
-        if (!expectToken(TokenValue::DEF, true))
-        {
-            errorSyntax("'def' 关键字未找到:" + deflok.toString());
-            return nullptr;
-        }
 
-        if (expectToken(TokenValue::IDENTIFIER))
+        TokenLocation deflok = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::DEF, "'def' 关键字未找到:" + deflok.toString(), true);
+        expectToken(TokenValue::IDENTIFIER, true);
+
+        string funname = scanner_.getToken().getStrValue();
+        vector<string> param;
+        expectToken(TokenValue::LEFT_PAREN, true);
+
+        while (!validateToken(TokenValue::RIGHT_PAREN, true) &&
+               scanner_.getToken().getTokenValue() != TokenValue::END_OF_FILE)
         {
-            vector<string> param;
-            string funname = scanner_.getToken().getStrValue();
-            scanner_.next();
-            if (expectToken(TokenValue::LEFT_PAREN, true))
-            {
-                while (!validateToken(TokenValue::RIGHT_PAREN, true) &&
-                        scanner_.getToken().getTokenValue() != TokenValue::END_OF_FILE)
-                {
-                    Token tok = scanner_.getToken();
-                    if (!expectToken(TokenValue::IDENTIFIER, true)) {
-                        errorSyntax("形式参数需要一个变量名字:" + tok.getTokenLocation().toString());
-                        return nullptr;
-                    }
-                    param.push_back(std::move(tok.getStrValue()));
-                }
-            }
-            BlockASTPtr funbody = parseBlock();
+            Token tok = scanner_.getToken();
+            expectToken(TokenValue::IDENTIFIER, "形式参数需要一个变量名", true);
+            param.push_back(std::move(tok.getStrValue()));
         }
+        BlockASTPtr funbody = parseBlock();
+
         errorSyntax("errorSyntax");
         return nullptr;
     }
 
 
-    bool Parser::expectToken(TokenValue val, bool next)
+    void Parser::expectToken(TokenValue val, bool next)
+    {
+        expectToken(val, "", next);
+    }
+
+
+    void Parser::expectToken(TokenValue val, const std::string &msg, bool next)
     {
         if (scanner_.getToken().getTokenValue() != val)
         {
             auto tok = scanner_.getToken();
-            errorSyntax("unknown token:" + tok.getStrValue() + "" + tok.getTokenLocation().toString());
-            return false;
+            throw SyntaxError(msg + "\t非预期的符号: " + tok.getStrValue() + "\t" + tok.getTokenLocation().toString());
         }
         if (next)
         {
             scanner_.next();
         }
-        return true;
     }
 
     bool Parser::validateToken(TokenValue val, bool next)
@@ -543,6 +452,11 @@ namespace lr
             scanner_.next();
         }
         return true;
+    }
+
+    void Parser::expectToken(TokenValue val, const char *msg, bool next) {
+        std::string str = msg;
+        expectToken(val, str, next);
     }
 
 

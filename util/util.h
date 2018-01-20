@@ -5,7 +5,7 @@
 #include <iostream>
 #include "../include/token.h"
 
-namespace lr {
+namespace cen {
 
     inline std::ostream &operator<<(std::ostream &io, const TokenValue &tokenValue) {
         std::string value = "unkonw token value!";
@@ -43,7 +43,7 @@ namespace lr {
             case TokenValue::ASSIGN:
                 value = "ASSIGN";
                 break;
-            case lr::TokenValue::IDENTIFIER:
+            case cen::TokenValue::IDENTIFIER:
                 value = "IDENTIFIER";
                 break;
             case TokenValue::ADD:
