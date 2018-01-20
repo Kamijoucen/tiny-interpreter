@@ -330,7 +330,6 @@ namespace cen
     class FunAST : public ExprAST
     {
     public:
-//        std::map<std::string, > param;
     private:
     };
 

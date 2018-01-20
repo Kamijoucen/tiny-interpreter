@@ -399,26 +399,31 @@ namespace cen
     {
         using namespace std;
 
-        TokenLocation deflok = scanner_.getToken().getTokenLocation();
-        expectToken(TokenValue::DEF, "'def' 关键字未找到:" + deflok.toString(), true);
+        TokenLocation defLok = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::DEF, "'def' 关键字未找到:" + defLok.toString(), true);
         expectToken(TokenValue::IDENTIFIER, true);
 
-        string funname = scanner_.getToken().getStrValue();
         vector<string> param;
+        Token fun = scanner_.getToken();
         expectToken(TokenValue::LEFT_PAREN, true);
-
-        while (!validateToken(TokenValue::RIGHT_PAREN, true) &&
-               scanner_.getToken().getTokenValue() != TokenValue::END_OF_FILE)
+        if (validateToken(TokenValue::IDENTIFIER))
         {
-            Token tok = scanner_.getToken();
-            expectToken(TokenValue::IDENTIFIER, "形式参数需要一个变量名", true);
-            param.push_back(std::move(tok.getStrValue()));
+            param.push_back(scanner_.getToken().getStrValue());
+            scanner_.next();
+            while (validateToken(TokenValue::COMMA, true))
+            {
+                expectToken(TokenValue::IDENTIFIER, "参数列表的逗号后需要另一个变量名称");
+                param.push_back(scanner_.getToken().getStrValue());
+                scanner_.next();
+            }
         }
-        BlockASTPtr funbody = parseBlock();
+        expectToken(TokenValue::RIGHT_PAREN, "需要匹配参数列表的右括号", true);
 
-        if (!funbody) {
-            // todo
+        BlockASTPtr funBody = parseBlock();
+        if (!funBody) {
+            errorSyntax(fun.getStrValue() + "函数的函数体未找到:" + fun.getTokenLocation().toString());
         }
+
         return nullptr;
     }
 

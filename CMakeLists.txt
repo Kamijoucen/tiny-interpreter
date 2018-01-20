@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.8)
 project(PL)
 
 set(CMAKE_CXX_STANDARD 14)
-SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
+add_definitions(-O3)
+#add_definitions(-Wall)
 
 add_subdirectory(googletest)
 

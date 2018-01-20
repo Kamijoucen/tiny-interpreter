@@ -122,7 +122,7 @@ TEST(eval, iftest)
 
 TEST(eval, flowctest)
 {
-    std::string a("../Resource/flowc.l");
+    std::string a("../Resource/flowca.l");
     Scanner scanner(a);
     Parser parser(scanner);
     VecExprASTPtr vec = parser.parse();
@@ -138,7 +138,7 @@ TEST(eval, flowctest)
 TEST(iter, iter)
 {
     Interpreter iter;
-    iter.interp("../Resource/flowc.l");
+    iter.interp("../Resource/flowca.l");
 }
 
 
