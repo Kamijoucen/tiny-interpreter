@@ -2,6 +2,7 @@
 #ifndef LLANGUAGE_PARSER_H
 #define LLANGUAGE_PARSER_H
 
+#include "../include/exception.h"
 #include "scanner.h"
 #include "ast.h"
 
@@ -61,13 +62,13 @@ namespace cen
 
     private:
 
-        void expectToken(TokenValue val, bool next = false);
+        inline void expectToken(TokenValue val, bool next = false);
 
-        void expectToken(TokenValue val, const std::string &msg, bool next = false);
+        inline void expectToken(TokenValue val, const std::string &msg, bool next = false);
 
-        void expectToken(TokenValue val, const char *msg, bool next = false);
+        inline void expectToken(TokenValue val, const char *msg, bool next = false);
 
-        bool validateToken(TokenValue val, bool next = false);
+        inline bool validateToken(TokenValue val, bool next = false);
 
     private:
         Scanner         &scanner_;
@@ -81,6 +82,27 @@ namespace cen
         Token tok = scanner_.getToken();
         scanner_.next();
         return std::make_unique<BoolAST>(tok.getTokenValue() == TokenValue::TRUE, tok.getTokenLocation());
+    }
+
+
+    inline void Parser::expectToken(TokenValue val, bool next) { expectToken(val, "", next); }
+
+    inline void Parser::expectToken(TokenValue val, const std::string &msg, bool next) {
+        if (scanner_.getToken().getTokenValue() != val) {
+            auto tok = scanner_.getToken();
+            throw SyntaxError(msg + "\t非预期的符号: " + tok.getStrValue() + "\t" + tok.getTokenLocation().toString());
+        }
+        if (next) scanner_.next();
+    }
+
+    inline bool Parser::validateToken(TokenValue val, bool next) {
+        if (scanner_.getToken().getTokenValue() != val) return false;
+        if (next) scanner_.next();
+        return true;
+    }
+
+    inline void Parser::expectToken(TokenValue val, const char *msg, bool next) {
+        expectToken(val, static_cast<std::string>(msg), next);
     }
 
 }

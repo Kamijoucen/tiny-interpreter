@@ -1,7 +1,6 @@
 
 #include <iostream>
 #include "../include/parser.h"
-#include "../include/exception.h"
 #include "../util/error.h"
 
 namespace cen
@@ -417,46 +416,10 @@ namespace cen
         }
         BlockASTPtr funbody = parseBlock();
 
-        errorSyntax("errorSyntax");
+        if (!funbody) {
+            // todo
+        }
         return nullptr;
-    }
-
-
-    void Parser::expectToken(TokenValue val, bool next)
-    {
-        expectToken(val, "", next);
-    }
-
-
-    void Parser::expectToken(TokenValue val, const std::string &msg, bool next)
-    {
-        if (scanner_.getToken().getTokenValue() != val)
-        {
-            auto tok = scanner_.getToken();
-            throw SyntaxError(msg + "\t非预期的符号: " + tok.getStrValue() + "\t" + tok.getTokenLocation().toString());
-        }
-        if (next)
-        {
-            scanner_.next();
-        }
-    }
-
-    bool Parser::validateToken(TokenValue val, bool next)
-    {
-        if (scanner_.getToken().getTokenValue() != val)
-        {
-            return false;
-        }
-        if (next)
-        {
-            scanner_.next();
-        }
-        return true;
-    }
-
-    void Parser::expectToken(TokenValue val, const char *msg, bool next) {
-        std::string str = msg;
-        expectToken(val, str, next);
     }
 
 
