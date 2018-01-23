@@ -125,10 +125,14 @@ namespace cen
             float num = static_cast<float>(std::strtod(token.getStrValue().c_str(), nullptr));
             expr = std::make_unique<FloatNumExprAST>(num, token.getTokenLocation());
         }
-        else
+        else if (token.getTokenValue() == TokenValue::INTEGER)
         {
             int num = std::strtol(token.getStrValue().c_str(), nullptr, 10);
             expr = std::make_unique<IntegerNumExprAST>(num, token.getTokenLocation());
+        }
+        else
+        {
+            errorSyntax("非法的数字类型 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
         }
         if (isNeg)
         {
@@ -343,9 +347,12 @@ namespace cen
 
     ExprASTPtr Parser::parsePrintStatement()
     {
-        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        Token token = scanner_.getToken();
         expectToken(TokenValue::PRINT, "'print' 关键字未找到", true);
         ExprASTPtr exp = parseExpression();
+        if (!exp) {
+            errorSyntax("print语句没有发现需要打印的表达式:" + token.getTokenLocation().toString());
+        }
         expectToken(TokenValue::SEMICOLON, "';'未找到", true);
         return std::make_unique<PrintStatementAST>(std::move(exp));
     }

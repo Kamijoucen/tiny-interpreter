@@ -5,6 +5,7 @@
 #include "../util/error.h"
 #include "../include/ast.h"
 #include "../include/parser.h"
+#include "../include/interpreter.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
@@ -171,8 +172,7 @@ namespace cen
 
     ValuePtr PrintStatementAST::eval(EnvPtr env)
     {
-        using namespace std;
-        cout << val_->eval(env)->toString() << endl;
+        std::cout << val_->eval(env)->toString() << std::endl;
         return VoidValue::instance();
     }
 

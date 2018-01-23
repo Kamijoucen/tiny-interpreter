@@ -5,14 +5,14 @@ while (i > 0) {
     i = i - 1;
     break;
 }
-// var i;
+//var i;
 
 var j = 5;
 while (j > 0) {
     print j;
     print "测试输出";
+    print +;
     j = j - 1;
 }
-45
 
-print "我是测试aaa";
+print "啦啦啦啦德玛西亚";
