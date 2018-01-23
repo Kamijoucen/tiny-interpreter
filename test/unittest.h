@@ -138,14 +138,14 @@ TEST(eval, flowctest)
 TEST(iter, iter)
 {
     Interpreter iter;
-    iter.interp("../Resource/flowca.l");
+    iter.interp("../Resource/flowc.l");
 }
 
 
 TEST(eval, fun)
 {
     try {
-        Scanner scanner("../Resource/fuccn.l");
+        Scanner scanner("../Resource/fun.l");
         Parser p(scanner);
         p.parseFunctionDefinitionStatement();
     } catch (const FileAccessError &error) {

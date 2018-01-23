@@ -9,8 +9,6 @@ namespace cen
 {
     class Value;
 
-    class Fun;
-
     using ValuePtr = std::shared_ptr<Value>;
 
     enum class ValueType

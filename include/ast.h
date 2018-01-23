@@ -330,7 +330,19 @@ namespace cen
     class FunAST : public ExprAST
     {
     public:
+        FunAST() = delete;
+
+        explicit FunAST(const TokenLocation &lok);
+
+        FunAST(std::vector<std::string> param, BlockASTPtr body, EnvPtr env, const TokenLocation &lok);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
     private:
+        std::vector<std::string> param_;
+        BlockASTPtr body_;
+        EnvPtr      funEnv_;
     };
 
 }

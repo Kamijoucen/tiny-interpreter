@@ -102,7 +102,7 @@ namespace cen
     }
 
     inline void Parser::expectToken(TokenValue val, const char *msg, bool next) {
-        expectToken(val, static_cast<std::string>(msg), next);
+        expectToken(val, std::move(static_cast<std::string>(msg)), next);
     }
 
 }

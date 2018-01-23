@@ -247,4 +247,15 @@ namespace cen
     ValuePtr ReturnAST::eval(EnvPtr env) {
         return cen::ValuePtr();
     }
+
+    FunAST::FunAST(const TokenLocation &lok) : ExprAST(lok) {}
+
+    FunAST::FunAST(std::vector<std::string> param, BlockASTPtr body, EnvPtr env, const TokenLocation &lok) : ExprAST(lok),
+                                                                                                             param_(std::move(param)),
+                                                                                                             body_(std::move(body)),
+                                                                                                             funEnv_(std::move(env)) {}
+
+    ValuePtr FunAST::eval(EnvPtr env) {
+        return cen::ValuePtr();
+    }
 }

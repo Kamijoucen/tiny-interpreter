@@ -10,18 +10,15 @@ namespace cen
 
     bool Interpreter::errorFlag = false;
 
-    Interpreter::Interpreter() : globalEnv_(Environment::buildInitScope()) {}
-
     void Interpreter::interp(const std::string &file)
     {
         try {
             Scanner scanner(file);
             unique_ptr<Parser> parser = std::make_unique<Parser>(scanner);
+            VecExprASTPtr program = parser->parse();
 
-            EnvPtr fileScope = std::make_shared<Environment>(globalEnv_);
-
-            VecExprASTPtr ast = parser->parse();
-            for (auto iter = ast.begin(), end = ast.end(); iter != end && !getErrorFlag();) {
+            EnvPtr fileScope = Environment::buildInitScope();
+            for (auto iter = program.begin(), end = program.end(); iter != end && !getErrorFlag();) {
                 (*iter++)->eval(fileScope);
             }
 
@@ -35,11 +32,6 @@ namespace cen
             std::cerr << "未知的异常!" << std::endl;
             throw;
         }
-
-    }
-
-    void Interpreter::interp(const std::vector<std::string> &files)
-    {
 
     }
 

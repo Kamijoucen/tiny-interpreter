@@ -17,7 +17,7 @@ namespace cen
         VecExprASTPtr vec;
         while (!validateToken(TokenValue::END_OF_FILE) && !Parser::getErrorFlag())
         {
-            ExprASTPtr expp = parsePrimary();
+            ExprASTPtr expp = parseStatement();
             if (!expp)
             {
                 errorSyntax("解析错误");
@@ -31,9 +31,29 @@ namespace cen
 
     ExprASTPtr Parser::parseStatement() {
 
-        // todo 语句
+        Token token = scanner_.getToken();
 
-        return cen::ExprASTPtr();
+        switch (token.getTokenValue()) {
+            case TokenValue::IF:
+                return parseIfStatement();
+            case TokenValue::WHILE:
+                return parseWhileStatement();
+            case TokenValue::VAR:
+                return parseVariableDefinitionStatement();
+            case TokenValue::PRINT:
+                return parsePrintStatement();
+            case TokenValue::INPUT:
+                return parseInputStatement();
+            case TokenValue::BREAK:
+            case TokenValue::CONTINUE:
+            case TokenValue::RETURN:
+                return parseFlowControllerStatement();
+            case TokenValue::IDENTIFIER:
+                return parseVariableUse();
+            default:
+                errorSyntax("未知的表达式开始 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
+        }
+        return nullptr;
     }
 
     ExprASTPtr Parser::parsePrimary()
@@ -46,23 +66,9 @@ namespace cen
             case TokenType::KEYWORDS:
                 switch (tokenValue)
                 {
-                    case TokenValue::IF:
-                        return parseIfStatement();
-                    case TokenValue::WHILE:
-                        return parseWhileStatement();
-                    case TokenValue::VAR:
-                        return parseVariableDefinitionStatement();
                     case TokenValue::TRUE:
                     case TokenValue::FALSE:
                         return parseBool();
-                    case TokenValue::PRINT:
-                        return parsePrintStatement();
-                    case TokenValue::INPUT:
-                        return parseInputStatement();
-                    case TokenValue::BREAK:
-                    case TokenValue::CONTINUE:
-                    case TokenValue::RETURN:
-                        return parseFlowControllerStatement();
                     default:
                         return nullptr;
                 }
@@ -198,7 +204,7 @@ namespace cen
         while (!validateToken(TokenValue::RIGHT_BRACE)
                && !validateToken(TokenValue::END_OF_FILE))
         {
-            if (auto stat = parsePrimary())
+            if (auto stat = parseStatement())
             {
                 blok->addAST(std::move(stat));
             }
@@ -408,12 +414,12 @@ namespace cen
         expectToken(TokenValue::LEFT_PAREN, true);
         if (validateToken(TokenValue::IDENTIFIER))
         {
-            param.push_back(scanner_.getToken().getStrValue());
+            param.push_back(std::move(scanner_.getToken().getStrValue()));
             scanner_.next();
             while (validateToken(TokenValue::COMMA, true))
             {
                 expectToken(TokenValue::IDENTIFIER, "参数列表的逗号后需要另一个变量名称");
-                param.push_back(scanner_.getToken().getStrValue());
+                param.push_back(std::move(scanner_.getToken().getStrValue()));
                 scanner_.next();
             }
         }
@@ -423,8 +429,7 @@ namespace cen
         if (!funBody) {
             errorSyntax(fun.getStrValue() + "函数的函数体未找到:" + fun.getTokenLocation().toString());
         }
-
-        return nullptr;
+        return std::make_unique<FunAST>(std::move(param), std::move(funBody), nullptr, fun.getTokenLocation());
     }
 
 

@@ -4,11 +4,11 @@
 
 #include <vector>
 #include "../value.h"
-#include "../token.h"
 
 namespace cen
 {
     class PrimFun;
+    class TokenLocation;
 
     using PrimFunPtr  = std::shared_ptr<PrimFun>;
     using ValuePtrVec = std::vector<ValuePtr>;

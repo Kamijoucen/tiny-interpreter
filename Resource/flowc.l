@@ -13,6 +13,6 @@ while (j > 0) {
     print "测试输出";
     j = j - 1;
 }
-
+45
 
 print "我是测试aaa";
