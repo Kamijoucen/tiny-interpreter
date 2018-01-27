@@ -11,7 +11,7 @@ var j = 5;
 while (j > 0) {
     print j;
     print "测试输出";
-    print +;
+    print a;
     j = j - 1;
 }
 

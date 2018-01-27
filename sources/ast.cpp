@@ -12,8 +12,11 @@
 
 namespace cen
 {
+    EnvPtr makeNewEnv(EnvPtr env) {
+        return std::make_shared<Environment>(env);
+    }
 
-    ValuePtr VariableAST::eval(EnvPtr ptr) {
+    ValuePtr VariableAST::eval(EnvPtr env) {
         return nullptr;
     }
 
@@ -23,12 +26,12 @@ namespace cen
     IntegerNumExprAST::IntegerNumExprAST(int num, TokenLocation tokenLocation) : ExprAST(std::move(tokenLocation)),
                                                                                  value_(num) {}
 
-    ValuePtr IntegerNumExprAST::eval(EnvPtr ptr)
+    ValuePtr IntegerNumExprAST::eval(EnvPtr env)
     {
         return std::make_shared<IntValue>(value_);
     }
 
-    ValuePtr FloatNumExprAST::eval(EnvPtr ptr) {
+    ValuePtr FloatNumExprAST::eval(EnvPtr env) {
         return std::make_shared<FloatValue>(value_);
     }
 
@@ -84,6 +87,10 @@ namespace cen
               lhs_(std::move(lhs)),
               rhs_(std::move(rhs)) {}
 
+//    ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env) {
+//        return cen::ValuePtr();
+//    }
+
 
     ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env)
     {
@@ -92,7 +99,8 @@ namespace cen
             errorInterp("变量 " + lhs_->getVarName() + " 定义重复:" + tokenLocation_.toString());
             return nullptr;
         }
-        env->putLocationValue(lhs_->getVarName(), rhs_->eval(env));
+        auto rval = rhs_->eval(env);
+        env->putLocationValue(lhs_->getVarName(), rval);
         return VoidValue::instance();
     }
 
@@ -151,7 +159,7 @@ namespace cen
     BoolAST::BoolAST(bool val, const TokenLocation &lok) : ExprAST(lok),
                                                            value_(val) {}
 
-    ValuePtr BoolAST::eval(EnvPtr ptr)
+    ValuePtr BoolAST::eval(EnvPtr env)
     {
         return std::make_unique<BoolValue>(value_);
     }
@@ -159,9 +167,9 @@ namespace cen
     VariableUseStatementAST::VariableUseStatementAST(const std::string &varname, TokenLocation lok) : ExprAST(std::move(lok)),
                                                                                                       varname_(varname) {}
 
-    ValuePtr VariableUseStatementAST::eval(EnvPtr ptr)
+    ValuePtr VariableUseStatementAST::eval(EnvPtr env)
     {
-        auto var = ptr->lookup(varname_);
+        auto var = env->lookup(varname_);
         if (!var)
         {
             errorInterp("作用域内没有发现变量: " + varname_ + "\t" + tokenLocation_.toString());
@@ -172,6 +180,11 @@ namespace cen
 
     ValuePtr PrintStatementAST::eval(EnvPtr env)
     {
+        ValuePtr value = val_->eval(env);
+        if (!value) {
+            errorInterp("print语句没有找到需要打印的值");
+            return nullptr;
+        }
         std::cout << val_->eval(env)->toString() << std::endl;
         return VoidValue::instance();
     }
@@ -248,14 +261,32 @@ namespace cen
         return cen::ValuePtr();
     }
 
-    FunAST::FunAST(const TokenLocation &lok) : ExprAST(lok) {}
+    FunAST::FunAST(std::string name, std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
+                                                                                                : ExprAST(lok),
+                                                                                                  param_(std::move(param)),
+                                                                                                  body_(std::move(body)),
+                                                                                                  name_(std::move(name)){}
 
-    FunAST::FunAST(std::vector<std::string> param, BlockASTPtr body, EnvPtr env, const TokenLocation &lok) : ExprAST(lok),
-                                                                                                             param_(std::move(param)),
-                                                                                                             body_(std::move(body)),
-                                                                                                             funEnv_(std::move(env)) {}
+    ValuePtr FunAST::eval(EnvPtr env)
+    {
+        // 检查参数
+        // 将参数放入新生成的函数环境
+        // 执行函数体
+        return NoneValue::instance();
+    }
 
-    ValuePtr FunAST::eval(EnvPtr env) {
+    AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
+                                                                                            : ExprAST(lok),
+                                                                                              param_(std::move(param)),
+                                                                                              body_(std::move(body)){}
+
+    ValuePtr AnonymousFunAST::eval(EnvPtr env)
+    {
+        // 检查参数
+        // 将参数放入闭包环境
+        // 执行函数体
         return cen::ValuePtr();
     }
+
+
 }

@@ -141,13 +141,19 @@ TEST(iter, iter)
     iter.interp("../Resource/flowc.l");
 }
 
+TEST(eval, print)
+{
+    Interpreter iter;
+    iter.interp("../Resource/print.l");
+}
+
 
 TEST(eval, fun)
 {
     try {
         Scanner scanner("../Resource/fun.l");
         Parser p(scanner);
-        p.parseFunctionDefinitionStatement();
+        p.parseFunctionStatement();
     } catch (const FileAccessError &error) {
         std::cout << error.what() << std::endl;
     }

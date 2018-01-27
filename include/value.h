@@ -21,6 +21,7 @@ namespace cen
         ANY,
         NONE,
         OP,
+        NULLED,
         CLOSURE,
         UNKNOWN
     };
@@ -159,17 +160,45 @@ namespace cen
     inline VoidValue::VoidValuePtr VoidValue::instance() { return voidPtr_; }
 
 
-
     class Closure : public Value
     {
     public:
-        Closure() = default;
+        class BlockAST;
 
-        ValueType getType() const override;
+    public:
+        explicit Closure(BlockAST& body);
 
-        std::string toString() const override;
+        inline ValueType getType() const override;
+
+        inline std::string toString() const override;
 
     private:
+        BlockAST &body_;
+
     };
+    inline ValueType Closure::getType() const { return ValueType::CLOSURE; }
+    inline std::string Closure::toString() const { return "function"; }
+
+
+//    template<typename T>
+//    class Closure : public Value
+//    {
+//    public:
+//        explicit Closure(T body);
+//
+//        inline ValueType getType() const override;
+//
+//        inline std::string toString() const override;
+//
+//    private:
+//        T fun;
+//    };
+//    template<typename T>
+//    Closure<T>::Closure(T body) : fun(std::move(body)) {}
+//    template<typename T>
+//    inline ValueType Closure<T>::getType() const { return ValueType::CLOSURE; }
+//    template<typename T>
+//    inline std::string Closure<T>::toString() const { return "function"; }
+
 }
 #endif //LLANGUAGE_RESULT_H

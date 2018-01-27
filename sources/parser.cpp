@@ -50,6 +50,8 @@ namespace cen
                 return parseFlowControllerStatement();
             case TokenValue::IDENTIFIER:
                 return parseVariableUse();
+            case TokenValue::DEF:
+                return parseFunctionStatement(); // todo
             default:
                 errorSyntax("未知的表达式开始 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
         }
@@ -69,6 +71,8 @@ namespace cen
                     case TokenValue::TRUE:
                     case TokenValue::FALSE:
                         return parseBool();
+                    case TokenValue::DEF:
+                        return parseAnonymousFunctionStatement();
                     default:
                         return nullptr;
                 }
@@ -379,13 +383,6 @@ namespace cen
     }
 
 
-    VecExprASTPtr Parser::parseMoreExpression(const TokenValue &sep)
-    {
-
-        return cen::VecExprASTPtr();
-    }
-
-
     ExprASTPtr Parser::parseFlowControllerStatement()
     {
         TokenValue tokenValue = scanner_.getToken().getTokenValue();
@@ -408,7 +405,17 @@ namespace cen
     }
 
 
-    ExprASTPtr Parser::parseFunctionDefinitionStatement()
+    ExprASTPtr Parser::parseGlobalFunctionStatement()
+    {
+        ExprASTPtr fun = parseFunctionStatement();
+
+        // 存放(文件)全局函数
+
+        return parseStatement();
+    }
+
+
+    ExprASTPtr Parser::parseFunctionStatement()
     {
         using namespace std;
 
@@ -416,8 +423,8 @@ namespace cen
         expectToken(TokenValue::DEF, "'def' 关键字未找到:" + defLok.toString(), true);
         expectToken(TokenValue::IDENTIFIER, true);
 
-        vector<string> param;
         Token fun = scanner_.getToken();
+        vector<string> param;
         expectToken(TokenValue::LEFT_PAREN, true);
         if (validateToken(TokenValue::IDENTIFIER))
         {
@@ -438,6 +445,37 @@ namespace cen
         }
         return std::make_unique<FunAST>(std::move(param), std::move(funBody), nullptr, fun.getTokenLocation());
     }
+
+
+    ExprASTPtr Parser::parseAnonymousFunctionStatement()
+    {
+        using namespace std;
+
+        TokenLocation defLok = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::DEF, "'def' 关键字未找到:" + defLok.toString(), true);
+
+        vector<string> param;
+        expectToken(TokenValue::LEFT_PAREN, true);
+        if (validateToken(TokenValue::IDENTIFIER))
+        {
+            param.push_back(std::move(scanner_.getToken().getStrValue()));
+            scanner_.next();
+            while (validateToken(TokenValue::COMMA, true))
+            {
+                expectToken(TokenValue::IDENTIFIER, "参数列表的逗号后需要另一个变量名称");
+                param.push_back(std::move(scanner_.getToken().getStrValue()));
+                scanner_.next();
+            }
+        }
+        expectToken(TokenValue::RIGHT_PAREN, "需要匹配参数列表的右括号", true);
+
+        BlockASTPtr funBody = parseBlock();
+        if (!funBody) {
+            errorSyntax("匿名函数的函数体未找到:" + defLok.toString());
+        }
+        return std::make_unique<AnonymousFunAST>();
+    }
+
 
 
 }

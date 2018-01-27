@@ -1,8 +1,10 @@
 
 #include "../include/value.h"
+#include "../include/ast.h"
 
 namespace cen
 {
+
     NoneValue::NoneValuePtr NoneValue::nonePtr_ = std::make_shared<NoneValue>();
 
     VoidValue::VoidValuePtr VoidValue::voidPtr_ = std::make_shared<VoidValue>();
@@ -15,11 +17,5 @@ namespace cen
 
     StringValue::StringValue(const std::string &str) : value_(str) {}
 
-    ValueType Closure::getType() const {
-        return ValueType::NONE;
-    }
-
-    std::string Closure::toString() const {
-        return "";
-    }
+    Closure::Closure(Closure::BlockAST &body) : body_(body) {}
 }

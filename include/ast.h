@@ -49,7 +49,7 @@ namespace cen
         explicit BlockAST(TokenLocation &);
 
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
         void addAST(ExprASTPtr ptr);
 
@@ -65,7 +65,7 @@ namespace cen
     class VariableAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
         inline std::string getVarName() const;
 
@@ -97,7 +97,7 @@ namespace cen
     class VariableAssignStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
     public:
         VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
@@ -112,7 +112,7 @@ namespace cen
     class VariableUseStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
     public:
         explicit VariableUseStatementAST(const std::string &varname, TokenLocation lok);
@@ -165,7 +165,7 @@ namespace cen
         inline int getVal() const;
 
     public:
-		ValuePtr eval(EnvPtr ptr) override;
+		ValuePtr eval(EnvPtr env) override;
 
         IntegerNumExprAST(int num, TokenLocation tokenLocation);
 
@@ -184,7 +184,7 @@ namespace cen
     public:
         inline float getVal() const;
 
-		ValuePtr eval(EnvPtr ptr) override;
+		ValuePtr eval(EnvPtr env) override;
     private:
         float value_;
     };
@@ -200,7 +200,7 @@ namespace cen
     public:
         inline bool getVal() const;
 
-        ValuePtr eval(EnvPtr evn) override;
+        ValuePtr eval(EnvPtr env) override;
 
     private:
         bool value_;
@@ -215,7 +215,7 @@ namespace cen
         StringAST(std::string str, const TokenLocation &lok);
 
     public:
-        ValuePtr eval(EnvPtr evn) override;
+        ValuePtr eval(EnvPtr env) override;
 
     private:
         std::string value_;
@@ -229,7 +229,7 @@ namespace cen
         IfStatementAST(ExprASTPtr condition, ExprASTPtr thenPart, ExprASTPtr elsePart, const TokenLocation &lok);
 
     public:
-        ValuePtr eval(EnvPtr ptr) override;
+        ValuePtr eval(EnvPtr env) override;
 
     private:
         ExprASTPtr condition_;
@@ -257,7 +257,7 @@ namespace cen
     class ForStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override {}
+        ValuePtr eval(EnvPtr env) override {}
 
     private:
     };
@@ -267,7 +267,7 @@ namespace cen
     class DoWhileStatementAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr ptr) override {}
+        ValuePtr eval(EnvPtr env) override {}
 
 
     private:
@@ -322,19 +322,26 @@ namespace cen
         ValuePtr eval(EnvPtr env) override;
     };
 
-    inline EnvPtr makeNewEnv(EnvPtr env) {
-        return std::make_shared<Environment>(env);
-    }
-
 
     class FunAST : public ExprAST
     {
     public:
-        FunAST() = delete;
+        FunAST(std::string name, std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok);
 
-        explicit FunAST(const TokenLocation &lok);
+    public:
+        ValuePtr eval(EnvPtr env) override;
 
-        FunAST(std::vector<std::string> param, BlockASTPtr body, EnvPtr env, const TokenLocation &lok);
+    private:
+        std::vector<std::string> param_;
+        std::string name_;
+        BlockASTPtr body_;
+    };
+
+
+    class AnonymousFunAST : public ExprAST
+    {
+    public:
+        AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok);
 
     public:
         ValuePtr eval(EnvPtr env) override;
@@ -342,7 +349,6 @@ namespace cen
     private:
         std::vector<std::string> param_;
         BlockASTPtr body_;
-        EnvPtr      funEnv_;
     };
 
 }

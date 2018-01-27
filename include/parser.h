@@ -2,7 +2,7 @@
 #ifndef LLANGUAGE_PARSER_H
 #define LLANGUAGE_PARSER_H
 
-#include "../include/exception.h"
+#include "exception.h"
 #include "scanner.h"
 #include "ast.h"
 
@@ -45,7 +45,11 @@ namespace cen
 
         ExprASTPtr    parseVariableUse();
 
-        ExprASTPtr    parseFunctionDefinitionStatement();
+        ExprASTPtr    parseGlobalFunctionStatement();   // 不需要将全局函数加入到语法树中
+
+        ExprASTPtr    parseFunctionStatement();
+
+        ExprASTPtr    parseAnonymousFunctionStatement();
 
         ExprASTPtr    parsePrintStatement();
 
