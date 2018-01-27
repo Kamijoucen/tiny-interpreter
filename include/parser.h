@@ -25,8 +25,6 @@ namespace cen
 
         ExprASTPtr    parseExpression();
 
-        VecExprASTPtr parseMoreExpression(const TokenValue &sep);
-
         ExprASTPtr    parseParen();
 
         ExprASTPtr    parseString();

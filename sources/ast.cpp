@@ -264,8 +264,8 @@ namespace cen
     FunAST::FunAST(std::string name, std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
                                                                                                 : ExprAST(lok),
                                                                                                   param_(std::move(param)),
-                                                                                                  body_(std::move(body)),
-                                                                                                  name_(std::move(name)){}
+                                                                                                  name_(std::move(name)),
+                                                                                                  body_(std::move(body)){}
 
     ValuePtr FunAST::eval(EnvPtr env)
     {

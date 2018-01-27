@@ -51,7 +51,7 @@ namespace cen
             case TokenValue::IDENTIFIER:
                 return parseVariableUse();
             case TokenValue::DEF:
-                return parseFunctionStatement(); // todo
+                return parseGlobalFunctionStatement();
             default:
                 errorSyntax("未知的表达式开始 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
         }
@@ -369,7 +369,6 @@ namespace cen
         expectToken(TokenValue::FOR, "for 关键字未找到", true);
         expectToken(TokenValue::LEFT_BRACE, "for 语句的左括号未找到", true);
 
-        VecExprASTPtr exps = parseMoreExpression(TokenValue::SEMICOLON);
 
         // todo
 
@@ -411,7 +410,11 @@ namespace cen
 
         // 存放(文件)全局函数
 
-        return parseStatement();
+        if (!validateToken(TokenValue::END_OF_FILE)) {
+            return parseStatement();
+        } else {
+            return nullptr;
+        }
     }
 
 
@@ -443,7 +446,7 @@ namespace cen
         if (!funBody) {
             errorSyntax(fun.getStrValue() + "函数的函数体未找到:" + fun.getTokenLocation().toString());
         }
-        return std::make_unique<FunAST>(std::move(param), std::move(funBody), nullptr, fun.getTokenLocation());
+        return std::make_unique<FunAST>(std::move(fun.getStrValue()), std::move(param), std::move(funBody), fun.getTokenLocation());
     }
 
 
@@ -473,7 +476,7 @@ namespace cen
         if (!funBody) {
             errorSyntax("匿名函数的函数体未找到:" + defLok.toString());
         }
-        return std::make_unique<AnonymousFunAST>();
+        return std::make_unique<AnonymousFunAST>(std::move(param), std::move(funBody), defLok);
     }
 
 
