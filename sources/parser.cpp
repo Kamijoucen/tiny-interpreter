@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "../include/parser.h"
+#include "../include/innerscope.h"
 #include "../util/error.h"
 
 namespace cen
@@ -406,9 +407,8 @@ namespace cen
 
     ExprASTPtr Parser::parseGlobalFunctionStatement()
     {
-        ExprASTPtr fun = parseFunctionStatement();
-
-        // 存放(文件)全局函数
+        auto funMate = parseFunctionStatement();
+        FileScope::putFunction(scanner_.getFileName(), std::get<0>(funMate), std::move(std::get<1>(funMate)));
 
         if (!validateToken(TokenValue::END_OF_FILE)) {
             return parseStatement();
@@ -418,15 +418,15 @@ namespace cen
     }
 
 
-    ExprASTPtr Parser::parseFunctionStatement()
+    FunMatePtr Parser::parseFunctionStatement()
     {
         using namespace std;
 
         TokenLocation defLok = scanner_.getToken().getTokenLocation();
         expectToken(TokenValue::DEF, "'def' 关键字未找到:" + defLok.toString(), true);
+        Token fun = scanner_.getToken();
         expectToken(TokenValue::IDENTIFIER, true);
 
-        Token fun = scanner_.getToken();
         vector<string> param;
         expectToken(TokenValue::LEFT_PAREN, true);
         if (validateToken(TokenValue::IDENTIFIER))
@@ -446,7 +446,8 @@ namespace cen
         if (!funBody) {
             errorSyntax(fun.getStrValue() + "函数的函数体未找到:" + fun.getTokenLocation().toString());
         }
-        return std::make_unique<FunAST>(std::move(fun.getStrValue()), std::move(param), std::move(funBody), fun.getTokenLocation());
+        auto ast = std::make_shared<FunAST>(std::move(fun.getStrValue()), std::move(param), std::move(funBody), fun.getTokenLocation());
+        return std::make_tuple<std::string, GlobalExprASTPtr>(fun.getStrValue(), std::move(ast));
     }
 
 

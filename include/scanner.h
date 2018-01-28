@@ -26,6 +26,8 @@ namespace cen
 
         inline static bool getErrorFlag();
 
+        inline std::string getFileName();
+
     private:
 
         void getNextChar();
@@ -86,6 +88,7 @@ namespace cen
     inline bool Scanner::getErrorFlag() { return errorFlag; }
     inline Token Scanner::getToken() const { return currentToken_; }
     inline const Dictionary &Scanner::getDic() const { return dictionary_; }
+    inline std::string Scanner::getFileName() { return filename_; }
 
 }
 

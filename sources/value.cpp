@@ -17,5 +17,5 @@ namespace cen
 
     StringValue::StringValue(const std::string &str) : value_(str) {}
 
-    Closure::Closure(Closure::BlockAST &body) : body_(body) {}
+    Closure::Closure(BlockAST &body) : body_(body) {}
 }

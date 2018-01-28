@@ -26,7 +26,7 @@ namespace cen
 
         std::string toString() const;
 
-    private:
+    public:
         int         line_;
         int         column_;
         std::string filename_;

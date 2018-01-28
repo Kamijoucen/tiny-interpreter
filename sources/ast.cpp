@@ -6,6 +6,7 @@
 #include "../include/ast.h"
 #include "../include/parser.h"
 #include "../include/interpreter.h"
+#include "../include/innerscope.h"
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
@@ -267,13 +268,7 @@ namespace cen
                                                                                                   name_(std::move(name)),
                                                                                                   body_(std::move(body)){}
 
-    ValuePtr FunAST::eval(EnvPtr env)
-    {
-        // 检查参数
-        // 将参数放入新生成的函数环境
-        // 执行函数体
-        return NoneValue::instance();
-    }
+    ValuePtr FunAST::eval(EnvPtr env) { return NoneValue::instance(); }
 
     AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
                                                                                             : ExprAST(lok),
@@ -284,9 +279,30 @@ namespace cen
     {
         // 检查参数
         // 将参数放入闭包环境
-        // 执行函数体
+        // 返回闭包
         return cen::ValuePtr();
     }
 
 
+    ValuePtr CallAST::eval(EnvPtr env)
+    {
+        if (ValuePtr funVal = env->lookup(name_))
+        {
+            if (funVal->getType() == ValueType::CLOSURE)
+            {
+                return static_cast<Closure *>(funVal.get())->body_.eval(env);
+            }
+        }
+
+        GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_);
+        if (gfun) {
+            return gfun->eval(env);
+        }
+        errorInterp("没有找到名为 " + name_ + " 的函数\t" + tokenLocation_.toString());
+        return nullptr;
+    }
+
+    CallAST::CallAST(std::string name, std::vector<std::string> param, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                            name_(std::move(name)),
+                                                                                            param_(std::move(param)){}
 }

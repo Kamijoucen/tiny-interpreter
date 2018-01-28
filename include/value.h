@@ -7,6 +7,7 @@
 
 namespace cen
 {
+    class BlockAST;
     class Value;
 
     using ValuePtr = std::shared_ptr<Value>;
@@ -163,16 +164,12 @@ namespace cen
     class Closure : public Value
     {
     public:
-        class BlockAST;
-
-    public:
         explicit Closure(BlockAST& body);
 
         inline ValueType getType() const override;
 
         inline std::string toString() const override;
 
-    private:
         BlockAST &body_;
 
     };

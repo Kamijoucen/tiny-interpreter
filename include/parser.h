@@ -9,6 +9,8 @@
 namespace cen
 {
 
+    using FunMatePtr = std::tuple<std::string, GlobalExprASTPtr >;
+
     class Parser
     {
     public:
@@ -45,8 +47,6 @@ namespace cen
 
         ExprASTPtr    parseGlobalFunctionStatement();   // 不需要将全局函数加入到语法树中
 
-        ExprASTPtr    parseFunctionStatement();
-
         ExprASTPtr    parseAnonymousFunctionStatement();
 
         ExprASTPtr    parsePrintStatement();
@@ -54,6 +54,8 @@ namespace cen
         ExprASTPtr    parseInputStatement();
 
         ExprASTPtr    parseFlowControllerStatement();
+
+        FunMatePtr    parseFunctionStatement();
 
     public:
         explicit Parser(Scanner&);
