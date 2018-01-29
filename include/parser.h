@@ -43,19 +43,21 @@ namespace cen
 
         ExprASTPtr    parseVariableDefinitionStatement();
 
-        ExprASTPtr    parseVariableUse();
+        ExprASTPtr    parseIdentifier();
 
         ExprASTPtr    parseGlobalFunctionStatement();   // 不需要将全局函数加入到语法树中
 
         ExprASTPtr    parseAnonymousFunctionStatement();
+
+        FunMatePtr    parseFunctionStatement();
+
+        ExprASTPtr    parseCallStatement();
 
         ExprASTPtr    parsePrintStatement();
 
         ExprASTPtr    parseInputStatement();
 
         ExprASTPtr    parseFlowControllerStatement();
-
-        FunMatePtr    parseFunctionStatement();
 
     public:
         explicit Parser(Scanner&);

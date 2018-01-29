@@ -283,26 +283,41 @@ namespace cen
         return cen::ValuePtr();
     }
 
+    CallAST::CallAST(std::string name, std::vector<ValuePtr> param, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                            name_(std::move(name)),
+                                                                                            param_(std::move(param)){}
 
     ValuePtr CallAST::eval(EnvPtr env)
     {
+        EnvPtr callEvn = makeNewEnv(env);
+
         if (ValuePtr funVal = env->lookup(name_))
         {
             if (funVal->getType() == ValueType::CLOSURE)
             {
-                return static_cast<Closure *>(funVal.get())->body_.eval(env);
+                return static_cast<Closure*>(funVal.get())->body_.eval(env);
             }
         }
 
-        GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_);
-        if (gfun) {
-            return gfun->eval(env);
+        if (GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_))
+        {
+            const std::vector<std::string> &paramName = gfun->param_;
+            auto iter = param_.begin();
+            for (auto &name : paramName)
+            {
+                if (iter != param_.end()) {
+                    callEvn->putLocationValue(name, *iter++);
+                } else {
+                    callEvn->putLocationValue(name, NoneValue::instance());
+                }
+            }
+            return gfun->eval(callEvn);
         }
-        errorInterp("没有找到名为 " + name_ + " 的函数\t" + tokenLocation_.toString());
-        return nullptr;
+        else
+        {
+            errorInterp("没有找到名为 " + name_ + " 的函数\t" + tokenLocation_.toString());
+            return nullptr;
+        }
     }
 
-    CallAST::CallAST(std::string name, std::vector<std::string> param, TokenLocation lok) : ExprAST(std::move(lok)),
-                                                                                            name_(std::move(name)),
-                                                                                            param_(std::move(param)){}
 }

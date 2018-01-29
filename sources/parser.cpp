@@ -50,7 +50,7 @@ namespace cen
             case TokenValue::RETURN:
                 return parseFlowControllerStatement();
             case TokenValue::IDENTIFIER:
-                return parseVariableUse();
+                return parseIdentifier();
             case TokenValue::DEF:
                 return parseGlobalFunctionStatement();
             default:
@@ -94,7 +94,7 @@ namespace cen
                 switch (tokenValue)
                 {
                     case TokenValue::IDENTIFIER:
-                        return parseVariableUse();
+                        return parseIdentifier();
                     case TokenValue::STRING:
                         return parseString();
                     default:
@@ -301,7 +301,7 @@ namespace cen
 
 
 
-    ExprASTPtr Parser::parseVariableUse()
+    ExprASTPtr Parser::parseIdentifier()
     {
         Token tok = scanner_.getToken();
         expectToken(TokenValue::IDENTIFIER, "未找到变量名", true);
@@ -318,6 +318,11 @@ namespace cen
             }
             expectToken(TokenValue::SEMICOLON, "';'未找到", true);
             return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
+        }
+        else if(validateToken(TokenValue::LEFT_PAREN, true))
+        {
+            // FIXME
+            return parseCallStatement();
         }
         else
         {
@@ -407,8 +412,8 @@ namespace cen
 
     ExprASTPtr Parser::parseGlobalFunctionStatement()
     {
-        auto funMate = parseFunctionStatement();
-        FileScope::putFunction(scanner_.getFileName(), std::get<0>(funMate), std::move(std::get<1>(funMate)));
+        auto funMeta = parseFunctionStatement();
+        FileScope::putFunction(scanner_.getFileName(), std::get<0>(funMeta), std::move(std::get<1>(funMeta)));
 
         if (!validateToken(TokenValue::END_OF_FILE)) {
             return parseStatement();
@@ -480,6 +485,11 @@ namespace cen
         return std::make_unique<AnonymousFunAST>(std::move(param), std::move(funBody), defLok);
     }
 
+    ExprASTPtr Parser::parseCallStatement()
+    {
+
+        return cen::ExprASTPtr();
+    }
 
 
 }

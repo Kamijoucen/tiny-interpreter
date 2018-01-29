@@ -15,8 +15,10 @@ namespace cen
     class NumberExprAST;
     class BlockAST;
     class VariableAST;
+    class FunAST;
+    class CallAST;
 
-    using GlobalExprASTPtr = std::shared_ptr<ExprAST>;
+    using GlobalExprASTPtr = std::shared_ptr<FunAST>;
     using ExprASTPtr       = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr = std::unique_ptr<NumberExprAST>;
     using BlockASTPtr      = std::unique_ptr<BlockAST>;
@@ -327,6 +329,9 @@ namespace cen
     class FunAST : public ExprAST
     {
     public:
+        friend class CallAST;
+
+    public:
         FunAST(std::string name, std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok);
 
     public:
@@ -356,14 +361,14 @@ namespace cen
     class CallAST : public ExprAST
     {
     public:
-        CallAST(std::string name, std::vector<std::string> param, TokenLocation lok);
+        CallAST(std::string name, std::vector<ValuePtr> param, TokenLocation lok);
 
     public:
         ValuePtr eval(EnvPtr env) override;
 
     private:
         std::string name_;
-        std::vector<std::string> param_;
+        std::vector<ValuePtr> param_;
     };
 
 }
