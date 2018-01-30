@@ -159,4 +159,10 @@ TEST(eval, fun)
     }
 }
 
+TEST(fun, call)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/call.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H

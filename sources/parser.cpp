@@ -19,12 +19,14 @@ namespace cen
         while (!validateToken(TokenValue::END_OF_FILE) && !Parser::getErrorFlag())
         {
             ExprASTPtr expp = parseStatement();
-            if (!expp)
+            if (expp)
             {
-                errorSyntax("解析错误");
+                vec.push_back(std::move(expp));
+            }
+            else
+            {
                 return vec;
             }
-            vec.push_back(std::move(expp));
         }
         return vec;
     }
@@ -321,8 +323,17 @@ namespace cen
         }
         else if(validateToken(TokenValue::LEFT_PAREN, true))
         {
-            // FIXME
-            return parseCallStatement();
+            std::vector<ExprASTPtr> param;
+            if (!validateToken(TokenValue::RIGHT_PAREN))
+            {
+                param.push_back(std::move(parseExpression()));
+                while (validateToken(TokenValue::COMMA, true))
+                {
+                    param.push_back(std::move(parseExpression()));
+                }
+                expectToken(TokenValue::RIGHT_PAREN, true);
+            }
+            return std::make_unique<CallAST>(std::move(tok.getStrValue()), std::move(param), std::move(tok.getTokenLocation()));
         }
         else
         {
@@ -483,12 +494,6 @@ namespace cen
             errorSyntax("匿名函数的函数体未找到:" + defLok.toString());
         }
         return std::make_unique<AnonymousFunAST>(std::move(param), std::move(funBody), defLok);
-    }
-
-    ExprASTPtr Parser::parseCallStatement()
-    {
-
-        return cen::ExprASTPtr();
     }
 
 

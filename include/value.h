@@ -59,7 +59,7 @@ namespace cen
         const ValueType type_ = ValueType::BOOL;
     };
     inline ValueType BoolValue::getType() const { return type_; }
-    inline std::string BoolValue::toString() const { return std::to_string(value_); }
+    inline std::string BoolValue::toString() const { return value_ ? "true" : "false"; }
 
 
 
@@ -133,8 +133,8 @@ namespace cen
     private:
         static NoneValuePtr nonePtr_;
     };
-    inline std::string NoneValue::toString() const { return "void"; }
-    inline ValueType NoneValue::getType() const { return ValueType::VOID; }
+    inline std::string NoneValue::toString() const { return "NONE"; }
+    inline ValueType NoneValue::getType() const { return ValueType::NONE; }
     inline NoneValue::NoneValuePtr NoneValue::instance() { return nonePtr_; }
 
 

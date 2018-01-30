@@ -32,7 +32,8 @@ namespace cen
         return std::make_shared<IntValue>(value_);
     }
 
-    ValuePtr FloatNumExprAST::eval(EnvPtr env) {
+    ValuePtr FloatNumExprAST::eval(EnvPtr env)
+    {
         return std::make_shared<FloatValue>(value_);
     }
 
@@ -268,7 +269,7 @@ namespace cen
                                                                                                   name_(std::move(name)),
                                                                                                   body_(std::move(body)){}
 
-    ValuePtr FunAST::eval(EnvPtr env) { return NoneValue::instance(); }
+    ValuePtr FunAST::eval(EnvPtr env) { return body_->eval(env); }
 
     AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
                                                                                             : ExprAST(lok),
@@ -283,7 +284,7 @@ namespace cen
         return cen::ValuePtr();
     }
 
-    CallAST::CallAST(std::string name, std::vector<ValuePtr> param, TokenLocation lok) : ExprAST(std::move(lok)),
+    CallAST::CallAST(std::string name, std::vector<ExprASTPtr> param, TokenLocation lok) : ExprAST(std::move(lok)),
                                                                                             name_(std::move(name)),
                                                                                             param_(std::move(param)){}
 
@@ -306,7 +307,7 @@ namespace cen
             for (auto &name : paramName)
             {
                 if (iter != param_.end()) {
-                    callEvn->putLocationValue(name, *iter++);
+                    callEvn->putLocationValue(name, (*iter++)->eval(callEvn));
                 } else {
                     callEvn->putLocationValue(name, NoneValue::instance());
                 }

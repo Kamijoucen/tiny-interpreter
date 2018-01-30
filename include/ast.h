@@ -361,14 +361,14 @@ namespace cen
     class CallAST : public ExprAST
     {
     public:
-        CallAST(std::string name, std::vector<ValuePtr> param, TokenLocation lok);
+        CallAST(std::string name, std::vector<ExprASTPtr> param, TokenLocation lok);
 
     public:
         ValuePtr eval(EnvPtr env) override;
 
     private:
         std::string name_;
-        std::vector<ValuePtr> param_;
+        std::vector<ExprASTPtr> param_;
     };
 
 }

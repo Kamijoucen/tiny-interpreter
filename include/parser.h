@@ -51,8 +51,6 @@ namespace cen
 
         FunMatePtr    parseFunctionStatement();
 
-        ExprASTPtr    parseCallStatement();
-
         ExprASTPtr    parsePrintStatement();
 
         ExprASTPtr    parseInputStatement();
