@@ -122,7 +122,7 @@ TEST(eval, iftest)
 
 TEST(eval, flowctest)
 {
-    std::string a("../Resource/flowca.l");
+    std::string a("../Resource/flowc.l");
     Scanner scanner(a);
     Parser parser(scanner);
     VecExprASTPtr vec = parser.parse();

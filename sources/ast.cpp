@@ -67,14 +67,10 @@ namespace cen
     ValuePtr BlockAST::eval(EnvPtr env)
     {
         EnvPtr lenv = makeNewEnv(env);
+        lenv->putLocationValue("isNeedContinue", std::make_shared<BoolValue>(false));
         for (auto &stat : vec_)
         {
-            if (typeid(BreakAST) == typeid(*stat))
-            {
-                env->changeValue("isNeedBreak", std::make_shared<BoolValue>(true));
-                break;
-            }
-            if (typeid(ContinueAST) == typeid(*stat)) {
+            if (static_cast<BoolValue*>(lenv->lookup("isNeedContinue").get())->value_) {
                 break;
             }
             stat->eval(lenv);
@@ -247,12 +243,14 @@ namespace cen
 
     ValuePtr BreakAST::eval(EnvPtr env)
     {
-        return cen::ValuePtr();
+        env->changeValue("isNeedBreak", std::make_shared<BoolValue>(true));
+        return NoneValue::instance();
     }
 
-    ValuePtr ContinueAST::eval(EnvPtr env) {
-
-        return cen::ValuePtr();
+    ValuePtr ContinueAST::eval(EnvPtr env)
+    {
+        env->changeValue("isNeedContinue", std::make_shared<BoolValue>(true));
+        return NoneValue::instance();
     }
 
     ContinueAST::ContinueAST(const TokenLocation &lok) : ExprAST(lok) {}
