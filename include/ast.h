@@ -347,14 +347,19 @@ namespace cen
     class AnonymousFunAST : public ExprAST
     {
     public:
-        AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok);
+        friend class CallAST;
+
+    public:
+        AnonymousFunAST(std::vector<std::string> param, std::vector<std::string> envParam, BlockASTPtr body, TokenLocation lok);
 
     public:
         ValuePtr eval(EnvPtr env) override;
 
     private:
         std::vector<std::string> param_;
+        std::vector<std::string> envParam_;
         BlockASTPtr body_;
+        EnvPtr closureEnv_;
     };
 
 

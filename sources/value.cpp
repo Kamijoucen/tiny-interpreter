@@ -1,9 +1,9 @@
 
 #include "../include/value.h"
 #include "../include/ast.h"
+#include "../include/environment.h"
 
-namespace cen
-{
+namespace cen {
 
     NoneValue::NoneValuePtr NoneValue::nonePtr_ = std::make_shared<NoneValue>();
 
@@ -17,5 +17,7 @@ namespace cen
 
     StringValue::StringValue(const std::string &str) : value_(str) {}
 
-    Closure::Closure(BlockAST &body) : body_(body) {}
+    Closure::Closure(std::vector<std::string> param, BlockASTPtr &body, EnvPtr &closureEnv) : body_(body),
+                                                                                              param_(std::move(param)),
+                                                                                              closureEnv_(closureEnv) {}
 }

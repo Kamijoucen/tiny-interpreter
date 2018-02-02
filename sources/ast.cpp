@@ -70,6 +70,7 @@ namespace cen
         lenv->putLocationValue("isNeedContinue", std::make_shared<BoolValue>(false));
         for (auto &stat : vec_)
         {
+            // todo
             if (static_cast<BoolValue*>(lenv->lookup("isNeedContinue").get())->value_) {
                 break;
             }
@@ -269,17 +270,20 @@ namespace cen
 
     ValuePtr FunAST::eval(EnvPtr env) { return body_->eval(env); }
 
-    AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
-                                                                                            : ExprAST(lok),
+    AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, std::vector<std::string> envParam, BlockASTPtr body, TokenLocation lok)
+                                                                                            : ExprAST(std::move(lok)),
+                                                                                              envParam_(std::move(envParam)),
                                                                                               param_(std::move(param)),
-                                                                                              body_(std::move(body)){}
+                                                                                              body_(std::move(body)),
+                                                                                              closureEnv_(nullptr){}
 
     ValuePtr AnonymousFunAST::eval(EnvPtr env)
     {
-        // 检查参数
-        // 将参数放入闭包环境
-        // 返回闭包
-        return cen::ValuePtr();
+        closureEnv_ = std::make_shared<Environment>();
+        for (auto &name : envParam_) {
+            closureEnv_->putLocationValue(name, env->lookup(name));
+        }
+        return std::make_shared<Closure>(param_, body_, closureEnv_);
     }
 
     CallAST::CallAST(std::string name, std::vector<ExprASTPtr> param, TokenLocation lok) : ExprAST(std::move(lok)),
@@ -288,18 +292,28 @@ namespace cen
 
     ValuePtr CallAST::eval(EnvPtr env)
     {
-        EnvPtr callEvn = makeNewEnv(env);
-
         if (ValuePtr funVal = env->lookup(name_))
         {
             if (funVal->getType() == ValueType::CLOSURE)
             {
-                return static_cast<Closure*>(funVal.get())->body_.eval(env);
+                auto closure = static_cast<Closure*>(funVal.get());
+                auto iter = param_.begin();
+                for (auto &name : closure->param_)
+                {
+                    if (iter != param_.end()) {
+                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
+                    } else {
+                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
+                    }
+                }
+                return closure->body_->eval(closure->closureEnv_);
             }
         }
 
+
         if (GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_))
         {
+            EnvPtr callEvn = makeNewEnv(env);
             const std::vector<std::string> &paramName = gfun->param_;
             auto iter = param_.begin();
             for (auto &name : paramName)

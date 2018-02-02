@@ -474,6 +474,21 @@ namespace cen
         TokenLocation defLok = scanner_.getToken().getTokenLocation();
         expectToken(TokenValue::DEF, "'def' 关键字未找到:" + defLok.toString(), true);
 
+        vector<string> envParam;
+        expectToken(TokenValue::LEFT_SQUARE, true);
+        if (validateToken(TokenValue::IDENTIFIER))
+        {
+            envParam.push_back(std::move(scanner_.getToken().getStrValue()));
+            scanner_.next();
+            while (validateToken(TokenValue::COMMA, true))
+            {
+                expectToken(TokenValue::IDENTIFIER, "匿名函数的捕获列表的逗号后需要另一个捕获名称");
+                envParam.push_back(std::move(scanner_.getToken().getStrValue()));
+                scanner_.next();
+            }
+        }
+        expectToken(TokenValue::RIGHT_SQUARE, "需要匹配匿名函数的捕获列表的右括号", true);
+
         vector<string> param;
         expectToken(TokenValue::LEFT_PAREN, true);
         if (validateToken(TokenValue::IDENTIFIER))
@@ -493,7 +508,7 @@ namespace cen
         if (!funBody) {
             errorSyntax("匿名函数的函数体未找到:" + defLok.toString());
         }
-        return std::make_unique<AnonymousFunAST>(std::move(param), std::move(funBody), defLok);
+        return std::make_unique<AnonymousFunAST>(std::move(param), std::move(envParam),std::move(funBody), defLok);
     }
 
 

@@ -4,11 +4,17 @@
 
 #include <memory>
 #include <ostream>
+#include <vector>
 
 namespace cen
 {
     class BlockAST;
     class Value;
+    class Environment;
+    class AnonymousFunAST;
+
+    using EnvPtr = std::shared_ptr<Environment>;
+    using BlockASTPtr = std::unique_ptr<BlockAST>;
 
     using ValuePtr = std::shared_ptr<Value>;
 
@@ -164,13 +170,15 @@ namespace cen
     class Closure : public Value
     {
     public:
-        explicit Closure(BlockAST& body);
+        Closure(std::vector<std::string> param, BlockASTPtr& body, EnvPtr &closureEnv);
 
         inline ValueType getType() const override;
 
         inline std::string toString() const override;
 
-        BlockAST &body_;
+        BlockASTPtr &body_;
+        EnvPtr &closureEnv_;
+        std::vector<std::string> param_;
 
     };
     inline ValueType Closure::getType() const { return ValueType::CLOSURE; }

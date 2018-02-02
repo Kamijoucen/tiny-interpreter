@@ -165,4 +165,10 @@ TEST(fun, call)
     interpreter.interp("../Resource/call.l");
 }
 
+TEST(fun, closure)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/closure.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H
