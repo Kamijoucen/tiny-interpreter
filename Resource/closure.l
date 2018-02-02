@@ -12,5 +12,10 @@ var fun = def[li, a, b](aa, bb, cc) {
     print cc;
 };
 
-fun(1, 2, 3)
+var fff = def[fun]() {
+    print "11111";
+    fun()
+};
 
+
+fff()

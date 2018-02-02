@@ -324,7 +324,7 @@ namespace cen
         else if(validateToken(TokenValue::LEFT_PAREN, true))
         {
             std::vector<ExprASTPtr> param;
-            if (!validateToken(TokenValue::RIGHT_PAREN))
+            if (!validateToken(TokenValue::RIGHT_PAREN, true))
             {
                 param.push_back(std::move(parseExpression()));
                 while (validateToken(TokenValue::COMMA, true))
