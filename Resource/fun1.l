@@ -1,18 +1,9 @@
 
+var fun = test(1);
+print fun(2);
 
-
-var str = test();
-
-print str;
-
-var i = 3;
-while(i > 0)
-{
-    print "aaaaaaa";
-    i = i - 1;
-    break;
-}
-
-def test() {
-    return "lisicen";
+def test(a) {
+    return def[a](b) {
+        return a + b;
+    };
 }

@@ -88,7 +88,7 @@ namespace cen
             }
             curVal = stat->eval(lenv);
         }
-        return VoidValue::instance();
+        return curVal ? curVal : VoidValue::instance();
     }
 
     BlockAST::BlockAST(TokenLocation &lok) : ExprAST(lok) {}
@@ -98,9 +98,6 @@ namespace cen
               lhs_(std::move(lhs)),
               rhs_(std::move(rhs)) {}
 
-//    ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env) {
-//        return cen::ValuePtr();
-//    }
 
 
     ValuePtr VariableDefinitionStatementAST::eval(EnvPtr env)
@@ -196,7 +193,7 @@ namespace cen
             errorInterp("print语句没有找到需要打印的值");
             return nullptr;
         }
-        std::cout << val_->eval(env)->toString() << std::endl;
+        std::cout << value->toString() << std::endl;
         return VoidValue::instance();
     }
 
@@ -319,7 +316,7 @@ namespace cen
 
     ValuePtr AnonymousFunAST::eval(EnvPtr env)
     {
-        closureEnv_ = std::make_shared<Environment>();
+        closureEnv_ = Environment::buildInitScope();
         closureEnv_->putLocationValue(IS_NEED_RETURN, std::make_shared<BoolValue>(false));
         for (auto &name : envParam_) {
             closureEnv_->putLocationValue(name, env->lookup(name));

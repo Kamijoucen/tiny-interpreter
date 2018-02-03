@@ -417,9 +417,9 @@ namespace cen
                 if (validateToken(TokenValue::SEMICOLON, true)) {
                     return std::make_unique<ReturnAST>(nullptr, std::move(toklocn));
                 } else {
-                    ExprASTPtr val = parseExpression();
+                    ExprASTPtr valAst = parseExpression();
                     expectToken(TokenValue::SEMICOLON, "; 未找到", true);
-                    return std::make_unique<ReturnAST>(std::move(val), std::move(toklocn));
+                    return std::make_unique<ReturnAST>(std::move(valAst), std::move(toklocn));
                 }
             default:
                 return nullptr;
