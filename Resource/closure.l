@@ -1,5 +1,5 @@
 
-var li = "lisicen";
+var li = "aaaaa";
 var a = 555.0;
 var b = false;
 
@@ -14,7 +14,7 @@ var fun = def[li, a, b](aa, bb, cc) {
 
 var fff = def[fun]() {
     print "11111";
-    fun()
+    fun("666", "666", 666)
 };
 
 

@@ -318,11 +318,13 @@ namespace cen
     class ReturnAST : public ExprAST
     {
     public:
-        ReturnAST() = default;
+        ReturnAST(ExprASTPtr ast, TokenLocation lok);
 
-        explicit ReturnAST(const TokenLocation &lok);
     public:
         ValuePtr eval(EnvPtr env) override;
+
+    private:
+        ExprASTPtr returnExp_;
     };
 
 

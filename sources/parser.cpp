@@ -405,16 +405,22 @@ namespace cen
         TokenLocation toklocn = scanner_.getToken().getTokenLocation();
         scanner_.next();
 
-        expectToken(TokenValue::SEMICOLON, "; 未找到", true);
-
         switch (tokenValue)
         {
             case TokenValue::BREAK:
+                expectToken(TokenValue::SEMICOLON, "; 未找到", true);
                 return std::make_unique<BreakAST>(toklocn);
             case TokenValue::CONTINUE:
+                expectToken(TokenValue::SEMICOLON, "; 未找到", true);
                 return std::make_unique<ContinueAST>(toklocn);
             case TokenValue::RETURN:
-                return std::make_unique<ReturnAST>(toklocn);
+                if (validateToken(TokenValue::SEMICOLON, true)) {
+                    return std::make_unique<ReturnAST>(nullptr, std::move(toklocn));
+                } else {
+                    ExprASTPtr val = parseExpression();
+                    expectToken(TokenValue::SEMICOLON, "; 未找到", true);
+                    return std::make_unique<ReturnAST>(std::move(val), std::move(toklocn));
+                }
             default:
                 return nullptr;
         }

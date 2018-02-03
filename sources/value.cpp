@@ -1,7 +1,6 @@
 
 #include "../include/value.h"
 #include "../include/ast.h"
-#include "../include/environment.h"
 
 namespace cen {
 

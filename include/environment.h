@@ -43,9 +43,13 @@ namespace cen
 
         PrimFunPtr lookupOpLocation(const TokenValue &key) const;
 
+        // inner
+
+
     private:
         EnvPtr parent_ = nullptr;
         std::map<std::string, ValuePtr>   varibs_;
+        std::map<std::string, ValuePtr>   innerVaribs_;
         std::map<TokenValue, PrimFunPtr>  prifun_;
     };
 

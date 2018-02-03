@@ -10,6 +10,9 @@
 
 #define Int     lr::ValueType::INT
 #define Float   lr::ValueType::FLOAT
+#define IS_NEED_RETURN   "isNeedReturn"
+#define IS_NEED_BREAK    "isNeedBreak"
+#define IS_NEED_CONTINUE "isNeedContinue"
 
 namespace cen
 {
@@ -67,14 +70,23 @@ namespace cen
     ValuePtr BlockAST::eval(EnvPtr env)
     {
         EnvPtr lenv = makeNewEnv(env);
-        lenv->putLocationValue("isNeedContinue", std::make_shared<BoolValue>(false));
+
+        ValuePtr curVal = nullptr;
         for (auto &stat : vec_)
         {
-            // todo
-            if (static_cast<BoolValue*>(lenv->lookup("isNeedContinue").get())->value_) {
-                break;
+            if (auto isnc = lenv->lookup(IS_NEED_CONTINUE))
+            {
+                if (static_cast<BoolValue*>(isnc.get())->value_) {
+                    break;
+                }
             }
-            stat->eval(lenv);
+            if (auto isnr = lenv->lookup(IS_NEED_RETURN))
+            {
+                if (static_cast<BoolValue *>(isnr.get())->value_) {
+                    return curVal;
+                }
+            }
+            curVal = stat->eval(lenv);
         }
         return VoidValue::instance();
     }
@@ -208,15 +220,21 @@ namespace cen
             return nullptr;
         }
 
-        whileEnv->putLocationValue("isNeedBreak", std::make_shared<BoolValue>(false));
+        whileEnv->putLocationValue(IS_NEED_BREAK, std::make_shared<BoolValue>(false));
+        whileEnv->putLocationValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(false));
 
-        while (static_cast<BoolValue*>(val.get())->value_ && !Parser::getErrorFlag())
+        while (static_cast<BoolValue*>(val.get())->value_)
         {
             body_->eval(whileEnv);
             val = condition_->eval(whileEnv);
 
-            if (static_cast<BoolValue*>(whileEnv->lookup("isNeedBreak").get())->value_)
-                break;
+            if (auto isnb = whileEnv->lookup(IS_NEED_BREAK))
+            {
+                if (static_cast<BoolValue *>(isnb.get())->value_) {
+                    break;
+                }
+            }
+            whileEnv->changeValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(false));
         }
 
         return VoidValue::instance();
@@ -244,22 +262,39 @@ namespace cen
 
     ValuePtr BreakAST::eval(EnvPtr env)
     {
-        env->changeValue("isNeedBreak", std::make_shared<BoolValue>(true));
+        if (!env->lookup(IS_NEED_BREAK)) {
+            errorInterp("当前环境无法执行 break 操作");
+            return nullptr;
+        }
+        env->changeValue(IS_NEED_BREAK, std::make_shared<BoolValue>(true));
         return NoneValue::instance();
     }
 
     ValuePtr ContinueAST::eval(EnvPtr env)
     {
-        env->changeValue("isNeedContinue", std::make_shared<BoolValue>(true));
+        if (!env->lookup(IS_NEED_CONTINUE)) {
+            errorInterp("当前环境无法执行 continue 操作");
+            return nullptr;
+        }
+        env->changeValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(true));
         return NoneValue::instance();
     }
 
     ContinueAST::ContinueAST(const TokenLocation &lok) : ExprAST(lok) {}
 
-    ReturnAST::ReturnAST(const TokenLocation &lok) : ExprAST(lok) {}
+    ReturnAST::ReturnAST(ExprASTPtr ast,TokenLocation lok) : ExprAST(std::move(lok)), returnExp_(std::move(ast)) {}
 
     ValuePtr ReturnAST::eval(EnvPtr env) {
-        return cen::ValuePtr();
+        if (!env->lookup(IS_NEED_RETURN)) {
+            errorInterp("当前环境无法执行 return 操作");
+            return nullptr;
+        }
+        env->changeValue(IS_NEED_RETURN, std::make_shared<BoolValue>(true));
+        if (returnExp_) {
+            return returnExp_->eval(env);
+        } else {
+            return NoneValue::instance();
+        }
     }
 
     FunAST::FunAST(std::string name, std::vector<std::string> param, BlockASTPtr body, const TokenLocation &lok)
@@ -268,7 +303,12 @@ namespace cen
                                                                                                   name_(std::move(name)),
                                                                                                   body_(std::move(body)){}
 
-    ValuePtr FunAST::eval(EnvPtr env) { return body_->eval(env); }
+    ValuePtr FunAST::eval(EnvPtr env)
+    {
+        EnvPtr funEnv = makeNewEnv(env);
+        funEnv->putLocationValue(IS_NEED_RETURN, std::make_shared<BoolValue>(false));
+        return body_->eval(funEnv);
+    }
 
     AnonymousFunAST::AnonymousFunAST(std::vector<std::string> param, std::vector<std::string> envParam, BlockASTPtr body, TokenLocation lok)
                                                                                             : ExprAST(std::move(lok)),
@@ -280,6 +320,7 @@ namespace cen
     ValuePtr AnonymousFunAST::eval(EnvPtr env)
     {
         closureEnv_ = std::make_shared<Environment>();
+        closureEnv_->putLocationValue(IS_NEED_RETURN, std::make_shared<BoolValue>(false));
         for (auto &name : envParam_) {
             closureEnv_->putLocationValue(name, env->lookup(name));
         }
