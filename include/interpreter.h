@@ -17,14 +17,13 @@ namespace cen
 
         void interp(const std::string &file);
 
-        inline bool getErrorFlag();
+        static bool getErrorFlag();
 
         static void setErrorFlag(bool);
 
     private:
         static bool errorFlag;
     };
-    inline bool Interpreter::getErrorFlag() { return errorFlag; }
 
 }
 

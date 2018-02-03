@@ -1,13 +1,6 @@
-
-
-
-
-
-
 callback(def[]() {
     print "back";
 })
-
 
 def callback(call)
 {

@@ -35,6 +35,10 @@ namespace cen
 
     }
 
+    bool Interpreter::getErrorFlag() {
+        return errorFlag;
+    }
+
     void Interpreter::setErrorFlag(bool flag) {
         errorFlag = flag;
     }

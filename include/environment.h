@@ -47,11 +47,17 @@ namespace cen
 
 
     private:
+        static inline EnvPtr baseInstance();
+
+    private:
         EnvPtr parent_ = nullptr;
         std::map<std::string, ValuePtr>   varibs_;
         std::map<std::string, ValuePtr>   innerVaribs_;
         std::map<TokenValue, PrimFunPtr>  prifun_;
+        static EnvPtr baseEnv_;
     };
+
+
 
 
 }

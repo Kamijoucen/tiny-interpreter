@@ -74,6 +74,9 @@ namespace cen
         ValuePtr curVal = nullptr;
         for (auto &stat : vec_)
         {
+            if (Interpreter::getErrorFlag()) {
+                return nullptr;
+            }
             if (auto isnc = lenv->lookup(IS_NEED_CONTINUE))
             {
                 if (static_cast<BoolValue*>(isnc.get())->value_) {
@@ -140,7 +143,10 @@ namespace cen
         }
         else
         {
-            return elsePart_->eval(env);
+            if (elsePart_) {
+                return elsePart_->eval(env);
+            }
+            return NoneValue::instance();
         }
     }
 

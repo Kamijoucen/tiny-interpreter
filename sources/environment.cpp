@@ -7,12 +7,15 @@
 #include "../include/primitives/less.h"
 #include "../include/primitives/multiply.h"
 #include "../include/primitives/minus.h"
+#include "../include/primitives/equal.h"
 
 namespace cen
 {
+    EnvPtr Environment::baseEnv_ = baseInstance();
+
     Environment::Environment(EnvPtr penv) : parent_(std::move(penv)) {}
 
-    EnvPtr Environment::buildInitScope()
+    inline EnvPtr Environment::baseInstance()
     {
         EnvPtr env = std::make_unique<Environment>();
         env->putLocationOp(TokenValue::ADD,          std::make_unique<Add>());
@@ -21,7 +24,13 @@ namespace cen
         env->putLocationOp(TokenValue::DIVIDE,       std::make_unique<Divide>());
         env->putLocationOp(TokenValue::GREATER_THAN, std::make_unique<Greater>());
         env->putLocationOp(TokenValue::LESS_THAN,    std::make_unique<Less>());
+        env->putLocationOp(TokenValue::EQUAL,        std::make_unique<Equal>());
         return env;
+    }
+
+    EnvPtr Environment::buildInitScope()
+    {
+        return baseEnv_;
     }
 
     ValuePtr Environment::lookup(const std::string &key) const

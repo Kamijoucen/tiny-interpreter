@@ -71,7 +71,7 @@ TEST(varExpr, expr)
 }
 
 TEST(scannerType, scanner) {
-    std::string a("../Resource/fun.l");
+    std::string a("../Resource/fibon.l");
     Scanner scanner(a);
     scanner.next();
     while (scanner.getToken().getTokenValue() != TokenValue::END_OF_FILE) {
@@ -174,7 +174,7 @@ TEST(fun, closure)
 TEST(fun, digui)
 {
     Interpreter interpreter;
-    interpreter.interp("../Resource/fun1.l");
+    interpreter.interp("../Resource/fibon.l");
 }
 
 #endif //LLANGUAGE_UNITTEST_H
