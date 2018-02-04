@@ -346,20 +346,8 @@ namespace cen
     ExprASTPtr Parser::parseInputStatement()
     {
         TokenLocation lok = scanner_.getToken().getTokenLocation();
-//        if (!expectToken(TokenValue::INPUT, true))
-//        {
-//            errorSyntax("'input' not found:" + lok.toString());
-//            return nullptr;
-//        }
-//
-//        if (!expectToken(TokenValue::IDENTIFIER))
-//        {
-//            errorSyntax("需要一个变量名字" + lok.toString());
-//            return nullptr;
-//        }
 
         // todo
-
 
         return nullptr;
     }

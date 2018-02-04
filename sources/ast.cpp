@@ -318,11 +318,10 @@ namespace cen
                                                                                               envParam_(std::move(envParam)),
                                                                                               param_(std::move(param)),
                                                                                               body_(std::move(body)),
-                                                                                              closureEnv_(nullptr){}
+                                                                                              closureEnv_(Environment::buildInitScope()){}
 
     ValuePtr AnonymousFunAST::eval(EnvPtr env)
     {
-        closureEnv_ = Environment::buildInitScope();
         closureEnv_->putLocationValue(IS_NEED_RETURN, std::make_shared<BoolValue>(false));
         for (auto &name : envParam_) {
             closureEnv_->putLocationValue(name, env->lookup(name));

@@ -174,7 +174,7 @@ TEST(fun, closure)
 TEST(fun, digui)
 {
     Interpreter interpreter;
-    interpreter.interp("../Resource/fibon.l");
+    interpreter.interp("../Resource/fun1.l");
 }
 
 #endif //LLANGUAGE_UNITTEST_H

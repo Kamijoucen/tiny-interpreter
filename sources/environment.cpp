@@ -17,7 +17,7 @@ namespace cen
 
     inline EnvPtr Environment::baseInstance()
     {
-        EnvPtr env = std::make_unique<Environment>();
+        EnvPtr env = std::make_shared<Environment>();
         env->putLocationOp(TokenValue::ADD,          std::make_unique<Add>());
         env->putLocationOp(TokenValue::MINUS,        std::make_unique<Minus>());
         env->putLocationOp(TokenValue::MULTIPLY,     std::make_unique<Multiply>());
@@ -30,7 +30,7 @@ namespace cen
 
     EnvPtr Environment::buildInitScope()
     {
-        return baseEnv_;
+        return std::make_shared<Environment>(baseEnv_);
     }
 
     ValuePtr Environment::lookup(const std::string &key) const
