@@ -152,20 +152,19 @@ namespace cen
 
     ValuePtr VariableAssignStatementAST::eval(EnvPtr env)
     {
-        auto name = lhs_->getVarName();
-        auto val  = env->lookup(name);
+        ValuePtr val = lhs_->eval(env);
         if (!val)
         {
-            errorInterp("作用域内没有发现变量: " + name);
+            errorInterp("作用域内没有发现变量: " + lhs_->getName());
         }
         else
         {
-            env->changeValue(name, rhs_->eval(env));
+            env->changeValue(lhs_->getName(), rhs_->eval(env));
         }
         return VoidValue::instance();
     }
 
-    VariableAssignStatementAST::VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs,
+    VariableAssignStatementAST::VariableAssignStatementAST(NameASTPtr lhs, ExprASTPtr rhs,
                                                            const TokenLocation &location) : ExprAST(location),
                                                                                             lhs_(std::move(lhs)),
                                                                                             rhs_(std::move(rhs)) {}
@@ -376,4 +375,9 @@ namespace cen
         }
     }
 
+    NameAST::NameAST(std::string name, TokenLocation lok) : ExprAST(std::move(lok)), name_(std::move(name)){}
+
+    ValuePtr NameAST::eval(EnvPtr env) { return env->lookup(name_); }
+
+    const std::string &NameAST::getName() const { return name_; }
 }

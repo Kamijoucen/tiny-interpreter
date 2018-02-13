@@ -11,18 +11,26 @@
 namespace cen
 {
 
+    /**
+     * 变量的赋值应该给予拷贝而不是仅仅拷贝智能指针。  基本类型的赋值 a = b, a,b就应该是两个
+     * 独立变量了。 如果仅仅是拷贝只能指针仍然是引用同一个值。！！！！！！！
+     *
+     */
+
     class ExprAST;
     class NumberExprAST;
     class BlockAST;
     class VariableAST;
     class FunAST;
     class CallAST;
+    class NameAST;
 
     using GlobalExprASTPtr = std::shared_ptr<FunAST>;
     using ExprASTPtr       = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr = std::unique_ptr<NumberExprAST>;
     using BlockASTPtr      = std::unique_ptr<BlockAST>;
     using VariableASTPtr   = std::unique_ptr<VariableAST>;
+    using NameASTPtr       = std::unique_ptr<NameAST>;
     using VecExprASTPtr    = std::vector<std::unique_ptr<ExprAST>>;
 
     class ExprAST
@@ -103,11 +111,11 @@ namespace cen
         ValuePtr eval(EnvPtr env) override;
 
     public:
-        VariableAssignStatementAST(VariableASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
+        VariableAssignStatementAST(NameASTPtr lhs, ExprASTPtr rhs, const TokenLocation &lok);
 
     private:
-        VariableASTPtr  lhs_;
-        ExprASTPtr      rhs_;
+        NameASTPtr  lhs_;
+        ExprASTPtr  rhs_;
     };
 
 
@@ -362,6 +370,20 @@ namespace cen
         std::vector<std::string> envParam_;
         BlockASTPtr body_;
         EnvPtr closureEnv_;
+    };
+
+    class NameAST : public ExprAST
+    {
+    public:
+        NameAST(std::string name, TokenLocation lok);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
+        const std::string &getName() const;
+
+    private:
+        std::string name_;
     };
 
 

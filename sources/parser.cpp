@@ -302,9 +302,71 @@ namespace cen
     }
 
 
+    ExprASTPtr Parser::parseIdentifier1(bool isStat)
+    {
+        Token identToken = scanner_.getToken();
+        expectToken(TokenValue::IDENTIFIER, "未找到标识符名称", true);
 
+        NameASTPtr name = std::make_unique<NameAST>(std::move(identToken.getStrValue()), identToken.getTokenLocation());
+
+        if (validateToken(TokenValue::ASSIGN, true))
+        {
+
+            ExprASTPtr rhs = parseExpression();
+            if (!rhs)
+            {
+                errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
+                return nullptr;
+            }
+            expectToken(TokenValue::SEMICOLON, "';'未找到", true);
+            return std::make_unique<VariableAssignStatementAST>(std::move(name), std::move(rhs), identToken.getTokenLocation());
+        }
+        else if(validateToken(TokenValue::LEFT_PAREN))
+        {
+            // todo call
+            while (validateToken(TokenValue::LEFT_PAREN))
+            {
+
+            }
+        }
+        else
+        {
+            return std::move(name);
+        }
+
+    }
+
+
+    std::vector<std::string> Parser::parseAttrs()
+    {
+        using namespace std;
+        expectToken(TokenValue::LEFT_PAREN, true);
+
+        vector<string> param;
+
+        expectToken(TokenValue::IDENTIFIER);
+        param.push_back(std::move(scanner_.getToken().getStrValue()));
+        scanner_.next();
+
+        while (validateToken(TokenValue::COMMA, true))
+        {
+            expectToken(TokenValue::IDENTIFIER);
+            param.push_back(std::move(scanner_.getToken().getStrValue()));
+            scanner_.next();
+        }
+
+        expectToken(TokenValue::RIGHT_PAREN, true);
+        return param;
+    }
+
+
+    /**
+     * FIXME
+     * @return
+     */
     ExprASTPtr Parser::parseIdentifier()
     {
+        // todo
         Token tok = scanner_.getToken();
         expectToken(TokenValue::IDENTIFIER, "未找到变量名", true);
 
@@ -502,7 +564,7 @@ namespace cen
         if (!funBody) {
             errorSyntax("匿名函数的函数体未找到:" + defLok.toString());
         }
-        return std::make_unique<AnonymousFunAST>(std::move(param), std::move(envParam),std::move(funBody), defLok);
+        return std::make_unique<AnonymousFunAST>(std::move(param), std::move(envParam),std::move(funBody), std::move(defLok));
     }
 
 
