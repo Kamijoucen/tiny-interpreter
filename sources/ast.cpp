@@ -332,23 +332,34 @@ namespace cen
                                                                                             name_(std::move(name)),
                                                                                             param_(std::move(param)){}
 
+    CallAST::CallAST(std::string name, std::vector<std::vector<ExprASTPtr>> params, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                                         name_(std::move(name)),
+                                                                                                         params_(std::move(params)) {}
+
+    ValuePtr CallAST::callFun(const std::vector<std::string> &param, const ExprASTPtr &body, const EnvPtr &funEnv,
+                              const EnvPtr &runtimeEnv) {
+        auto iter = param_.begin();
+        for (auto &name : param)
+        {
+            if (iter != param_.end()) {
+                funEnv->putLocationValue(name, (*iter++)->eval(runtimeEnv));
+            } else {
+                funEnv->putLocationValue(name, NoneValue::instance());
+            }
+        }
+        return body->eval(funEnv);
+    }
+
+
     ValuePtr CallAST::eval(EnvPtr env)
     {
+
         if (ValuePtr funVal = env->lookup(name_))
         {
             if (funVal->getType() == ValueType::CLOSURE)
             {
                 auto closure = static_cast<Closure*>(funVal.get());
-                auto iter = param_.begin();
-                for (auto &name : closure->param_)
-                {
-                    if (iter != param_.end()) {
-                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
-                    } else {
-                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
-                    }
-                }
-                return closure->body_->eval(closure->closureEnv_);
+                return callFun(closure->param_, closure->body_, closure->closureEnv_, env);
             }
         }
 
@@ -357,6 +368,9 @@ namespace cen
         {
             EnvPtr callEvn = makeNewEnv(env);
             const std::vector<std::string> &paramName = gfun->param_;
+
+            callFun(gfun->param_, gfun, callEvn, callEvn);
+
             auto iter = param_.begin();
             for (auto &name : paramName)
             {

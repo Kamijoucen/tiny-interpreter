@@ -304,6 +304,7 @@ namespace cen
 
     ExprASTPtr Parser::parseIdentifier1(bool isStat)
     {
+        using namespace std;
         Token identToken = scanner_.getToken();
         expectToken(TokenValue::IDENTIFIER, "未找到标识符名称", true);
 
@@ -323,36 +324,50 @@ namespace cen
         }
         else if(validateToken(TokenValue::LEFT_PAREN))
         {
-            // todo call
+            vector<vector<ExprASTPtr>> calls;
             while (validateToken(TokenValue::LEFT_PAREN))
             {
-
+                vector<ExprASTPtr> param = parseCallAttrs();
+                calls.push_back(std::move(param));
             }
+            if (isStat) {
+                expectToken(TokenValue::COMMA, "';'未找到", true);
+            }
+            return std::make_unique<CallAST>(identToken.getStrValue(), std::move(calls), std::move(identToken.getTokenLocation()));
         }
         else
         {
+            if (isStat) {
+                expectToken(TokenValue::COMMA, "';'未找到", true);
+            }
             return std::move(name);
         }
 
     }
 
 
-    std::vector<std::string> Parser::parseAttrs()
+    std::vector<ExprASTPtr> Parser::parseCallAttrs()
     {
         using namespace std;
         expectToken(TokenValue::LEFT_PAREN, true);
 
-        vector<string> param;
+        vector<ExprASTPtr> param;
 
-        expectToken(TokenValue::IDENTIFIER);
-        param.push_back(std::move(scanner_.getToken().getStrValue()));
-        scanner_.next();
+        if (ExprASTPtr exp = parsePrimary()) {
+            param.push_back(std::move(exp));
+//            scanner_.next();
+        } else {
+            errorSyntax("函数的参数表达式解析错误");
+        }
 
         while (validateToken(TokenValue::COMMA, true))
         {
-            expectToken(TokenValue::IDENTIFIER);
-            param.push_back(std::move(scanner_.getToken().getStrValue()));
-            scanner_.next();
+            if (ExprASTPtr exp = parsePrimary()) {
+                param.push_back(std::move(exp));
+//                scanner_.next();
+            } else {
+                errorSyntax("函数的参数表达式解析错误");
+            }
         }
 
         expectToken(TokenValue::RIGHT_PAREN, true);
@@ -381,6 +396,7 @@ namespace cen
                 return nullptr;
             }
             expectToken(TokenValue::SEMICOLON, "';'未找到", true);
+            // FIXME
             return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
         }
         else if(validateToken(TokenValue::LEFT_PAREN, true))

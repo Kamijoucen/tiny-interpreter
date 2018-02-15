@@ -11,12 +11,11 @@
 namespace cen
 {
 
-    /**
-     * 变量的赋值应该给予拷贝而不是仅仅拷贝智能指针。  基本类型的赋值 a = b, a,b就应该是两个
+    /*
+     * 变量的赋值应该基于拷贝而不是仅仅拷贝智能指针。  基本类型的赋值 a = b, a,b就应该是两个
      * 独立变量了。 如果仅仅是拷贝只能指针仍然是引用同一个值。！！！！！！！
      *
      */
-
     class ExprAST;
     class NumberExprAST;
     class BlockAST;
@@ -392,13 +391,22 @@ namespace cen
     public:
         CallAST(std::string name, std::vector<ExprASTPtr> param, TokenLocation lok);
 
+        CallAST(std::string name, std::vector<std::vector<ExprASTPtr>> params, TokenLocation lok);
+
     public:
         ValuePtr eval(EnvPtr env) override;
 
     private:
+        ValuePtr callFun(const std::vector<std::string> &param, const ExprASTPtr &body,
+                         const EnvPtr &funEnv, const EnvPtr &runtimeEnv);
+
+    private:
         std::string name_;
         std::vector<ExprASTPtr> param_;
+        std::vector<std::vector<ExprASTPtr>> params_;
     };
+
+
 
 }
 

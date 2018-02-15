@@ -45,7 +45,7 @@ namespace cen
 
         ExprASTPtr    parseIdentifier();
 
-        ExprASTPtr    parseIdentifier1(bool isStat);
+        ExprASTPtr    parseIdentifier1(bool isStat = true);
 
         ExprASTPtr    parseGlobalFunctionStatement();   // 不需要将全局函数加入到语法树中
 
@@ -59,7 +59,7 @@ namespace cen
 
         ExprASTPtr    parseFlowControllerStatement();
 
-        std::vector<std::string> parseAttrs();
+        std::vector<ExprASTPtr> parseCallAttrs();
 
     public:
         explicit Parser(Scanner&);
