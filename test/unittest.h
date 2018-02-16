@@ -177,4 +177,10 @@ TEST(fun, digui)
     interpreter.interp("../Resource/fun1.l");
 }
 
+TEST(fun, closure2)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/fun2.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H

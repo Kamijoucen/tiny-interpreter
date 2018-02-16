@@ -185,25 +185,5 @@ namespace cen
     inline std::string Closure::toString() const { return "function"; }
 
 
-//    template<typename T>
-//    class Closure : public Value
-//    {
-//    public:
-//        explicit Closure(T body);
-//
-//        inline ValueType getType() const override;
-//
-//        inline std::string toString() const override;
-//
-//    private:
-//        T fun;
-//    };
-//    template<typename T>
-//    Closure<T>::Closure(T body) : fun(std::move(body)) {}
-//    template<typename T>
-//    inline ValueType Closure<T>::getType() const { return ValueType::CLOSURE; }
-//    template<typename T>
-//    inline std::string Closure<T>::toString() const { return "function"; }
-
 }
 #endif //LLANGUAGE_RESULT_H

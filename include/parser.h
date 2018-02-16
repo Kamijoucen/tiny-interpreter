@@ -43,8 +43,6 @@ namespace cen
 
         ExprASTPtr    parseVariableDefinitionStatement();
 
-        ExprASTPtr    parseIdentifier();
-
         ExprASTPtr    parseIdentifier1(bool isStat = true);
 
         ExprASTPtr    parseGlobalFunctionStatement();   // 不需要将全局函数加入到语法树中

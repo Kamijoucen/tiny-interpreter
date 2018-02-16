@@ -390,10 +390,29 @@ namespace cen
         }
         paramsIter++;
 
-//        for (; paramsIter != params_.end();)
-//        {
-//
-//        }
+        for (; paramsIter != params_.end(); paramsIter++)
+        {
+            if (callVal->getType() != ValueType::CLOSURE)
+            {
+                errorInterp("待调用的对象不是一个函数对象");
+                return nullptr;
+            }
+            else
+            {
+                auto closure = static_cast<Closure *>(callVal.get());
+                auto iter = paramsIter->begin();
+                for (auto &name : closure->param_)
+                {
+                    if (iter != paramsIter->end()) {
+                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
+                    } else {
+                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
+                    }
+                }
+                callVal = closure->body_->eval(closure->closureEnv_);
+            }
+
+        }
         return callVal;
     }
 
