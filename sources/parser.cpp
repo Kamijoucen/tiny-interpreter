@@ -52,7 +52,7 @@ namespace cen
             case TokenValue::RETURN:
                 return parseFlowControllerStatement();
             case TokenValue::IDENTIFIER:
-                return parseIdentifier();
+                return parseIdentifier1(true);
             case TokenValue::DEF:
                 return parseGlobalFunctionStatement();
             default:
@@ -96,7 +96,7 @@ namespace cen
                 switch (tokenValue)
                 {
                     case TokenValue::IDENTIFIER:
-                        return parseIdentifier();
+                        return parseIdentifier1(false);
                     case TokenValue::STRING:
                         return parseString();
                     default:
@@ -379,45 +379,45 @@ namespace cen
      * FIXME
      * @return
      */
-    ExprASTPtr Parser::parseIdentifier()
-    {
-        // todo
-        Token tok = scanner_.getToken();
-        expectToken(TokenValue::IDENTIFIER, "未找到变量名", true);
-
-        if (validateToken(TokenValue::ASSIGN, true))
-        {
-            VariableASTPtr lhs = std::make_unique<VariableAST>(tok.getStrValue());
-
-            ExprASTPtr rhs = parseExpression();
-            if (!rhs)
-            {
-                errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
-                return nullptr;
-            }
-            expectToken(TokenValue::SEMICOLON, "';'未找到", true);
-            // FIXME
-            return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
-        }
-        else if(validateToken(TokenValue::LEFT_PAREN, true))
-        {
-            std::vector<ExprASTPtr> param;
-            if (!validateToken(TokenValue::RIGHT_PAREN, true))
-            {
-                param.push_back(std::move(parseExpression()));
-                while (validateToken(TokenValue::COMMA, true))
-                {
-                    param.push_back(std::move(parseExpression()));
-                }
-                expectToken(TokenValue::RIGHT_PAREN, true);
-            }
-            return std::make_unique<CallAST>(std::move(tok.getStrValue()), std::move(param), std::move(tok.getTokenLocation()));
-        }
-        else
-        {
-            return std::make_unique<VariableUseStatementAST>(tok.getStrValue(), tok.getTokenLocation());
-        }
-    }
+//    ExprASTPtr Parser::parseIdentifier()
+//    {
+//        // todo
+//        Token tok = scanner_.getToken();
+//        expectToken(TokenValue::IDENTIFIER, "未找到变量名", true);
+//
+//        if (validateToken(TokenValue::ASSIGN, true))
+//        {
+//            VariableASTPtr lhs = std::make_unique<VariableAST>(tok.getStrValue());
+//
+//            ExprASTPtr rhs = parseExpression();
+//            if (!rhs)
+//            {
+//                errorSyntax("赋值运算符的右侧没有发现表达式:" + scanner_.getToken().getTokenLocation().toString());
+//                return nullptr;
+//            }
+//            expectToken(TokenValue::SEMICOLON, "';'未找到", true);
+//            // FIXME
+//            return std::make_unique<VariableAssignStatementAST>(std::move(lhs), std::move(rhs), tok.getTokenLocation());
+//        }
+//        else if(validateToken(TokenValue::LEFT_PAREN, true))
+//        {
+//            std::vector<ExprASTPtr> param;
+//            if (!validateToken(TokenValue::RIGHT_PAREN, true))
+//            {
+//                param.push_back(std::move(parseExpression()));
+//                while (validateToken(TokenValue::COMMA, true))
+//                {
+//                    param.push_back(std::move(parseExpression()));
+//                }
+//                expectToken(TokenValue::RIGHT_PAREN, true);
+//            }
+//            return std::make_unique<CallAST>(std::move(tok.getStrValue()), std::move(param), std::move(tok.getTokenLocation()));
+//        }
+//        else
+//        {
+//            return std::make_unique<VariableUseStatementAST>(tok.getStrValue(), tok.getTokenLocation());
+//        }
+//    }
 
 
 

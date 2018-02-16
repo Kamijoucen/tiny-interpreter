@@ -394,18 +394,15 @@ namespace cen
         CallAST(std::string name, std::vector<std::vector<ExprASTPtr>> params, TokenLocation lok);
 
     public:
-        ValuePtr eval(EnvPtr env) override;
+        ValuePtr eval1(EnvPtr env);
 
-    private:
-        ValuePtr callFun(const std::vector<std::string> &param, const ExprASTPtr &body,
-                         const EnvPtr &funEnv, const EnvPtr &runtimeEnv);
+        ValuePtr eval(EnvPtr env) override;
 
     private:
         std::string name_;
         std::vector<ExprASTPtr> param_;
         std::vector<std::vector<ExprASTPtr>> params_;
     };
-
 
 
 }

@@ -336,41 +336,92 @@ namespace cen
                                                                                                          name_(std::move(name)),
                                                                                                          params_(std::move(params)) {}
 
-    ValuePtr CallAST::callFun(const std::vector<std::string> &param, const ExprASTPtr &body, const EnvPtr &funEnv,
-                              const EnvPtr &runtimeEnv) {
-        auto iter = param_.begin();
-        for (auto &name : param)
-        {
-            if (iter != param_.end()) {
-                funEnv->putLocationValue(name, (*iter++)->eval(runtimeEnv));
-            } else {
-                funEnv->putLocationValue(name, NoneValue::instance());
-            }
-        }
-        return body->eval(funEnv);
-    }
-
-
     ValuePtr CallAST::eval(EnvPtr env)
     {
+        ValuePtr callVal = nullptr;
+
+        auto paramsIter = params_.begin();
+        if (paramsIter == params_.end())
+        {
+            errorInterp("没有发现调用函数的参数");
+            return nullptr;
+        }
 
         if (ValuePtr funVal = env->lookup(name_))
         {
             if (funVal->getType() == ValueType::CLOSURE)
             {
                 auto closure = static_cast<Closure*>(funVal.get());
-                return callFun(closure->param_, closure->body_, closure->closureEnv_, env);
+                // 获取第一次调用的迭代器
+                auto iter = paramsIter->begin();
+                for (auto &name : closure->param_)
+                {
+                    if (iter != paramsIter->end()) {
+                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
+                    } else {
+                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
+                    }
+                }
+                // 匿名函数第一次调用后的值
+                callVal = closure->body_->eval(closure->closureEnv_);
             }
         }
 
+        else if (GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_))
+        {
+            EnvPtr callEvn = makeNewEnv(env);
+            const std::vector<std::string> &paramName = gfun->param_;
+            auto iter = paramsIter->begin();
+            for (auto &name : paramName)
+            {
+                if (iter != paramsIter->end()) {
+                    callEvn->putLocationValue(name, (*iter++)->eval(callEvn));
+                } else {
+                    callEvn->putLocationValue(name, NoneValue::instance());
+                }
+            }
+            // 全局函数第一次调用后的值
+            callVal = gfun->eval(callEvn);
+        }
+        else
+        {
+            errorInterp("没有找到名为 " + name_ + " 的函数\t" + tokenLocation_.toString());
+            return nullptr;
+        }
+        paramsIter++;
+
+//        for (; paramsIter != params_.end();)
+//        {
+//
+//        }
+        return callVal;
+    }
+
+
+    ValuePtr CallAST::eval1(EnvPtr env)
+    {
+        if (ValuePtr funVal = env->lookup(name_))
+        {
+            if (funVal->getType() == ValueType::CLOSURE)
+            {
+                auto closure = static_cast<Closure*>(funVal.get());
+                auto iter = param_.begin();
+                for (auto &name : closure->param_)
+                {
+                    if (iter != param_.end()) {
+                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
+                    } else {
+                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
+                    }
+                }
+                return closure->body_->eval(closure->closureEnv_);
+            }
+        }
 
         if (GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_))
         {
             EnvPtr callEvn = makeNewEnv(env);
             const std::vector<std::string> &paramName = gfun->param_;
-
-            callFun(gfun->param_, gfun, callEvn, callEvn);
-
             auto iter = param_.begin();
             for (auto &name : paramName)
             {
