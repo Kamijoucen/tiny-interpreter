@@ -18,4 +18,4 @@ def fff() {
 	return d;
 }
 
-fff();
+print fff();

@@ -183,4 +183,10 @@ TEST(fun, closure2)
     interpreter.interp("../Resource/fun2.l");
 }
 
+TEST(pl, pl)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/pl.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H

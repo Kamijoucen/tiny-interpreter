@@ -6,6 +6,6 @@ var f = def[](a) {
         };
     };
 };
-print f(1)(2)(3);
+print f(1)(550)(1);
 
 // (def[](a){print a;})(15);

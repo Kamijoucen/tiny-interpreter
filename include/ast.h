@@ -389,8 +389,6 @@ namespace cen
     class CallAST : public ExprAST
     {
     public:
-        CallAST(std::string name, std::vector<ExprASTPtr> param, TokenLocation lok);
-
         CallAST(std::string name, std::vector<std::vector<ExprASTPtr>> params, TokenLocation lok);
 
     public:
@@ -400,7 +398,6 @@ namespace cen
 
     private:
         std::string name_;
-        std::vector<ExprASTPtr> param_;
         std::vector<std::vector<ExprASTPtr>> params_;
     };
 

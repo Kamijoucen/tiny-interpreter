@@ -355,8 +355,6 @@ namespace cen
 
         if (ExprASTPtr exp = parsePrimary()) {
             param.push_back(std::move(exp));
-        } else {
-            errorSyntax("函数的参数表达式解析错误");
         }
 
         while (validateToken(TokenValue::COMMA, true))
