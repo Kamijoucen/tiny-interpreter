@@ -331,14 +331,14 @@ namespace cen
                 calls.push_back(std::move(param));
             }
             if (isStat) {
-                expectToken(TokenValue::COMMA, "';'未找到", true);
+                expectToken(TokenValue::SEMICOLON, "';'未找到", true);
             }
             return std::make_unique<CallAST>(identToken.getStrValue(), std::move(calls), std::move(identToken.getTokenLocation()));
         }
         else
         {
             if (isStat) {
-                expectToken(TokenValue::COMMA, "';'未找到", true);
+                expectToken(TokenValue::SEMICOLON, "';'未找到", true);
             }
             return std::move(name);
         }
@@ -355,7 +355,6 @@ namespace cen
 
         if (ExprASTPtr exp = parsePrimary()) {
             param.push_back(std::move(exp));
-//            scanner_.next();
         } else {
             errorSyntax("函数的参数表达式解析错误");
         }
@@ -364,7 +363,6 @@ namespace cen
         {
             if (ExprASTPtr exp = parsePrimary()) {
                 param.push_back(std::move(exp));
-//                scanner_.next();
             } else {
                 errorSyntax("函数的参数表达式解析错误");
             }
