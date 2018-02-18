@@ -195,4 +195,10 @@ TEST(eval, copy)
     interpreter.interp("../Resource/copy.l");
 }
 
+TEST(eval, temp)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/dowhile.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H

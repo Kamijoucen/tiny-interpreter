@@ -288,13 +288,13 @@ namespace cen
         if (!block) {
             errorSyntax("没有找到 do while 语句的函数体:" + lok.toString());
         }
+        expectToken(TokenValue::WHILE, "while 未找到", true);
 
         expectToken(TokenValue::LEFT_PAREN, true);
-
         ExprASTPtr condi = parseExpression();
-
         expectToken(TokenValue::RIGHT_PAREN, true);
-        expectToken(TokenValue::SEMICOLON, "; 未找到", true);
+
+        expectToken(TokenValue::SEMICOLON, "';' 未找到", true);
 
         return std::make_unique<DoWhileStatementAST>(std::move(condi), std::move(block), std::move(lok));
     }
