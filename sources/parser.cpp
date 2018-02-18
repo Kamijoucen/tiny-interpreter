@@ -277,6 +277,30 @@ namespace cen
 
 
 
+    ExprASTPtr Parser::parseDoWhileStatement()
+    {
+        TokenLocation lok = scanner_.getToken().getTokenLocation();
+        expectToken(TokenValue::DO, "'do' 关键字未找到", true);
+
+        ExprASTPtr block = parseBlock();
+        if (!block) {
+            errorSyntax("没有找到 do while 语句的函数体:" + lok.toString());
+        }
+
+        expectToken(TokenValue::LEFT_PAREN, true);
+
+        ExprASTPtr condi = parseExpression();
+
+        expectToken(TokenValue::RIGHT_PAREN, true);
+
+
+
+
+        return cen::ExprASTPtr();
+    }
+
+
+
     ExprASTPtr Parser::parseVariableDefinitionStatement()
     {
         expectToken(TokenValue::VAR, "'var' 关键字未找到", true);

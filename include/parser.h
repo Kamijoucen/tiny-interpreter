@@ -39,6 +39,8 @@ namespace cen
 
         ExprASTPtr    parseWhileStatement();
 
+        ExprASTPtr    parseDoWhileStatement();
+
         ExprASTPtr    parseForStatement();
 
         ExprASTPtr    parseVariableDefinitionStatement();

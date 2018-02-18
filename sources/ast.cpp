@@ -16,7 +16,7 @@
 
 namespace cen
 {
-    EnvPtr makeNewEnv(EnvPtr env) {
+    inline EnvPtr makeNewEnv(EnvPtr env) {
         return std::make_shared<Environment>(env);
     }
 

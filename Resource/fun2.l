@@ -6,6 +6,12 @@ var f = def[](a) {
         };
     };
 };
-print f(1)(550)(1);
+// print f(1)(2)(3);
+
+def fun(ff) {
+    return ff;
+}
+
+print fun(f)(1)(2)(3);
 
 // (def[](a){print a;})(15);

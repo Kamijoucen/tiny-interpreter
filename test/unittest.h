@@ -189,4 +189,10 @@ TEST(pl, pl)
     interpreter.interp("../Resource/pl.l");
 }
 
+TEST(eval, copy)
+{
+    Interpreter interpreter;
+    interpreter.interp("../Resource/copy.l");
+}
+
 #endif //LLANGUAGE_UNITTEST_H

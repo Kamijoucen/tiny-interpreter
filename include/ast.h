@@ -264,6 +264,21 @@ namespace cen
 
 
 
+    class DoWhileStatementAST : public ExprAST
+    {
+    public:
+        DoWhileStatementAST(ExprASTPtr condition, BlockASTPtr body, TokenLocation lok);
+
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
+    private:
+        ExprASTPtr condition_;
+        BlockASTPtr body_;
+    };
+
+
+
     class ForStatementAST : public ExprAST
     {
     public:
