@@ -288,17 +288,6 @@ namespace cen
     };
 
 
-
-    class DoWhileStatementAST : public ExprAST
-    {
-    public:
-        ValuePtr eval(EnvPtr env) override {}
-
-
-    private:
-    };
-
-
     // todo 简单实现方便调试
     class PrintStatementAST : public ExprAST
     {

@@ -239,8 +239,45 @@ namespace cen
             whileEnv->changeValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(false));
         }
 
-        return VoidValue::instance();
+        return NoneValue::instance();
     }
+
+
+
+    ValuePtr DoWhileStatementAST::eval(EnvPtr env)
+    {
+        EnvPtr doWhileEnv = makeNewEnv(env);
+
+        ValuePtr conditionVal = condition_->eval(doWhileEnv);
+        if (conditionVal->getType() != ValueType::BOOL) {
+            errorInterp("do while 的条件语句需要一个布尔值:" + tokenLocation_.toString());
+            return nullptr;
+        }
+
+        doWhileEnv->putLocationValue(IS_NEED_BREAK, std::make_shared<BoolValue>(false));
+        doWhileEnv->putLocationValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(false));
+
+            do {
+            body_->eval(doWhileEnv);
+            conditionVal = condition_->eval(doWhileEnv);
+
+            if (auto isnb = doWhileEnv->lookup(IS_NEED_BREAK))
+            {
+                if (static_cast<BoolValue *>(isnb.get())->value_) {
+                    break;
+                }
+            }
+            doWhileEnv->changeValue(IS_NEED_CONTINUE, std::make_shared<BoolValue>(false));
+
+        } while (static_cast<BoolValue *>(conditionVal.get())->value_);
+
+        return NoneValue::instance();
+    }
+
+    DoWhileStatementAST::DoWhileStatementAST(ExprASTPtr condition, BlockASTPtr body, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                                          condition_(std::move(condition)),
+                                                                                                          body_(std::move(body)){}
+
 
     StringAST::StringAST(std::string str, const TokenLocation &lok) : ExprAST(lok), value_(std::move(str)) {}
 

@@ -55,6 +55,8 @@ namespace cen
                 return parseIdentifier1(true);
             case TokenValue::DEF:
                 return parseGlobalFunctionStatement();
+            case TokenValue::DO:
+                return parseDoWhileStatement();
             default:
                 errorSyntax("未知的表达式开始 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
         }
@@ -282,7 +284,7 @@ namespace cen
         TokenLocation lok = scanner_.getToken().getTokenLocation();
         expectToken(TokenValue::DO, "'do' 关键字未找到", true);
 
-        ExprASTPtr block = parseBlock();
+        BlockASTPtr block = parseBlock();
         if (!block) {
             errorSyntax("没有找到 do while 语句的函数体:" + lok.toString());
         }
@@ -292,11 +294,9 @@ namespace cen
         ExprASTPtr condi = parseExpression();
 
         expectToken(TokenValue::RIGHT_PAREN, true);
+        expectToken(TokenValue::SEMICOLON, "; 未找到", true);
 
-
-
-
-        return cen::ExprASTPtr();
+        return std::make_unique<DoWhileStatementAST>(std::move(condi), std::move(block), std::move(lok));
     }
 
 
