@@ -198,7 +198,7 @@ TEST(eval, copy)
 TEST(eval, temp)
 {
     Interpreter interpreter;
-    interpreter.interp("../Resource/dowhile.l");
+    interpreter.interp("../Resource/neg.l");
 }
 
 #endif //LLANGUAGE_UNITTEST_H

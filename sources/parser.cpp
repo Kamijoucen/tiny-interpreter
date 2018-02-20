@@ -92,6 +92,14 @@ namespace cen
                         return nullptr;
                 }
             case TokenType::OPERATORS:
+                switch (tokenValue)
+                {
+                    case TokenValue::ADD:
+                    case TokenValue::MINUS:
+
+                    default:
+                        return nullptr;
+                }
             case TokenType::NUMBER:
                 return parseNumber();
             case TokenType::UNRESERVED:
@@ -120,11 +128,6 @@ namespace cen
 
     ExprASTPtr Parser::parseNumber()
     {
-        bool isNeg = false;
-        if (validateToken(TokenValue::MINUS, true))
-        {
-            isNeg = true;
-        }
         Token token = scanner_.getToken();
         scanner_.next();
 
@@ -143,17 +146,13 @@ namespace cen
         {
             errorSyntax("非法的数字类型 '" + token.getStrValue() + "'\t" + token.getTokenLocation().toString());
         }
-        if (isNeg)
-        {
-            // todo 处理负数
-        }
         return expr;
     }
 
 
     ExprASTPtr Parser::parseParen()
     {
-        scanner_.next();    // eat (
+        expectToken(TokenValue::LEFT_PAREN, "没有找到左括号", true);
         ExprASTPtr ptr = parseExpression();
         expectToken(TokenValue::RIGHT_PAREN, "括号未匹配", true);
         return ptr;

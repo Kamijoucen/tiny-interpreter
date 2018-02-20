@@ -286,8 +286,8 @@ namespace cen
         return std::make_shared<StringValue>(value_);
     }
 
-    UnaryExprAST::UnaryExprAST(ExprASTPtr hs, TokenValue tv, const TokenLocation &lok)
-            : ExprAST(lok),
+    UnaryExprAST::UnaryExprAST(ExprASTPtr hs, TokenValue tv, TokenLocation lok)
+            : ExprAST(std::move(lok)),
               hs_(std::move(hs)),
               op_(tv) {}
 
@@ -321,7 +321,7 @@ namespace cen
 
     ContinueAST::ContinueAST(const TokenLocation &lok) : ExprAST(lok) {}
 
-    ReturnAST::ReturnAST(ExprASTPtr ast,TokenLocation lok) : ExprAST(std::move(lok)), returnExp_(std::move(ast)) {}
+    ReturnAST::ReturnAST(ExprASTPtr ast, TokenLocation lok) : ExprAST(std::move(lok)), returnExp_(std::move(ast)) {}
 
     ValuePtr ReturnAST::eval(EnvPtr env) {
         if (!env->lookup(IS_NEED_RETURN)) {
@@ -450,47 +450,6 @@ namespace cen
     }
 
 
-//    ValuePtr CallAST::eval1(EnvPtr env)
-//    {
-//        if (ValuePtr funVal = env->lookup(name_))
-//        {
-//            if (funVal->getType() == ValueType::CLOSURE)
-//            {
-//                auto closure = static_cast<Closure*>(funVal.get());
-//                auto iter = param_.begin();
-//                for (auto &name : closure->param_)
-//                {
-//                    if (iter != param_.end()) {
-//                        closure->closureEnv_->putLocationValue(name, (*iter++)->eval(env));
-//                    } else {
-//                        closure->closureEnv_->putLocationValue(name, NoneValue::instance());
-//                    }
-//                }
-//                return closure->body_->eval(closure->closureEnv_);
-//            }
-//        }
-//
-//        if (GlobalExprASTPtr gfun = FileScope::getFunction(tokenLocation_.filename_, name_))
-//        {
-//            EnvPtr callEvn = makeNewEnv(env);
-//            const std::vector<std::string> &paramName = gfun->param_;
-//            auto iter = param_.begin();
-//            for (auto &name : paramName)
-//            {
-//                if (iter != param_.end()) {
-//                    callEvn->putLocationValue(name, (*iter++)->eval(callEvn));
-//                } else {
-//                    callEvn->putLocationValue(name, NoneValue::instance());
-//                }
-//            }
-//            return gfun->eval(callEvn);
-//        }
-//        else
-//        {
-//            errorInterp("没有找到名为 " + name_ + " 的函数\t" + tokenLocation_.toString());
-//            return nullptr;
-//        }
-//    }
 
     NameAST::NameAST(std::string name, TokenLocation lok) : ExprAST(std::move(lok)), name_(std::move(name)){}
 

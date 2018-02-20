@@ -138,10 +138,7 @@ namespace cen
     public:
         ValuePtr eval(EnvPtr env) override;
 
-    public:
-        UnaryExprAST() = default;
-
-        UnaryExprAST(ExprASTPtr hs, TokenValue tv, const TokenLocation &lok);
+        UnaryExprAST(ExprASTPtr hs, TokenValue tv, TokenLocation lok);
 
     private:
         ExprASTPtr hs_;
