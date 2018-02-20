@@ -8,6 +8,7 @@
 #include "../include/primitives/multiply.h"
 #include "../include/primitives/minus.h"
 #include "../include/primitives/equal.h"
+#include "../include/primitives/posi.h"
 
 namespace cen
 {
@@ -25,6 +26,7 @@ namespace cen
         env->putLocationOp(TokenValue::GREATER_THAN, std::make_unique<Greater>());
         env->putLocationOp(TokenValue::LESS_THAN,    std::make_unique<Less>());
         env->putLocationOp(TokenValue::EQUAL,        std::make_unique<Equal>());
+        env->putLocationOp(TokenValue::POSI,        std::make_unique<Posi>());
         return env;
     }
 

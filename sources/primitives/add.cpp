@@ -10,7 +10,7 @@ namespace cen
     {
         if (vec.size() != 2)
         {
-            errorSyntax("'+'必须作用于两个以上的值");
+            errorInterp("'+'必须作用于两个以上的值");
             return nullptr;
         }
 

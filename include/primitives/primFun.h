@@ -5,6 +5,9 @@
 #include <vector>
 #include "../value.h"
 
+#define Int     cen::ValueType::INT
+#define Float   cen::ValueType::FLOAT
+
 namespace cen
 {
     class PrimFun;

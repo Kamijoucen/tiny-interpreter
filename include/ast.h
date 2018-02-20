@@ -136,12 +136,13 @@ namespace cen
     class UnaryExprAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr env) override;
-
         UnaryExprAST(ExprASTPtr hs, TokenValue tv, TokenLocation lok);
 
+    public:
+        ValuePtr eval(EnvPtr env) override;
+
     private:
-        ExprASTPtr hs_;
+        ExprASTPtr exp_;
         TokenValue op_;
     };
 
@@ -150,12 +151,10 @@ namespace cen
     class BinaryExprAST : public ExprAST
     {
     public:
-        ValuePtr eval(EnvPtr env) override;
+        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tv, const TokenLocation &lok);
 
     public:
-        BinaryExprAST() = default;
-
-        BinaryExprAST(ExprASTPtr left, ExprASTPtr right, TokenValue tv, const TokenLocation &lok);
+        ValuePtr eval(EnvPtr env) override;
 
     private:
 

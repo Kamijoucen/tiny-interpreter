@@ -67,6 +67,27 @@ namespace cen
         return fun->apply(vec, getTokenLocation());
     }
 
+
+
+    UnaryExprAST::UnaryExprAST(ExprASTPtr hs, TokenValue tv, TokenLocation lok)
+            : ExprAST(std::move(lok)),
+              exp_(std::move(hs)),
+              op_(tv) {}
+
+    ValuePtr UnaryExprAST::eval(EnvPtr env)
+    {
+        std::vector<ValuePtr> vec = {exp_->eval(env)};
+        auto fun = env->lookupOp(op_);
+        if (!fun)
+        {
+            errorInterp("没有发现操作符:");
+            return nullptr;
+        }
+        return fun->apply(vec, getTokenLocation());
+    }
+
+
+
     ValuePtr BlockAST::eval(EnvPtr env)
     {
         EnvPtr lenv = makeNewEnv(env);
@@ -284,17 +305,6 @@ namespace cen
     ValuePtr StringAST::eval(EnvPtr env)
     {
         return std::make_shared<StringValue>(value_);
-    }
-
-    UnaryExprAST::UnaryExprAST(ExprASTPtr hs, TokenValue tv, TokenLocation lok)
-            : ExprAST(std::move(lok)),
-              hs_(std::move(hs)),
-              op_(tv) {}
-
-    ValuePtr UnaryExprAST::eval(EnvPtr env)
-    {
-        // todo
-        return nullptr;
     }
 
     BreakAST::BreakAST(const TokenLocation &lok) : ExprAST(lok) {}
