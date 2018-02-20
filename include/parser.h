@@ -25,6 +25,8 @@ namespace cen
 
         ExprASTPtr    parseBinOpRHS(ExprASTPtr lhs, int precedence);
 
+        ExprASTPtr    parseUnaryExpression();
+
         ExprASTPtr    parseExpression();
 
         ExprASTPtr    parseParen();

@@ -4,6 +4,8 @@ var c = -1 + 1;
 var d = -1 - 1;
 var e = 1 - -(1 + 1);
 var f = 1 + -(1 + 1);
+var f = -(1 + 1) + 1;
+var f = -(1 + 1) + 1;
 
 print a;
 print b;

@@ -73,13 +73,15 @@ namespace cen
         DIVIDE,             // /
         AND,                // &&
         OR,                 // ||
-        NOT,                // !
         EQUAL,              // ==
         GREATER_OR_EQUAL,   // >=
         LESS_OR_EQUAL,      // <=
         GREATER_THAN,       // >
         LESS_THAN,          // <
         NOT_ASSIGN,         // !=
+        NOT,                // !
+        POSI,               // + 取正操作符
+        NEGA,               // - 取负操作符
 
         // delimiter
         SEMICOLON,          // ;

@@ -1,13 +1,14 @@
+#ifndef PL_POSI_H
+#define PL_POSI_H
 
-#ifndef LLANGUAGE_DIVIDE_H
-#define LLANGUAGE_DIVIDE_H
 
 #include "primFun.h"
 
 namespace cen
 {
-    struct Divide : public PrimFun
+    struct Posi : public PrimFun
     {
+
         ValuePtr apply(const ValuePtrVec &vec, const TokenLocation& lok) override;
 
         ValueType typeCheck(const ValuePtrVec &vec) override;
@@ -17,8 +18,7 @@ namespace cen
         std::string toString() const override;
 
     };
-
 }
 
 
-#endif //LLANGUAGE_DIVIDE_H
+#endif //PL_POSI_H

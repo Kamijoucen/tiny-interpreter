@@ -197,8 +197,12 @@ TEST(eval, copy)
 
 TEST(eval, temp)
 {
-    Interpreter interpreter;
-    interpreter.interp("../Resource/neg.l");
+    std::string a("../Resource/neg.l");
+    Scanner scanner(a);
+    Parser parser(scanner);
+    VecExprASTPtr vec = parser.parse();
+//    Interpreter interpreter;
+//    interpreter.interp("../Resource/neg.l");
 }
 
 #endif //LLANGUAGE_UNITTEST_H

@@ -96,7 +96,7 @@ namespace cen
                 {
                     case TokenValue::ADD:
                     case TokenValue::MINUS:
-
+                        return parseUnaryExpression();
                     default:
                         return nullptr;
                 }
@@ -156,6 +156,19 @@ namespace cen
         ExprASTPtr ptr = parseExpression();
         expectToken(TokenValue::RIGHT_PAREN, "括号未匹配", true);
         return ptr;
+    }
+
+    ExprASTPtr Parser::parseUnaryExpression()
+    {
+        Token token = scanner_.getToken();
+        if (token.getTokenType() != TokenType::OPERATORS) {
+            errorSyntax("需要一个单目运算符");
+        }
+        scanner_.next();
+
+        ExprASTPtr exp = parsePrimary();
+
+        return std::make_unique<UnaryExprAST>(std::move(exp), token.getTokenValue(), std::move(token.getTokenLocation()));
     }
 
     ExprASTPtr Parser::parseExpression()
