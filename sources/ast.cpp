@@ -164,7 +164,8 @@ namespace cen
         }
         else
         {
-            if (elsePart_) {
+            if (elsePart_)
+            {
                 return elsePart_->eval(env);
             }
             return NoneValue::instance();

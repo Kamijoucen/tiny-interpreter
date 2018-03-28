@@ -88,6 +88,8 @@ namespace cen
                         return parseParen();
                     case TokenValue::LEFT_BRACE:
                         return parseBlock();
+                    case TokenValue::LEFT_SQUARE:
+                        return parseArray();
                     default:
                         return nullptr;
                 }
@@ -150,6 +152,25 @@ namespace cen
     }
 
 
+    ExprASTPtr Parser::parseArray(bool isStat)
+    {
+        expectToken(TokenValue::LEFT_SQUARE, "数组类型应该由 '[' 开头", true);
+
+        if (ExprASTPtr exp1 = parseExpression())
+        {
+            std::vector<ExprASTPtr> arrVec = {std::move(exp1)};
+            while (validateToken(TokenValue::COMMA, true))
+            {
+                ExprASTPtr exp = parseExpression();
+                arrVec.push_back(std::move(exp));
+            }
+
+            // todo parse array
+        }
+        return nullptr;
+    }
+
+
     ExprASTPtr Parser::parseParen()
     {
         expectToken(TokenValue::LEFT_PAREN, "没有找到左括号", true);
@@ -162,7 +183,7 @@ namespace cen
     {
         Token token = scanner_.getToken();
         if (token.getTokenType() != TokenType::OPERATORS) {
-            errorSyntax("需要一个单目运算符");
+            errorSyntax("需要一个单目运算符:" + token.getTokenLocation().toString());
         }
         scanner_.next();
 

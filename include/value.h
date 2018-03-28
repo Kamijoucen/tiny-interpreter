@@ -49,6 +49,15 @@ namespace cen
 
 
 
+    class ArrayValue : public Value
+    {
+    public:
+    public:
+    private:
+    };
+
+
+
     class BoolValue : public Value
     {
     public:

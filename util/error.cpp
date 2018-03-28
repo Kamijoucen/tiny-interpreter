@@ -4,7 +4,6 @@
 #include "../include/scanner.h"
 #include "../include/parser.h"
 #include "../include/interpreter.h"
-#include "../include/exception.h"
 
 namespace cen {
 

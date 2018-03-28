@@ -15,6 +15,18 @@ namespace cen
 
         ValuePtr expVal = vec[0];
         ValueType type = expVal->getType();
+
+        if (type == ValueType::INT) {
+
+        }
+        else if (type == ValueType::FLOAT) {
+
+        }
+        else {
+
+        }
+
+        // todo
         switch (type) {
             case ValueType::INT:
             case ValueType::FLOAT:

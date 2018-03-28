@@ -37,6 +37,8 @@ namespace cen
 
         ExprASTPtr    parseNumber();
 
+        ExprASTPtr    parseArray(bool isStat = true);
+
         ExprASTPtr    parseIfStatement();
 
         ExprASTPtr    parseWhileStatement();
