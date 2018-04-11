@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\primitives">
+      <UniqueIdentifier>{53a4a4a4-f9bb-4a42-99fb-470591f40fc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\primitives">
+      <UniqueIdentifier>{473680dc-a0ff-429b-af79-1b1d8af97e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\util">
+      <UniqueIdentifier>{61d8a4c6-c6bf-4b8d-9b04-93bb1d634f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\util">
+      <UniqueIdentifier>{9288ab20-a6b5-485d-99f4-e0bd0eb29e5c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ast.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dictionary.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="environment.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="innerscope.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="interpreter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="parser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="scanner.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="token.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="value.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="add.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="divide.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="equal.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="greater.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="less.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="minus.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="multiply.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="posi.cpp">
+      <Filter>源文件\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="error.cpp">
+      <Filter>源文件\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ast.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="environment.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="innerscope.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="interpreter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="scanner.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="token.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="value.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="add.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="divide.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="equal.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="greater.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="less.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="minus.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="multiply.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="posi.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primFun.h">
+      <Filter>头文件\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="error.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>头文件\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="while.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="varxixixi.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="vars.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="var.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="str.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="print.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="pl.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="neg.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="iftest.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fz.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fun2.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fun1.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fun.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fortest.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="flowc.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="fibon.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="dowhile.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="digui.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="copy.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="comp.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="closure1.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="closure.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="call.l">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="arr.l">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+</Project>
