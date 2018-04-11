@@ -226,5 +226,8 @@
     <None Include="arr.l">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="locvar.l">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

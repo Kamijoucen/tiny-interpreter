@@ -203,6 +203,7 @@
     <None Include="fun2.l" />
     <None Include="fz.l" />
     <None Include="iftest.l" />
+    <None Include="locvar.l" />
     <None Include="neg.l" />
     <None Include="pl.l" />
     <None Include="print.l" />
