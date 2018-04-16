@@ -158,7 +158,9 @@ namespace cen
 
         if (ExprASTPtr exp1 = parseExpression())
         {
-            std::vector<ExprASTPtr> arrVec = {std::move(exp1)};
+//            std::vector<ExprASTPtr> arrVec = {std::move(exp1)};
+            // fixme
+            std::vector<ExprASTPtr> arrVec;
             while (validateToken(TokenValue::COMMA, true))
             {
                 ExprASTPtr exp = parseExpression();

@@ -30,6 +30,7 @@ namespace cen
         OP,
         NULLED,
         CLOSURE,
+        ARRAY,
         UNKNOWN
     };
 
@@ -131,6 +132,7 @@ namespace cen
     };
     inline ValueType StringValue::getType() const { return ValueType::STRING; }
     inline std::string StringValue::toString() const { return value_; }
+
 
 
     class NoneValue : public Value {
