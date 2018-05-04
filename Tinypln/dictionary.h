@@ -17,7 +17,7 @@ namespace cen
 
         std::tuple<TokenType, TokenValue, int> lookup(const std::string &name) const;
 
-        bool haveToken(std::string &name) const;
+        bool haveToken(const std::string &name) const;
 
     private:
         void addToken(std::string name, std::tuple<TokenType, TokenValue, int> tokenMate);

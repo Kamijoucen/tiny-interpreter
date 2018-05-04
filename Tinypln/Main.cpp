@@ -3,18 +3,21 @@
 #include <iostream>
 using namespace std;
 
+void f() {
+	string str = "fun2.l";
 
+	//cout << "请输入文件名：";
+	//cin >> str;
+
+	cen::Interpreter in;
+	in.interp(str);
+}
 
 
 int main()
 {
-	string str;
-
-	cout << "请输入文件名：";
-	cin >> str;
-
-	cen::Interpreter in;
-	in.interp(str);
+	int i = 10000;
+	f();
 	getchar();
 	getchar();
 	return 0;

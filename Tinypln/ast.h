@@ -28,7 +28,6 @@ namespace cen
     using ExprASTPtr       = std::unique_ptr<ExprAST>;
     using NumberExprASTPtr = std::unique_ptr<NumberExprAST>;
     using BlockASTPtr      = std::unique_ptr<BlockAST>;
-    // using VariableASTPtr   = std::unique_ptr<VariableAST>;
     using NameASTPtr       = std::unique_ptr<NameAST>;
     using VecExprASTPtr    = std::vector<std::unique_ptr<ExprAST>>;
 
@@ -72,22 +71,6 @@ namespace cen
     inline const VecExprASTPtr& BlockAST::getBody() const { return vec_; }
 
 
-    /*class VariableAST : public ExprAST
-    {
-    public:
-        ValuePtr eval(EnvPtr env) override;
-
-        inline std::string getVarName() const;
-
-    public:
-        explicit VariableAST(std::string str);
-
-    private:
-        std::string varName_;
-    };
-    inline std::string VariableAST::getVarName() const { return varName_; }*/
-
-
 
     class VariableDefinitionStatementAST : public ExprAST
     {
@@ -115,20 +98,6 @@ namespace cen
     private:
         NameASTPtr  lhs_;
         ExprASTPtr  rhs_;
-    };
-
-
-
-    class VariableUseStatementAST : public ExprAST
-    {
-    public:
-        ValuePtr eval(EnvPtr env) override;
-
-    public:
-        explicit VariableUseStatementAST(const std::string &varname, TokenLocation lok);
-
-    private:
-        std::string varname_;
     };
 
 

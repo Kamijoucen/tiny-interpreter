@@ -71,7 +71,7 @@ namespace cen
         return std::make_tuple(tokenType, tokenValue, precedence);
     }
 
-    bool Dictionary::haveToken(std::string &name) const
+    bool Dictionary::haveToken(const std::string &name) const
     {
         return dictionary_.find(name) != dictionary_.end();
     }

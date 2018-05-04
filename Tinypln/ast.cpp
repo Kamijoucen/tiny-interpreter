@@ -20,12 +20,6 @@ namespace cen
         return std::make_shared<Environment>(env);
     }
 
-    /*ValuePtr VariableAST::eval(EnvPtr env) {
-        return nullptr;
-    }
-
-    VariableAST::VariableAST(std::string str) : varName_(std::move(str)) {}*/
-
 
     IntegerNumExprAST::IntegerNumExprAST(int num, TokenLocation tokenLocation) : ExprAST(std::move(tokenLocation)),
                                                                                  value_(num) {}
@@ -200,10 +194,10 @@ namespace cen
         return std::make_unique<BoolValue>(value_);
     }
 
-    VariableUseStatementAST::VariableUseStatementAST(const std::string &varname, TokenLocation lok) : ExprAST(std::move(lok)),
-                                                                                                      varname_(varname) {}
+   /* VariableUseStatementAST::VariableUseStatementAST(const std::string &varname, TokenLocation lok) : ExprAST(std::move(lok)),
+                                                                                                      varname_(varname) {}*/
 
-    ValuePtr VariableUseStatementAST::eval(EnvPtr env)
+    /*ValuePtr VariableUseStatementAST::eval(EnvPtr env)
     {
         auto var = env->lookup(varname_);
         if (!var)
@@ -212,7 +206,7 @@ namespace cen
             return nullptr;
         }
         return var;
-    }
+    }*/
 
     ValuePtr PrintStatementAST::eval(EnvPtr env)
     {

@@ -17,6 +17,8 @@ namespace cen
 
         VecExprASTPtr parse();
 
+		ExprASTPtr	  parseImportStatement();
+
         ExprASTPtr    parseStatement();
 
         BlockASTPtr   parseBlock();

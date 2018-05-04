@@ -31,6 +31,13 @@ namespace cen
         return vec;
     }
 
+	ExprASTPtr Parser::parseImportStatement()
+	{
+		expectToken(TokenValue::IMPORT, "'import'关键字未找到", true);
+
+		return ExprASTPtr();
+	}
+
 
     ExprASTPtr Parser::parseStatement() {
 
