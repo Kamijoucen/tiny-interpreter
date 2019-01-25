@@ -412,13 +412,13 @@ namespace cen
 
         vector<ExprASTPtr> param;
 
-        if (ExprASTPtr exp = parsePrimary()) {
+        if (ExprASTPtr exp = parseExpression()) {
             param.push_back(std::move(exp));
         }
 
         while (validateToken(TokenValue::COMMA, true))
         {
-            if (ExprASTPtr exp = parsePrimary()) {
+            if (ExprASTPtr exp = parseExpression()) {
                 param.push_back(std::move(exp));
             } else {
                 errorSyntax("函数的参数表达式解析错误");
